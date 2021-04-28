@@ -9,7 +9,7 @@ source ./scripts/lib/start.source.sh
 source ./scripts/lib/source-env.source.sh
 
 echo 'Running our tests'
-docker run --rm \
+"$BIN"docker run --rm \
   -v "$(pwd)"/tests/browser-tests:/app/test \
   --network "$DOCKERNETWORK" \
   -v "$(pwd)"/do-not-commit/screenshots:/artifacts/screenshots \

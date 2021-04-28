@@ -24,11 +24,11 @@ echo " => $TEMPFILENAME now contains"
 cat "$TEMPFILENAME"
 
 echo "HELLO=old should exist"
-cat "$TEMPFILENAME" | grep "HELLO=old"
+grep "HELLO=old" < "$TEMPFILENAME"
 echo "HELLO=new should not exist"
-! cat "$TEMPFILENAME" | grep "HELLO=new"
+! grep "HELLO=new" < "$TEMPFILENAME"
 echo "WORLD=new should exist"
-cat "$TEMPFILENAME" | grep "WORLD=new"
+grep "WORLD=new" < "$TEMPFILENAME"
 
 echo "We should have only two lines"
 LINECOUNT=$(./scripts/lib/line-count.sh "$TEMPFILENAME")

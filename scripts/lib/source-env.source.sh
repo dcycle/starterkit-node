@@ -40,4 +40,4 @@ done
 
 echo " => Add some variables to $ENVLOC if they are not there"
 echo " => These are required by docker-compose.yml"
-./scripts/lib/add-to-env.sh $ENVLOC "DOCKERNETWORK" "$DOCKERNETWORK"
+./scripts/lib/add-to-env.sh "$ENVLOC" "DOCKERNETWORK" "$DOCKERNETWORK"

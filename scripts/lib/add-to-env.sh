@@ -13,9 +13,11 @@ FILELOC="$1"
 VARNAME="$2"
 VARVALUE="$3"
 
-if [[ $(grep "^$2=" $FILELOC) ]] ; then
+# Not sure how to fix this...
+# shellcheck disable=SC2143
+if [[ $(grep "^$2=" "$FILELOC") ]] ; then
   echo "$FILELOC contains ^$2="
 else
   echo "$FILELOC does not contain ^$2="
-  echo "$VARNAME=$VARVALUE" >> $FILELOC
+  echo "$VARNAME=$VARVALUE" >> "$FILELOC"
 fi
