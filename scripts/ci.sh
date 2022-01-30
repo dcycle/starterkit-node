@@ -14,10 +14,10 @@ source ./scripts/lib/start.source.sh
 mkdir -p "$BASE"/do-not-commit/screenshots
 mkdir -p "$BASE"/do-not-commit/dom-captures
 
-echo "$MYINDENT"'=> Running ./scripts/test.sh'
-"$BASE"/scripts/test.sh
 echo "$MYINDENT"'=> Initial deployment'
 "$BASE"/scripts/deploy.sh
+echo "$MYINDENT"'=> Running ./scripts/test.sh'
+"$BASE"/scripts/test.sh
 echo "$MYINDENT"'=> Incremental deployment'
 "$BASE"/scripts/deploy.sh
 echo "$MYINDENT"'=> End-to-end tests'
