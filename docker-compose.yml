@@ -5,6 +5,7 @@ services:
   node:
     build: .
     volumes:
+      - "./app/static:/usr/src/app/static"
       - "./app/code:/usr/src/app/app"
       - "./app/test:/usr/src/app/test"
     links:

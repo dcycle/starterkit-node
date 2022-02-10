@@ -26,5 +26,6 @@ docker network ls | grep "$DOCKERNETWORK" || docker network create "$DOCKERNETWO
 "$BASE"/scripts/docker-compose.sh up -d --build
 "$BASE"/scripts/docker-compose.sh restart
 "$BASE"/scripts/docker-compose.sh ps
+"$BASE"/scripts/uli.sh
 
 source ./scripts/lib/end.source.sh

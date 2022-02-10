@@ -25,7 +25,7 @@
   const app = express();
   const http = require('http').Server(app);
 
-  app.use(express.static(__dirname));
+  app.use(express.static('/usr/src/app/static'));
   var bodyParser = require('body-parser');
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({extended: false}));
