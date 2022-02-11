@@ -10,7 +10,7 @@ source ./scripts/lib/start.source.sh
 cat "$BASE"/scripts/lib/my-ascii-art.txt
 
 source "$BASE"/scripts/lib/source-env.source.sh
-"$BIN"docker pull node
+"$BIN"docker pull node:lts
 "$BIN"docker pull mongo:4
 "$BIN"docker build -t my/starterkit-node .
 

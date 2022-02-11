@@ -17,7 +17,7 @@ it('It should be possible to log in and edit a node', async function() {
     await page.setViewport({ width: 1280, height: 800 });
     console.log('go to the home page');
     await page.goto('http://node:8080');
-    await testBase.assertInSourceCode(page, 'Hello world');
+    await testBase.assertInSourceCode(page, 'Send Message');
     await testBase.screenshot(page, 'home', await page.content());
   }
   catch (error) {

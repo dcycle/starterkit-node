@@ -17,7 +17,7 @@ services:
       - MONGO_PORT=27017
       - MONGO_DB=login
     ports:
-      - "8080"
+      - "${DOCKERPORT}:8080"
 
   mongo:
     image: mongo:4

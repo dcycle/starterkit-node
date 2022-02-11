@@ -32,10 +32,25 @@
         getMessages()
       })
 
+      function htmlDecode(value) {
+        // https://stackoverflow.com/a/36138117/1207752
+        return $("<textarea/>").html(value).text();
+      }
+
+      function htmlEncode(value) {
+        // https://stackoverflow.com/a/36138117/1207752
+        return $('<textarea/>').text(value).html();
+      }
+
+      function formatMessage(message) {
+        let ret = '<div class="message-single">';
+        ret += '<h4>' + htmlEncode(message.name) + '</h4>';
+        ret += '<p>' + htmlEncode(message.message) +'</p>';
+        return ret + '</div>';
+      }
+
       function addMessages(message) {
-        $("#messages").append(`
-          <h4> ${message.name} </h4>
-          <p>  ${message.message} </p>`)
+        $("#messages").append(formatMessage(message));
       }
 
       function getMessages(){

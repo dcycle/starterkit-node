@@ -6,38 +6,17 @@ set -e
 
 ENVLOC="$BASE/.env"
 
+source ./config/versioned
 if [ ! -f "$ENVLOC" ]; then
   echo " => $ENVLOC did not exist, creating it."
-  cp "$BASE"/scripts/lib/examples/env.txt "$ENVLOC"
-  echo " => Adding random MONGO_USER."
-  echo "export MONGO_USER=$("$BASE"/scripts/lib/generate-uuid.sh)" >> "$ENVLOC"
-  echo " => Adding random MONGO_PASS."
-  echo "export MONGO_PASS=$("$BASE"/scripts/lib/generate-uuid.sh)" >> "$ENVLOC"
-  echo " => ENVIRONMENT_USAGE set to dev; edit the .dev file and redeploy for prod."
-  echo "export ENVIRONMENT_USAGE=dev"
+  echo "# See $BASE/scripts/lib/examples/env.txt" > "$ENVLOC"
 fi
-
-source ./config/versioned
 source "$ENVLOC"
 
-array=( \
-MONGO_USER \
-MONGO_PASS \
-ENVIRONMENT_USAGE \
-DOCKERNETWORK \
-)
-for i in "${array[@]}"
-do
-  echo " => Checking environment variable $i"
-  if [ -z "$$i" ]; then
-    >&2 echo " => Environment variable $i does not exist"
-    >&2 echo " => Please edit $ENVLOC"
-    exit 2
-  else
-    echo " => Environment variable $i exists"
-  fi
-done
+grep MONGO_USER "$ENVLOC" > /dev/null || echo "export MONGO_USER=$("$BASE"/scripts/lib/generate-uuid.sh)" >> "$ENVLOC"
+grep MONGO_PASS "$ENVLOC" > /dev/null || echo "export MONGO_PASS=$("$BASE"/scripts/lib/generate-uuid.sh)" >> "$ENVLOC"
+grep ENVIRONMENT_USAGE "$ENVLOC" > /dev/null || echo "export ENVIRONMENT_USAGE=dev" >> "$ENVLOC"
+grep DOCKERPORT "$ENVLOC" > /dev/null || echo "export DOCKERPORT=$DOCKERPORT" >> "$ENVLOC"
+grep DOCKERNETWORK "$ENVLOC" > /dev/null || echo "export DOCKERNETWORK=$DOCKERNETWORK" >> "$ENVLOC"
 
-echo " => Add some variables to $ENVLOC if they are not there"
-echo " => These are required by docker-compose.yml"
-./scripts/lib/add-to-env.sh "$ENVLOC" "DOCKERNETWORK" "$DOCKERNETWORK"
+source "$ENVLOC"
