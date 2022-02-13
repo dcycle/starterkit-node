@@ -6,9 +6,9 @@ set -e
 source ./scripts/lib/start.source.sh
 
 echo "$MYINDENT"'=> Linting all file types'
-"$BASE"/scripts/linters/lint-shell.sh
-"$BASE"/scripts/linters/lint-yaml.sh
-"$BASE"/scripts/linters/lint-js.sh
-"$BASE"/scripts/linters/lint-json.sh
+./scripts/linters/lint-shell.sh
+./scripts/linters/lint-yaml.sh
+./scripts/linters/lint-js.sh
+./scripts/linters/lint-json.sh
 
 source ./scripts/lib/end.source.sh

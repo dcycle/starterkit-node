@@ -1,1 +1,0 @@
-echo 'destroy called'

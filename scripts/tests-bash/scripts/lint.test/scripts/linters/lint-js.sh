@@ -1,1 +1,0 @@
-echo 'lint js called'

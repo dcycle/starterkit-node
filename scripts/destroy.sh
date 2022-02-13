@@ -5,12 +5,12 @@
 set -e
 
 source ./scripts/lib/start.source.sh
-source "$BASE"/scripts/lib/source-env.source.sh
+source ./scripts/lib/source-env.source.sh
 
-"$BASE"/scripts/docker-compose.sh down -v
+./scripts/docker-compose.sh down -v
 docker network rm "$DOCKERNETWORK" || echo 'docker network cannot be deleted; moving on.'
 
-rm -rf "$BASE"/do-not-commit
-rm "$BASE"/.env
+rm -rf ./do-not-commit
+rm ./.env
 
 source ./scripts/lib/end.source.sh

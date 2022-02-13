@@ -6,8 +6,8 @@ set -e
 
 source ./scripts/lib/start.source.sh
 
-source "$BASE"/scripts/lib/source-env.source.sh
+source ./scripts/lib/source-env.source.sh
 
-"$BASE"/scripts/docker-compose.sh down
+./scripts/docker-compose.sh down
 
 source ./scripts/lib/end.source.sh

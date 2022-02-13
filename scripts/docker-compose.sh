@@ -19,6 +19,6 @@ fi
 
 # Cannot quote $DOCKER_COMPOSE_FILES here
 # shellcheck disable=SC2086
-"$BIN"docker-compose $COMPOSEFILES "$@"
+docker-compose $COMPOSEFILES "$@"
 
 source ./scripts/lib/start.source.sh

@@ -8,8 +8,7 @@ set -e
 source ./scripts/lib/start.source.sh
 
 echo "$MYINDENT"'=> Running all relatively fast tests.'
-"$BASE"/scripts/lint.sh
-"$BASE"/scripts/tests-bash/test.sh
-"$BASE"/scripts/unit-tests-node.sh
+./scripts/lint.sh
+./scripts/unit-tests-node.sh
 
 source ./scripts/lib/end.source.sh

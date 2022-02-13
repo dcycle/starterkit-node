@@ -11,19 +11,19 @@ source ./scripts/lib/start.source.sh
 # We need to create some directories because if they are created with
 # ./scripts/end-to-end-tests.sh, Circle CI will not be able to delete them
 # within the destroy.sh script.
-mkdir -p "$BASE"/do-not-commit/screenshots
-mkdir -p "$BASE"/do-not-commit/dom-captures
+mkdir -p ./do-not-commit/screenshots
+mkdir -p ./do-not-commit/dom-captures
 
 echo "$MYINDENT"'=> Initial deployment'
-"$BASE"/scripts/deploy.sh
+./scripts/deploy.sh
 echo "$MYINDENT"'=> Running ./scripts/test.sh'
-"$BASE"/scripts/test.sh
+./scripts/test.sh
 echo "$MYINDENT"'=> Incremental deployment'
-"$BASE"/scripts/deploy.sh
+./scripts/deploy.sh
 echo "$MYINDENT"'=> End-to-end tests'
-"$BASE"/scripts/end-to-end-tests.sh
+./scripts/end-to-end-tests.sh
 echo "$MYINDENT"'=> Destroy'
-"$BASE"/scripts/destroy.sh
+./scripts/destroy.sh
 
 source ./scripts/lib/end.source.sh
 

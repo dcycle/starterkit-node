@@ -13,8 +13,8 @@ if [ ! -f "$ENVLOC" ]; then
 fi
 source "$ENVLOC"
 
-grep MONGO_USER "$ENVLOC" > /dev/null || echo "export MONGO_USER=$("$BASE"/scripts/lib/generate-uuid.sh)" >> "$ENVLOC"
-grep MONGO_PASS "$ENVLOC" > /dev/null || echo "export MONGO_PASS=$("$BASE"/scripts/lib/generate-uuid.sh)" >> "$ENVLOC"
+grep MONGO_USER "$ENVLOC" > /dev/null || echo "export MONGO_USER=$(./scripts/lib/generate-uuid.sh)" >> "$ENVLOC"
+grep MONGO_PASS "$ENVLOC" > /dev/null || echo "export MONGO_PASS=$(./scripts/lib/generate-uuid.sh)" >> "$ENVLOC"
 grep ENVIRONMENT_USAGE "$ENVLOC" > /dev/null || echo "export ENVIRONMENT_USAGE=dev" >> "$ENVLOC"
 grep DOCKERPORT "$ENVLOC" > /dev/null || echo "export DOCKERPORT=$DOCKERPORT" >> "$ENVLOC"
 grep DOCKERNETWORK "$ENVLOC" > /dev/null || echo "export DOCKERNETWORK=$DOCKERNETWORK" >> "$ENVLOC"
