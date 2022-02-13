@@ -26,3 +26,7 @@ echo "$MYINDENT"'=> Destroy'
 "$BASE"/scripts/destroy.sh
 
 source ./scripts/lib/end.source.sh
+
+echo ""
+echo " ===> All done running continuous integration tests!"
+echo ""
