@@ -5,7 +5,7 @@ set -e
 
 source ./scripts/lib/start.source.sh
 
-echo "$MYINDENT"'=> Running unit tests on node scripts.'
+echo "$MYINDENT"'=> Running unit tests on node scripts (2).'
 "$BIN"docker-compose exec node /bin/bash -c 'npm test'
 
 source ./scripts/lib/end.source.sh
