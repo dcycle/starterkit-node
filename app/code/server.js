@@ -6,12 +6,15 @@
 
 (function () {
   'use strict';
-
   const express = require('express');
   const mongoose = require('mongoose');
   const database = require('./database.js');
 
-  database.init();
+  const dbUrl = database.url();
+
+  mongoose.connect(dbUrl, (err) => {
+    console.log('mongodb connected',err);
+  });
 
   var Message = mongoose.model('Message',{ name : String, message : String});
 

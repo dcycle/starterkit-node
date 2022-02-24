@@ -13,10 +13,12 @@
   const Env = {
     required: function(name) {
       const candidate = process.env[name];
+      console.log(name);
       if (typeof candidate === 'undefined') {
         throw Error('Environemnt variable ' + name + ' is required.');
       }
-      return candidate;
+      console.log(candidate);
+      return String(candidate);
     },
   };
 

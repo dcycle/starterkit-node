@@ -13,21 +13,16 @@
   const Database = {
     url: function() {
       return 'mongodb://'
-        + env.required('MONGO_USER') + ':'
-        + env.required('MONGO_PASS') + '@' +
-        + env.required('MONGO_HOST') + ':' +
-        + env.required('MONGO_PORT') + '/' +
-        + env.required('MONGO_DB') + '?authSource=admin';
-    },
-    init: function() {
-      mongoose.connect(this.url(), (err) => {
-        throw Error('Could not connect to database ' + err);
-      });
+        + String(env.required('MONGO_USER')) + ':'
+        + String(env.required('MONGO_PASS')) + '@'
+        + String(env.required('MONGO_HOST')) + ':'
+        + String(env.required('MONGO_PORT')) + '/'
+        + String(env.required('MONGO_DB')) + '?authSource=admin';
     },
   };
 
-  exports.init = function () {
-    Database.init();
+  exports.url = function () {
+    return Database.url();
   }
 
 }());
