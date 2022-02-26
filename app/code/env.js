@@ -1,14 +1,9 @@
 /**
- * My database module.
- *
- * Interact with the database.
+ * Get environment variables.
  */
 
 (function () {
   'use strict';
-
-  const mongoose = require('mongoose');
-  const env = require('./env.js');
 
   const Env = {
     required: function(name) {
