@@ -8,6 +8,7 @@ mv /docker-resources/node/package.json /usr/src/app/package.json
 
 npm install \
   body-parser \
+  connect-ensure-login \
   express \
   express-session \
   http \

@@ -54,6 +54,11 @@
   app.use(passport.initialize());
   app.use(passport.session());
 
+  // Passport authentication.
+  passport.use(UserDetails.createStrategy());
+  passport.serializeUser(UserDetails.serializeUser());
+  passport.deserializeUser(UserDetails.deserializeUser());
+
   app.get('/messages', (req, res) => {
     Message.find({},(err, messages)=> {
       res.send(messages);
