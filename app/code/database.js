@@ -10,7 +10,12 @@
   const mongoose = require('mongoose');
   const env = require('./env.js');
 
-  const Database = {
+  module.exports = {
+    init: function() {
+      mongoose.connect(this.url(), (err) => {
+        console.log('mongodb connected',err);
+      });
+    },
     url: function() {
       const user = String(env.required('MONGO_USER'));
       const pass = String(env.required('MONGO_PASS'));
@@ -20,10 +25,6 @@
 
       return 'mongodb://' + user + ':' + pass + '@' + host + ':' + port + '/' + db + '?authSource=admin';
     },
-  };
-
-  exports.url = function () {
-    return Database.url();
   };
 
 }());

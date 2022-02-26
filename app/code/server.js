@@ -10,11 +10,7 @@
   const mongoose = require('mongoose');
   const database = require('./database.js');
 
-  const dbUrl = database.url();
-
-  mongoose.connect(dbUrl, (err) => {
-    console.log('mongodb connected',err);
-  });
+  database.init();
 
   var Message = mongoose.model('Message',{ name : String, message : String});
 
