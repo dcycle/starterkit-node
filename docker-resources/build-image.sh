@@ -13,5 +13,6 @@ npm install \
   http \
   mongoose \
   passport \
+  passport-local-mongoose \
   socket.io \
   && echo "Done with npm install."

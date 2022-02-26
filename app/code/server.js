@@ -9,12 +9,34 @@
   const express = require('express');
   const mongoose = require('mongoose');
   const database = require('./database.js');
-  const authentication = require('./authentication.js');
+  const env = require('./env.js');
+  const passport = require('passport');
+  const passportLocalMongoose = require('passport-local-mongoose');
 
   database.init();
-  authentication.init();
 
-  var Message = mongoose.model('Message',{ name : String, message : String});
+  // express-session is required for login/authentication.
+  const secret = String(env.required('SESSION_SECRET'));
+  const expressSession = require('express-session')({
+    secret: secret,
+    resave: false,
+    saveUninitialized: false
+  });
+
+  // Set up the database for messages.
+  var Message = mongoose.model('Message', {
+    name : String,
+    message : String,
+  });
+
+  // Set up the database for usernames and hashed passwords.
+  const Schema = mongoose.Schema;
+  const UserDetail = new Schema({
+    username: String,
+    password: String
+  });
+  UserDetail.plugin(passportLocalMongoose);
+  const UserDetails = mongoose.model('userInfo', UserDetail, 'userInfo');
 
   // Constants.
   const PORT = 8080;
@@ -24,10 +46,13 @@
   const app = express();
   const http = require('http').Server(app);
 
+  app.use(expressSession);
   app.use(express.static('/usr/src/app/static'));
-  var bodyParser = require('body-parser');
+  const bodyParser = require('body-parser');
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({extended: true}));
+  app.use(passport.initialize());
+  app.use(passport.session());
 
   app.get('/messages', (req, res) => {
     Message.find({},(err, messages)=> {
@@ -35,7 +60,7 @@
     });
   });
 
-  var io = require('socket.io')(http);
+  const io = require('socket.io')(http);
 
   io.on('connection', () =>{
     console.log('a user is connected');
@@ -48,10 +73,11 @@
   });
 
   app.post('/messages', (req, res) => {
-    var message = new Message(req.body);
+    const message = new Message(req.body);
     message.save((err) =>{
-      if(err)
+      if(err) {
         sendStatus(500);
+      }
       io.emit('message', req.body);
       res.sendStatus(200);
     });

@@ -9,6 +9,9 @@ source ./scripts/lib/start.source.sh
 # See http://patorjk.com/software/taag/#p=display&f=Ivrit&t=D8%20Starterkit%0A
 cat ./scripts/lib/my-ascii-art.txt
 
+echo ""
+echo ""
+
 source ./scripts/lib/source-env.source.sh
 docker pull node:lts
 docker pull mongo:4
