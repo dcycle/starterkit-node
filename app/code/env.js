@@ -5,7 +5,7 @@
 (function () {
   'use strict';
 
-  const Env = {
+  module.exports = {
     required: function(name) {
       const candidate = process.env[name];
       console.log(name);
@@ -15,10 +15,6 @@
       console.log(candidate);
       return String(candidate);
     },
-  };
-
-  exports.required = function (name) {
-    return Env.required(name);
   };
 
 }());
