@@ -6,8 +6,12 @@ set -e
 
 mv /docker-resources/node/package.json /usr/src/app/package.json
 
-npm install express
-npm install mongoose
-npm install body-parser
-npm install socket.io
-npm install http
+npm install \
+  body-parser \
+  express \
+  express-session \
+  http \
+  mongoose \
+  passport \
+  socket.io \
+  && echo "Done with npm install."

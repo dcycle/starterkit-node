@@ -12,6 +12,7 @@
 
   module.exports = {
     init: function() {
+      // See https://mongoosejs.com/docs/connections.html.
       mongoose.connect(this.url(), (err) => {
         console.log('mongodb connected',err);
       });

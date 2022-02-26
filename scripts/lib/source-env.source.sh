@@ -13,6 +13,7 @@ if [ ! -f "$ENVLOC" ]; then
 fi
 source "$ENVLOC"
 
+grep SESSION_SECRET "$ENVLOC" > /dev/null || echo "export SESSION_SECRET=$(./scripts/lib/generate-uuid.sh)" >> "$ENVLOC"
 grep MONGO_USER "$ENVLOC" > /dev/null || echo "export MONGO_USER=$(./scripts/lib/generate-uuid.sh)" >> "$ENVLOC"
 grep MONGO_PASS "$ENVLOC" > /dev/null || echo "export MONGO_PASS=$(./scripts/lib/generate-uuid.sh)" >> "$ENVLOC"
 grep ENVIRONMENT_USAGE "$ENVLOC" > /dev/null || echo "export ENVIRONMENT_USAGE=dev" >> "$ENVLOC"

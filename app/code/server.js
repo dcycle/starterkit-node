@@ -9,8 +9,10 @@
   const express = require('express');
   const mongoose = require('mongoose');
   const database = require('./database.js');
+  const authentication = require('./authentication.js');
 
   database.init();
+  authentication.init();
 
   var Message = mongoose.model('Message',{ name : String, message : String});
 
@@ -25,7 +27,7 @@
   app.use(express.static('/usr/src/app/static'));
   var bodyParser = require('body-parser');
   app.use(bodyParser.json());
-  app.use(bodyParser.urlencoded({extended: false}));
+  app.use(bodyParser.urlencoded({extended: true}));
 
   app.get('/messages', (req, res) => {
     Message.find({},(err, messages)=> {
