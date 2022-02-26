@@ -12,17 +12,18 @@
 
   const Database = {
     url: function() {
-      return 'mongodb://'
-        + String(env.required('MONGO_USER')) + ':'
-        + String(env.required('MONGO_PASS')) + '@'
-        + String(env.required('MONGO_HOST')) + ':'
-        + String(env.required('MONGO_PORT')) + '/'
-        + String(env.required('MONGO_DB')) + '?authSource=admin';
+      const user = String(env.required('MONGO_USER'));
+      const pass = String(env.required('MONGO_PASS'));
+      const host = String(env.required('MONGO_HOST'));
+      const port = String(env.required('MONGO_PORT'));
+      const db = String(env.required('MONGO_DB'));
+
+      return 'mongodb://' + user + ':' + pass + '@' + host + ':' + port + '/' + db + '?authSource=admin';
     },
   };
 
   exports.url = function () {
     return Database.url();
-  }
+  };
 
 }());

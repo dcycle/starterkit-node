@@ -12,3 +12,11 @@ echo "$MYINDENT"'=> Running all relatively fast tests.'
 ./scripts/unit-tests-node.sh
 
 source ./scripts/lib/end.source.sh
+
+echo ""
+echo "."
+echo ".."
+echo " --- fast tests complete ---"
+echo ".."
+echo "."
+echo ""

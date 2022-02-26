@@ -19,6 +19,6 @@
 
   exports.required = function (name) {
     return Env.required(name);
-  }
+  };
 
 }());
