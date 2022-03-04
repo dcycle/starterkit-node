@@ -29,15 +29,23 @@ module.exports = {
     try {
       // See https://mongoosejs.com/docs/connections.html.
       this.mongoose().connect(this.uri(), {}).then(
-        () => callbackOK(),
-        err => callbackInitError(err),
+        () => {
+          console.log('Connection to database OK.');
+        },
+        err => {
+          console.log('Connection to database could not be established. Shutting down. ' + err);
+          process.exit(1);
+        },
       );
       this.mongoose().connection.on('error',
-        err => callbackError(err),
+        err => {
+          console.log('Error during database operation. Will try to continue. ' + err);
+        },
       );
     }
     catch (err) {
-      callbackInitError(err);
+      console.log('An error was thrown during database initialization. ' + err);
+      process.exit(1);
     }
   },
 
