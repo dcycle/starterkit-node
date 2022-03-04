@@ -26,6 +26,12 @@ echo 'The network is then referenced in docker-compose.yml.'
 echo 'See https://github.com/docker/compose/issues/3736.'
 docker network ls | grep "$DOCKERNETWORK" || docker network create "$DOCKERNETWORK"
 
+if [ "$ENVIRONMENT_USAGE" != 'prod' ]; then
+  docker build --progress=plain -f="Dockerfile-dev" .
+else
+  docker build --progress=plain -f="Dockerfile" .
+fi
+
 ./scripts/docker-compose.sh up -d --build
 ./scripts/docker-compose.sh restart
 ./scripts/docker-compose.sh ps

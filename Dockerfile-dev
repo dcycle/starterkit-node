@@ -1,4 +1,9 @@
-FROM my/starterkit-node
+FROM node:lts
+
+RUN mkdir -p /usr/src/app
+WORKDIR /usr/src/app
+
+ADD docker-resources /docker-resources
 
 RUN /docker-resources/build-dev.sh
 

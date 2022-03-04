@@ -10,9 +10,9 @@
   const test = require('ava');
   const sinon = require('sinon');
 
-  const my = require('../app/database.js');
+  const my = require('/mycode/database.js');
 
-  test('URL is correct', t => {
+  test('URI is correct', t => {
     [
       {
         valid: true,
@@ -34,14 +34,14 @@
       });
 
       try {
-        const output = my.url();
+        const output = my.uri();
         t.true(!data.expectError);
+        t.true(output == data.expected, output + '==' + data.expected);
       }
       catch (e) {
         t.true(data.expectError);
+        t.true(typeof output === 'undefined', 'output should be undefined');
       }
-
-      t.true(output == data.expected, output + '==' + data.expected);
 
       stub1.restore();
     });

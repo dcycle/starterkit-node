@@ -16,11 +16,16 @@
   const userpass = require('./collection/userpass.js');
   const bodyParser = require('body-parser');
 
-  const PORT = 8080;
-
   module.exports = {
-    run: function() {
-      database.init();
+    run: function(port) {
+      database.init(function() {
+        console.log('Connection to database OK.');
+      }, function(err) {
+        console.log('Connection to database could not be established. Shutting down. ' + err);
+        process.exit(1);
+      }, function(err) {
+        console.log('Error during database operation. Will try to continue. ' + err);
+      });
 
       webserver.app().use(authentication.expressSession());
       webserver.app().use(express.static('/usr/src/app/static'));
@@ -107,8 +112,8 @@
         });
       });
 
-      webserver.http().listen(PORT, function() {
-       console.log('listening on *:' + PORT);
+      webserver.http().listen(port, function() {
+       console.log('listening on *:' + port);
       });
     },
   };

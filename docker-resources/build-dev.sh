@@ -4,5 +4,9 @@
 #
 set -e
 
-npm install --save-dev mocha chai sinon
+/docker-resources/build-image.sh
+npm install --save-dev \
+  mocha \
+  chai \
+  sinon
 npm install forever -g

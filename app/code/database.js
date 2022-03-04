@@ -1,34 +1,54 @@
+// @flow
 /**
  * My database module.
  *
  * Interact with the database.
  */
+'use strict';
 
-(function () {
-  'use strict';
+module.exports = {
 
-  const mongoose = require('mongoose');
-  const env = require('./env.js');
+  /** Mockable wrapper around mongoose. */
+  mongoose: function() /*:: : Object */ {
+    // $FlowExpectedError
+    return require('mongoose');
+  },
 
-  module.exports = {
-    env: function() {
-      return env;
-    },
-    init: function() {
+  /** Mockable wrapper around env. */
+  env: function() /*:: : Object */ {
+    // $FlowExpectedError
+    return require('./env.js');
+  },
+
+  /** Initialize the connection to Mongoose. */
+  init: function(
+    callbackOK /*:: : () => number */,
+    callbackInitError /*:: : (x: string) => null */,
+    callbackError /*:: : (x: string) => null */) {
+
+    try {
       // See https://mongoosejs.com/docs/connections.html.
-      mongoose.connect(this.url(), (err) => {
-        console.log('mongodb connected',err);
-      });
-    },
-    url: function() {
-      const user = String(this.env().required('MONGO_USER'));
-      const pass = String(this.env().required('MONGO_PASS'));
-      const host = String(this.env().required('MONGO_HOST'));
-      const port = String(this.env().required('MONGO_PORT'));
-      const db = String(this.env().required('MONGO_DB'));
+      this.mongoose().connect(this.uri(), {}).then(
+        () => callbackOK(),
+        err => callbackInitError(err),
+      );
+      this.mongoose().connection.on('error',
+        err => callbackError(err),
+      );
+    }
+    catch (err) {
+      callbackInitError(err);
+    }
+  },
 
-      return 'mongodb://' + user + ':' + pass + '@' + host + ':' + port + '/' + db + '?authSource=admin';
-    },
-  };
+  /** Get the connection URI for the Mongoose database. */
+  uri: function() /*:: : string */ {
+    const user = String(this.env().required('MONGO_USER'));
+    const pass = String(this.env().required('MONGO_PASS'));
+    const host = String(this.env().required('MONGO_HOST'));
+    const port = String(this.env().required('MONGO_PORT'));
+    const db = String(this.env().required('MONGO_DB'));
 
-}());
+    return 'mongodb://' + user + ':' + pass + '@' + host + ':' + port + '/' + db + '?authSource=admin';
+  },
+};
