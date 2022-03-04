@@ -8,53 +8,39 @@
   const express = require('express');
   const mongoose = require('mongoose');
   const database = require('./database.js');
+  const webserver = require('./webserver.js');
   const authentication = require('./authentication.js');
   const env = require('./env.js');
   const passport = require('passport');
-  const passportLocalMongoose = require('passport-local-mongoose');
   const message = require('./collection/message.js');
+  const userpass = require('./collection/userpass.js');
+  const bodyParser = require('body-parser');
+
+  const PORT = 8080;
 
   module.exports = {
     run: function() {
       database.init();
 
-      // Set up the database for usernames and hashed passwords.
-      const Schema = mongoose.Schema;
-      const UserDetail = new Schema({
-        username: String,
-        password: String
-      });
-      UserDetail.plugin(passportLocalMongoose);
-      const UserDetails = mongoose.model('userInfo', UserDetail, 'userInfo');
-
-      // Constants.
-      const PORT = 8080;
-      const HOST = '0.0.0.0';
-
-      // App.
-      const app = express();
-      const http = require('http').Server(app);
-
-      app.use(authentication.expressSession());
-      app.use(express.static('/usr/src/app/static'));
-      const bodyParser = require('body-parser');
-      app.use(bodyParser.json());
-      app.use(bodyParser.urlencoded({extended: true}));
-      app.use(passport.initialize());
-      app.use(passport.session());
+      webserver.app().use(authentication.expressSession());
+      webserver.app().use(express.static('/usr/src/app/static'));
+      webserver.app().use(bodyParser.json());
+      webserver.app().use(bodyParser.urlencoded({extended: true}));
+      webserver.app().use(passport.initialize());
+      webserver.app().use(passport.session());
 
       // Passport authentication.
-      passport.use(UserDetails.createStrategy());
-      passport.serializeUser(UserDetails.serializeUser());
-      passport.deserializeUser(UserDetails.deserializeUser());
+      passport.use(userpass.model().createStrategy());
+      passport.serializeUser(userpass.model().serializeUser());
+      passport.deserializeUser(userpass.model().deserializeUser());
 
-      app.get('/messages', (req, res) => {
+      webserver.app().get('/messages', (req, res) => {
         message.model().find({},(err, messages)=> {
           res.send(messages);
         });
       });
 
-      const io = require('socket.io')(http);
+      const io = require('socket.io')(webserver.http());
 
       io.on('connection', () =>{
         console.log('a user is connected');
@@ -68,7 +54,7 @@
 
       const connectEnsureLogin = require('connect-ensure-login');
 
-      app.post('/login', (req, res, next) => {
+      webserver.app().post('/login', (req, res, next) => {
         passport.authenticate('local',
         (err, user, info) => {
           if (err) {
@@ -90,27 +76,27 @@
         })(req, res, next);
       });
 
-      app.get('/login',
+      webserver.app().get('/login',
         (req, res) => res.sendFile('private-html/login.html',
         { root: __dirname })
       );
 
-      app.get('/',
+      webserver.app().get('/',
         connectEnsureLogin.ensureLoggedIn(),
         (req, res) => res.sendFile('private-html/index.html', {root: __dirname})
       );
 
-      app.get('/private',
+      webserver.app().get('/private',
         connectEnsureLogin.ensureLoggedIn(),
         (req, res) => res.sendFile('private-html/private.html', {root: __dirname})
       );
 
-      app.get('/user',
+      webserver.app().get('/user',
         connectEnsureLogin.ensureLoggedIn(),
         (req, res) => res.send({user: req.user})
       );
 
-      app.post('/messages', (req, res) => {
+      webserver.app().post('/messages', (req, res) => {
         const message = new Message(req.body);
         message.save((err) =>{
           if(err) {
@@ -121,11 +107,9 @@
         });
       });
 
-      // app.listen(PORT, HOST);
-      http.listen(PORT, function() {
+      webserver.http().listen(PORT, function() {
        console.log('listening on *:' + PORT);
       });
-      console.log(`Running on http://${HOST}:${PORT}`);
     },
   };
 
