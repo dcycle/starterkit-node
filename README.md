@@ -15,10 +15,17 @@ Install Docker and run:
 
     ./scripts/deploy.sh
 
+Authentication
+-----
+
+The system automatically creates a user account for you, with the username admin and a random password.
+
+You can reset the password by running ./scripts/uli.sh.
+
 Caveats
 -----
 
-This system uses UUIDs as random strings, for example in `./scripts/lib/source-env.source.sh`. According to [Moving away from UUIDs, Neil Madden, 30 August, 2018, neilmadden.blog](https://neilmadden.blog/2018/08/30/moving-away-from-uuids/), there are more secure ways to generate random strings, which you might consider in your own application.
+This system uses UUIDs as random strings in some cases, for example in `./scripts/lib/source-env.source.sh`. According to [Moving away from UUIDs, Neil Madden, 30 August, 2018, neilmadden.blog](https://neilmadden.blog/2018/08/30/moving-away-from-uuids/), there are more secure ways to generate random strings, which you might consider in your own application.
 
 Resources
 -----
