@@ -47,6 +47,7 @@ module.exports = {
       console.log('An error was thrown during database initialization. ' + err);
       process.exit(1);
     }
+    return this;
   },
 
   /** Get the connection URI for the Mongoose database. */

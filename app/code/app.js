@@ -20,6 +20,9 @@
     database: function() {
       return require('./database.js');
     },
+    mail: function() {
+      return require('./mail.js');
+    },
     webserver: function() {
       return require('./webserver.js');
     },
@@ -27,6 +30,7 @@
       return [
         this.database(),
         this.webserver(),
+        this.mail(),
       ];
     },
     run: function(port) {

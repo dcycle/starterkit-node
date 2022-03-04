@@ -1,0 +1,15 @@
+[include]
+[libs]
+flow-typed
+[options]
+all=true
+[ignore]
+<PROJECT_ROOT>/app.js
+<PROJECT_ROOT>/authentication.js
+<PROJECT_ROOT>/collection/message.js
+<PROJECT_ROOT>/collection/userpass.js
+<PROJECT_ROOT>/env.js
+<PROJECT_ROOT>/mylogger.js
+<PROJECT_ROOT>/random.js
+<PROJECT_ROOT>/server.js
+<PROJECT_ROOT>/tools/reset-password.js

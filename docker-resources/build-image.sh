@@ -13,6 +13,7 @@ npm install \
   express-session \
   http \
   mongoose \
+  nodemailer \
   passport \
   passport-local-mongoose \
   socket.io \

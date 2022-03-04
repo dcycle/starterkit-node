@@ -2,6 +2,12 @@
 version: '2'
 
 services:
+  mail:
+    # Dummy email client for development, see ./README.md.
+    image: mailhog/mailhog
+    ports:
+      - "${DOCKERMAILPORT}:8025"
+
   node:
     build:
       context: .

@@ -3,27 +3,27 @@
  * Webserver.
  */
 
-(function () {
-  'use strict';
+'use strict';
 
-  module.exports = {
+module.exports = {
 
-    /** Initialize the webserver. */
-    init: function() {
-      const express = require('express');
-      this.privateApp = express();
-      this.privateHttp = require('http').Server(this.privateApp);
-    },
+  /** Initialize the webserver. */
+  init: function() {
+    // $FlowExpectedError
+    const express = require('express');
+    this.privateApp = express();
+    // $FlowExpectedError
+    this.privateHttp = require('http').Server(this.privateApp);
+    return this;
+  },
 
-    /** Get the app instance. */
-    app: function() {
-      return this.privateApp;
-    },
+  /** Get the app instance. */
+  app: function() /*:: : Object */ {
+    return this.privateApp;
+  },
 
-    /** Get the http server instance. */
-    http: function() {
-      return this.privateHttp;
-    },
-  };
-
-}());
+  /** Get the http server instance. */
+  http: function() /*:: : Object */ {
+    return this.privateHttp;
+  },
+};

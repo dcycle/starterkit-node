@@ -18,6 +18,9 @@ grep MONGO_USER "$ENVLOC" > /dev/null || echo "export MONGO_USER=$(./scripts/lib
 grep MONGO_PASS "$ENVLOC" > /dev/null || echo "export MONGO_PASS=$(./scripts/lib/generate-uuid.sh)" >> "$ENVLOC"
 grep ENVIRONMENT_USAGE "$ENVLOC" > /dev/null || echo "export ENVIRONMENT_USAGE=dev" >> "$ENVLOC"
 grep DOCKERPORT "$ENVLOC" > /dev/null || echo "export DOCKERPORT=$DOCKERPORT" >> "$ENVLOC"
+grep DOCKERMAILPORT "$ENVLOC" > /dev/null || echo "export DOCKERMAILPORT=$DOCKERMAILPORT" >> "$ENVLOC"
 grep DOCKERNETWORK "$ENVLOC" > /dev/null || echo "export DOCKERNETWORK=$DOCKERNETWORK" >> "$ENVLOC"
+grep SMTP_HOST "$ENVLOC" > /dev/null || echo "export SMTP_HOST=mail" >> "$ENVLOC"
+grep SMTP_PORT "$ENVLOC" > /dev/null || echo "export SMTP_PORT=8025" >> "$ENVLOC"
 
 source "$ENVLOC"
