@@ -17,8 +17,18 @@
   const bodyParser = require('body-parser');
 
   module.exports = {
+    database: function() {
+      return require('./database.js');
+    },
+    modules: function() {
+      return [
+        this.database(),
+      ];
+    },
     run: function(port) {
-      database.init();
+      this.modules().forEach(function(module) {
+        module.init();
+      });
 
       webserver.app().use(authentication.expressSession());
       webserver.app().use(express.static('/usr/src/app/static'));
