@@ -27,9 +27,9 @@ echo 'See https://github.com/docker/compose/issues/3736.'
 docker network ls | grep "$DOCKERNETWORK" || docker network create "$DOCKERNETWORK"
 
 if [ "$ENVIRONMENT_USAGE" != 'prod' ]; then
-  docker build --progress=plain -f="Dockerfile-dev" .
+  docker build -f="Dockerfile-dev" .
 else
-  docker build --progress=plain -f="Dockerfile" .
+  docker build -f="Dockerfile" .
 fi
 
 ./scripts/docker-compose.sh up -d --build
