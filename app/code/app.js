@@ -8,28 +8,15 @@
   const express = require('express');
   const mongoose = require('mongoose');
   const database = require('./database.js');
+  const authentication = require('./authentication.js');
   const env = require('./env.js');
   const passport = require('passport');
   const passportLocalMongoose = require('passport-local-mongoose');
+  const message = require('./collection/message.js');
 
   module.exports = {
     run: function() {
-
       database.init();
-
-      // express-session is required for login/authentication.
-      const secret = String(env.required('SESSION_SECRET'));
-      const expressSession = require('express-session')({
-        secret: secret,
-        resave: false,
-        saveUninitialized: false
-      });
-
-      // Set up the database for messages.
-      var Message = mongoose.model('Message', {
-        name : String,
-        message : String,
-      });
 
       // Set up the database for usernames and hashed passwords.
       const Schema = mongoose.Schema;
@@ -48,7 +35,7 @@
       const app = express();
       const http = require('http').Server(app);
 
-      app.use(expressSession);
+      app.use(authentication.expressSession());
       app.use(express.static('/usr/src/app/static'));
       const bodyParser = require('body-parser');
       app.use(bodyParser.json());
@@ -62,7 +49,7 @@
       passport.deserializeUser(UserDetails.deserializeUser());
 
       app.get('/messages', (req, res) => {
-        Message.find({},(err, messages)=> {
+        message.model().find({},(err, messages)=> {
           res.send(messages);
         });
       });
@@ -73,7 +60,7 @@
         console.log('a user is connected');
       });
 
-      Message.find({},(err, messages)=> {
+      message.model().find({},(err, messages)=> {
         console.log('***');
         console.log(messages);
         console.log('***');
