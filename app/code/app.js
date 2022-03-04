@@ -97,8 +97,8 @@
       );
 
       webserver.app().post('/messages', (req, res) => {
-        const message = new Message(req.body);
-        message.save((err) =>{
+        const myMessage = new message.model()(req.body);
+        myMessage.save((err) =>{
           if(err) {
             sendStatus(500);
           }
