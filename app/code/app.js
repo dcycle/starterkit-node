@@ -20,9 +20,13 @@
     database: function() {
       return require('./database.js');
     },
+    webserver: function() {
+      return require('./webserver.js');
+    },
     modules: function() {
       return [
         this.database(),
+        this.webserver(),
       ];
     },
     run: function(port) {

@@ -1,3 +1,4 @@
+// @flow
 /**
  * Webserver.
  */
@@ -5,16 +6,17 @@
 (function () {
   'use strict';
 
-  const express = require('express');
-  const app = express();
-  const http = require('http').Server(app);
-
   module.exports = {
+    init: function() {
+      const express = require('express');
+      this.privateApp = express();
+      this.privateHttp = require('http').Server(this.privateApp);
+    },
     app: function() {
-      return app;
+      return this.privateApp;
     },
     http: function() {
-      return http;
+      return this.privateHttp;
     },
   };
 
