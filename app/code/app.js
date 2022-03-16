@@ -13,6 +13,9 @@ class Singleton {
   random() {
     return require('./random.js');
   }
+  express() {
+    return require('express');
+  }
   async init() {
     const database = this.database();
     await this.authentication().init(database);
@@ -25,7 +28,6 @@ class Singleton {
     port /*:: : string */,
     staticPath /*:: : string */
   ) {
-    const express = require('express');
     const mongoose = require('mongoose');
 
     var Message = mongoose.model('Message',{ name : String, message : String});
@@ -34,13 +36,21 @@ class Singleton {
     const HOST = '0.0.0.0';
 
     // App.
-    const app = express();
+    const app = this.express()();
     const http = require('http').Server(app);
 
-    app.use(express.static(staticPath));
+    app.use(this.express().static(staticPath));
     var bodyParser = require('body-parser');
     app.use(bodyParser.json());
     app.use(bodyParser.urlencoded({extended: false}));
+
+    const expressSession = require('express-session')({
+      secret: this.env().required('EXPRESS_SESSION_SECRET'),
+      resave: false,
+      saveUninitialized: false
+    });
+
+    app.use(expressSession);
 
     app.get('/messages', (req, res) => {
       Message.find({},(err, messages)=> {
@@ -69,6 +79,43 @@ class Singleton {
         res.sendStatus(200);
       });
     });
+
+    app.get('/login',
+      (req, res) => res.sendFile('login.html',
+      { root: '/usr/src/app/private' })
+    );
+
+    app.post('/login', (req, res, next) => {
+      this.authentication().passport().authenticate('local',
+      (err, user, info) => {
+        if (err) {
+          return next(err);
+        }
+
+        if (!user) {
+          return res.redirect('/login?info=' + info);
+        }
+
+        req.logIn(user, function(err) {
+          if (err) {
+            return next(err);
+          }
+
+          return res.redirect('/');
+        });
+
+      })(req, res, next);
+    });
+
+    app.get('/private',
+      this.authentication().connectEnsureLogin().ensureLoggedIn(),
+      (req, res) => res.sendFile('private.html', {root: '/usr/src/app/private'})
+    );
+
+    app.get('/user',
+      this.authentication().connectEnsureLogin().ensureLoggedIn(),
+      (req, res) => res.send({user: req.user})
+    );
 
     // app.listen(PORT, HOST);
     http.listen(port, function() {

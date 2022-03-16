@@ -24,6 +24,14 @@ class Singleton {
     return require('passport-local-mongoose');
   }
 
+  passport() {
+    return require('passport');
+  }
+
+  connectEnsureLogin() {
+    return require('connect-ensure-login');
+  }
+
   /** Get UserDetails model. */
   userDetails() /*:: : Object */ {
     return this.myUserDetails;

@@ -18,5 +18,6 @@ grep MONGO_PASS "$ENVLOC" > /dev/null || echo "export MONGO_PASS=$(./scripts/lib
 grep ENVIRONMENT_USAGE "$ENVLOC" > /dev/null || echo "export ENVIRONMENT_USAGE=dev" >> "$ENVLOC"
 grep DOCKERPORT "$ENVLOC" > /dev/null || echo "export DOCKERPORT=$DOCKERPORT" >> "$ENVLOC"
 grep DOCKERNETWORK "$ENVLOC" > /dev/null || echo "export DOCKERNETWORK=$DOCKERNETWORK" >> "$ENVLOC"
+grep EXPRESS_SESSION_SECRET "$ENVLOC" > /dev/null || echo "export EXPRESS_SESSION_SECRET=$(./scripts/lib/generate-uuid.sh)" >> "$ENVLOC"
 
 source "$ENVLOC"
