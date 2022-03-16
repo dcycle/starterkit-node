@@ -8,9 +8,15 @@
 
 class Singleton {
   constructor() {
-    this.mongoose().connect(this.url(), (err) => {
-      console.log('mongodb connected',err);
+    this.ready = false;
+    console.log(this.ready);
+    this.mongoose().connect(this.uri(), (err) => {
+      console.log(this.ready);
+      this.ready = true;
     });
+  }
+  isReady() {
+    return this.ready;
   }
   mongoose() {
     return require('mongoose');
@@ -18,7 +24,7 @@ class Singleton {
   env() {
     return require('./env.js');
   }
-  url() {
+  uri() {
     const user = String(this.env().required('MONGO_USER'));
     const pass = String(this.env().required('MONGO_PASS'));
     const host = String(this.env().required('MONGO_HOST'));
