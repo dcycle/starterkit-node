@@ -3,7 +3,6 @@
  *
  * You can test this by running:
  */
-
 'use strict';
 
 class Singleton {
@@ -15,6 +14,11 @@ class Singleton {
     });
     UserDetail.plugin(this.passportLocalMongoose());
     this.myUserDetails = database.mongoose().model('userInfo', UserDetail, 'userInfo');
+
+    this.passport().use(this.userDetails().createStrategy());
+    this.passport().serializeUser(this.userDetails().serializeUser());
+    this.passport().deserializeUser(this.userDetails().deserializeUser());
+
     return this;
   }
 
