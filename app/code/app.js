@@ -1,10 +1,12 @@
 'use strict';
 
-module.exports = {
-  init: function() {
-    return this;
-  },
-  run: function(
+'use strict';
+
+class Singleton {
+  authentication() {
+    return require('./authentication.js');
+  }
+  run(
     port /*:: : string */,
     staticPath /*:: : string */
   ) {
@@ -59,5 +61,7 @@ module.exports = {
      console.log('listening on *:' + port);
     });
     console.log(`Running on http://${HOST}:${port}`);
-  },
+  }
 }
+
+module.exports = new Singleton();

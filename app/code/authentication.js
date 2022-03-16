@@ -2,84 +2,84 @@
 /**
  *
  * You can test this by running:
- * ./scripts/node-cli.sh
- * const myDatabase = require('./app/myDatabase.js').init();
- * const myAuthentication = require('./app/myAuthentication.js').init(myDatabase);
  */
 
 'use strict';
 
-module.exports = {
-
-  /** Initialize the authentication system. */
-  init: function(
-    database /*:: : Object */ ) /*:: : Object */ {
-
-    const Schema = database.mongoose().Schema;
+class Singleton {
+  constructor() {
+    const Schema = this.database().mongoose().Schema;
     const UserDetail = new Schema({
       username: String,
       password: String
     });
     UserDetail.plugin(this.passportLocalMongoose());
-    this.myUserDetails = database.mongoose().model('userInfo', UserDetail, 'userInfo');
+    this.myUserDetails = this.database().mongoose().model('userInfo', UserDetail, 'userInfo');
     return this;
-  },
+  }
+
+  database() {
+    return require('./database.js');
+  }
 
   /** Mockable wrapper around require('passport-local-mongoose'). */
-  passportLocalMongoose: function() /*:: : Object */ {
+  passportLocalMongoose() /*:: : Object */ {
     // $FlowExpectedError
     return require('passport-local-mongoose');
-  },
+  }
 
   /** Get UserDetails model. */
-  userDetails: function() /*:: : Object */ {
+  userDetails() /*:: : Object */ {
     return this.myUserDetails;
-  },
+  }
 
   /** Register a user, throw an error if there is an issue. */
-  registerUser: function(
-    username /*:: : string */ ,
-    password /*:: : string */ ) {
+  registerUser(
+    username /*:: : string */,
+    password /*:: : string */
+  ) {
 
     this.validateUsername(username);
     this.validatePassword(password);
     this.userDetails().register({username: username, active: false}, password);
-  },
+  }
 
   /** Validate a username, throw an error if it does not validate. */
-  validateUsername: function(
-    username /*:: : string */ ) {
+  validateUsername(
+    username /*:: : string */
+  ) {
 
     if (!username.length) {
       throw Error('Usernames cannot be empty.');
     }
-  },
+  }
 
   /** Validate a password, throw an error if it does not validate. */
-  validatePassword: function(
-    password  /*:: : string */ ) {
+  validatePassword(
+    password  /*:: : string */
+  ) {
 
     if (!password.length) {
       throw Error('Passwords cannot be empty.');
     }
-  },
+  }
 
-  allUsers: async function() {
+  async allUsers() {
     return await this.userDetails().find();
-  },
+  }
 
-  userExists: async function(name) {
+  async userExists(name) {
     return (await this.userDetails().find({username: name})).length;
-  },
+  }
 
-  user: async function(name) {
+  async user(name) {
     if (await this.userExists(name)) {
       return (await this.userDetails().find({username: name}))[0];
     }
     throw Error('User does not exist');
-  },
+  }
 
-  changePassword: async function(name, pass) {
+  async changePassword(name, pass) {
     if (await this.userExists(name)) {
       const user = await this.user(name);
       await user.setPassword(pass);
@@ -88,6 +88,7 @@ module.exports = {
     else {
       throw Error('User does not exist');
     }
-  },
+  }
+}
 
-};
+module.exports = new Singleton;

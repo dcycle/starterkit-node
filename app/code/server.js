@@ -6,5 +6,5 @@
 
 (function () {
   'use strict';
-  require('./app.js').init().run(8080, '/usr/src/app/static');
+  require('./app.js').run(8080, '/usr/src/app/static');
 }());
