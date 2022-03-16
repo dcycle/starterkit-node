@@ -12,8 +12,6 @@ module.exports = {
     const mongoose = require('mongoose');
     const database = require('./database.js');
 
-    database.init();
-
     var Message = mongoose.model('Message',{ name : String, message : String});
 
     // Constants.
