@@ -1,6 +1,9 @@
 'use strict';
 
 module.exports = {
+  init: function() {
+    return this;
+  },
   run: function(
     port /*:: : string */,
     staticPath /*:: : string */
