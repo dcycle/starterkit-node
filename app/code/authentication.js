@@ -8,6 +8,7 @@ class Singleton {
   async init(
     database /*:: : Object */
   ) /*:: : Object */ {
+
     const Schema = database.mongoose().Schema;
     const UserDetail = new Schema({
       username: String,

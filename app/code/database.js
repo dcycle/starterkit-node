@@ -7,8 +7,7 @@
 
 class Singleton {
   async init() {
-    await this.mongoose().connect(this.uri(), (err) => {
-    });
+    await this.mongoose().connect(this.uri());
   }
   async exitGracefully() {
     await this.mongoose().disconnect();

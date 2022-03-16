@@ -15,6 +15,9 @@
     console.log('username: ' + username);
     console.log('password: ' + password);
 
-    await app.exitGracefully();
+    process.exit(0);
+    // console.log('131')
+    // await app.exitGracefully();
+    // console.log('131')
   });
 }());
