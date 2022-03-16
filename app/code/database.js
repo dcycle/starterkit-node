@@ -1,27 +1,20 @@
+// @flow
 /**
  * My database module.
  *
  * Interact with the database.
  */
 
-'use strict';
-
 class Singleton {
-  constructor() {
-    this.ready = false;
-    console.log(this.ready);
-    this.mongoose().connect(this.uri(), (err) => {
-      console.log(this.ready);
-      this.ready = true;
+  async init() {
+    await this.mongoose().connect(this.uri(), (err) => {
     });
-  }
-  isReady() {
-    return this.ready;
   }
   async exitGracefully() {
     await this.mongoose().disconnect();
   }
   mongoose() {
+    // $FlowExpectedError
     return require('mongoose');
   }
   env() {
@@ -38,4 +31,5 @@ class Singleton {
   }
 }
 
+// $FlowExpectedError
 module.exports = new Singleton();

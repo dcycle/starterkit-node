@@ -1,5 +1,4 @@
-'use strict';
-
+// @flow
 class Singleton {
   authentication() {
     return require('./authentication.js');
@@ -10,14 +9,32 @@ class Singleton {
   env() {
     return require('./env.js');
   }
+  bodyParser() {
+    // $FlowExpectedError
+    return require('body-parser');
+  }
+  http() {
+    // $FlowExpectedError
+    return require('http');
+  }
   random() {
     return require('./random.js');
   }
   express() {
+    // $FlowExpectedError
     return require('express');
+  }
+  expressSessionModule() {
+    // $FlowExpectedError
+    return require('express-session');
+  }
+  socketIo() {
+    // $FlowExpectedError
+    return require('socket.io');
   }
   async init() {
     const database = this.database();
+    await this.database().init();
     await this.authentication().init(database);
   }
   async exitGracefully() {
@@ -28,23 +45,22 @@ class Singleton {
     port /*:: : string */,
     staticPath /*:: : string */
   ) {
-    const mongoose = require('mongoose');
-
-    var Message = mongoose.model('Message',{ name : String, message : String});
+    var Message = this.database().mongoose().model('Message',{ name : String, message : String});
 
     // Constants.
     const HOST = '0.0.0.0';
 
     // App.
     const app = this.express()();
-    const http = require('http').Server(app);
+    // $FlowExpectedError
+    const http = this.http().Server(app);
 
     app.use(this.express().static(staticPath));
-    var bodyParser = require('body-parser');
+    var bodyParser = this.bodyParser();
     app.use(bodyParser.json());
     app.use(bodyParser.urlencoded({extended: false}));
 
-    const expressSession = require('express-session')({
+    const expressSession = this.expressSessionModule()({
       secret: this.env().required('EXPRESS_SESSION_SECRET'),
       resave: false,
       saveUninitialized: false
@@ -58,7 +74,7 @@ class Singleton {
       });
     });
 
-    var io = require('socket.io')(http);
+    var io = this.socketIo()(http);
 
     io.on('connection', () =>{
       console.log('a user is connected');
@@ -73,8 +89,9 @@ class Singleton {
     app.post('/messages', (req, res) => {
       var message = new Message(req.body);
       message.save((err) =>{
-        if(err)
-          sendStatus(500);
+        if(err) {
+          res.sendStatus(500);
+        }
         io.emit('message', req.body);
         res.sendStatus(200);
       });
@@ -125,4 +142,5 @@ class Singleton {
   }
 }
 
+// $FlowExpectedError
 module.exports = new Singleton();

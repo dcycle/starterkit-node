@@ -3,8 +3,6 @@
  * Generate random strings.
  */
 
-'use strict';
-
 class Singleton {
   random(size = 32) {
     return require('crypto')
@@ -12,6 +10,14 @@ class Singleton {
       .toString('base64')
       .slice(0, size);
   }
+
+  addTwoNumbers(
+    a /*:: : number */,
+    b /*:: : number */
+  ) /*:: : number */ {
+    return a+b;
+  }
 }
 
+// $FlowExpectedError
 module.exports = new Singleton();

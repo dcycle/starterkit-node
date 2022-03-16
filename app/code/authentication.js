@@ -3,16 +3,18 @@
  *
  * You can test this by running:
  */
-'use strict';
 
 class Singleton {
-  async init(database) {
+  async init(
+    database /*:: : Object */
+  ) /*:: : Object */ {
     const Schema = database.mongoose().Schema;
     const UserDetail = new Schema({
       username: String,
       password: String
     });
     UserDetail.plugin(this.passportLocalMongoose());
+    // $FlowExpectedError
     this.myUserDetails = database.mongoose().model('userInfo', UserDetail, 'userInfo');
 
     this.passport().use(this.userDetails().createStrategy());
@@ -29,15 +31,18 @@ class Singleton {
   }
 
   passport() {
+    // $FlowExpectedError
     return require('passport');
   }
 
   connectEnsureLogin() {
+    // $FlowExpectedError
     return require('connect-ensure-login');
   }
 
   /** Get UserDetails model. */
   userDetails() /*:: : Object */ {
+    // $FlowExpectedError
     return this.myUserDetails;
   }
 
@@ -114,4 +119,5 @@ class Singleton {
   }
 }
 
-module.exports = new Singleton;
+// $FlowExpectedError
+module.exports = new Singleton();
