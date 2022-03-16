@@ -6,7 +6,7 @@ Dcycle Node.js starterkit
 About
 -----
 
-This project is a quick starter for Node applications on Docker. We have implemented a very simple chat application (see "Resources", below) using Socket.io, Express, and MongoDB.
+This project is a quick starter for Node applications on Docker. We have implemented a very simple chat application with authentication (see "Resources", below) using Socket.io, Express, and MongoDB.
 
 Quickstart
 -----
@@ -14,6 +14,19 @@ Quickstart
 Install Docker and run:
 
     ./scripts/deploy.sh
+
+Authentication
+-----
+
+Socket.io
+-----
+
+Testing modules
+-----
+
+const app = require('./app.js');
+undefined
+> app.init().then(async () => {  users = await app.authentication().allUsers(); console.log(users); })
 
 Resources
 -----

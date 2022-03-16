@@ -1,10 +1,25 @@
 'use strict';
 
-'use strict';
-
 class Singleton {
   authentication() {
     return require('./authentication.js');
+  }
+  database() {
+    return require('./database.js');
+  }
+  env() {
+    return require('./env.js');
+  }
+  random() {
+    return require('./random.js');
+  }
+  async init() {
+    const database = this.database();
+    await this.authentication().init(database);
+  }
+  async exitGracefully() {
+    await this.database().exitGracefully();
+    process.exit(0);
   }
   run(
     port /*:: : string */,
@@ -12,7 +27,6 @@ class Singleton {
   ) {
     const express = require('express');
     const mongoose = require('mongoose');
-    const database = require('./database.js');
 
     var Message = mongoose.model('Message',{ name : String, message : String});
 

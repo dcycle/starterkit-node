@@ -7,19 +7,15 @@
 'use strict';
 
 class Singleton {
-  constructor() {
-    const Schema = this.database().mongoose().Schema;
+  async init(database) {
+    const Schema = database.mongoose().Schema;
     const UserDetail = new Schema({
       username: String,
       password: String
     });
     UserDetail.plugin(this.passportLocalMongoose());
-    this.myUserDetails = this.database().mongoose().model('userInfo', UserDetail, 'userInfo');
+    this.myUserDetails = database.mongoose().model('userInfo', UserDetail, 'userInfo');
     return this;
-  }
-
-  database() {
-    return require('./database.js');
   }
 
   /** Mockable wrapper around require('passport-local-mongoose'). */
@@ -31,6 +27,21 @@ class Singleton {
   /** Get UserDetails model. */
   userDetails() /*:: : Object */ {
     return this.myUserDetails;
+  }
+
+  /** Register or alter a user. */
+  async createOrAlterUser(
+    username /*:: : string */,
+    password /*:: : string */
+  ) {
+    this.validateUsername(username);
+    this.validatePassword(password);
+    if (await this.userExists(username)) {
+      await this.changePassword(username, password);
+    }
+    else {
+      await this.registerUser(username, password);
+    }
   }
 
   /** Register a user, throw an error if there is an issue. */

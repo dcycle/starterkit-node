@@ -6,5 +6,8 @@
 
 (function () {
   'use strict';
-  require('./app.js').run(8080, '/usr/src/app/static');
+  const app = require('./app.js');
+  app.init().then(() => {
+    app.run(8080, '/usr/src/app/static');
+  });
 }());

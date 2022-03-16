@@ -18,6 +18,9 @@ class Singleton {
   isReady() {
     return this.ready;
   }
+  async exitGracefully() {
+    await this.mongoose().disconnect();
+  }
   mongoose() {
     return require('mongoose');
   }
