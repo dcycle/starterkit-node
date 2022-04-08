@@ -1,4 +1,15 @@
 // @flow
+const loggedIn = function(req, res, next) {
+  return next();
+  console.log('zzzzzz');
+  console.log(req.user);
+  if (req.user) {
+    next();
+  } else {
+    res.redirect('/login');
+  }
+}
+
 class Singleton {
   authentication() {
     return require('./authentication.js');
@@ -106,10 +117,14 @@ class Singleton {
       this.authentication().passport().authenticate('local',
       (err, user, info) => {
         if (err) {
+          console.log('error during /login');
+          console.log(err);
           return next(err);
         }
 
         if (!user) {
+          console.log('no user during /login');
+          console.log(info);
           return res.redirect('/login?info=' + info);
         }
 
@@ -124,14 +139,22 @@ class Singleton {
       })(req, res, next);
     });
 
-    app.get('/private',
-      this.authentication().connectEnsureLogin().ensureLoggedIn(),
-      (req, res) => res.sendFile('private.html', {root: '/usr/src/app/private'})
-    );
-
-    app.get('/user',
-      this.authentication().connectEnsureLogin().ensureLoggedIn(),
-      (req, res) => res.send({user: req.user})
+    app.get('/private', loggedIn,
+      (req, res) => {
+        res.send({
+          bla: "bla",
+          user: "a" + req.user,
+          isAuthenticated: "b" + req.isAuthenticated,
+        });
+        // console.log('receiving a request for /private.')
+        // console.log('we want to get rid of connect-ensure-login')
+        // console.log('https://github.com/jaredhanson/connect-ensure-login/blob/master/lib/ensureLoggedIn.js')
+        // console.log('so we will inspect req')
+        // console.log(req.user)
+        // console.log('aaa')
+        // console.log(req)
+        // res.sendFile('private.html', {root: '/usr/src/app/private'});
+      }
     );
 
     // app.listen(PORT, HOST);

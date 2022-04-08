@@ -36,11 +36,6 @@ class Singleton {
     return require('passport');
   }
 
-  connectEnsureLogin() {
-    // $FlowExpectedError
-    return require('connect-ensure-login');
-  }
-
   /** Get UserDetails model. */
   userDetails() /*:: : Object */ {
     // $FlowExpectedError
@@ -85,7 +80,7 @@ class Singleton {
 
   /** Validate a password, throw an error if it does not validate. */
   validatePassword(
-    password  /*:: : string */
+    password /*:: : string */
   ) {
 
     if (!password.length) {
