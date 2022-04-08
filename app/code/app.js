@@ -63,6 +63,7 @@ class Singleton {
 
     // App.
     const app = this.express()();
+
     // $FlowExpectedError
     const http = this.http().Server(app);
 
@@ -78,6 +79,8 @@ class Singleton {
     });
 
     app.use(expressSession);
+    app.use(this.authentication().passport().initialize());
+    app.use(this.authentication().passport().session());
 
     app.get('/messages', (req, res) => {
       Message.find({},(err, messages)=> {
@@ -129,6 +132,8 @@ class Singleton {
         }
 
         req.logIn(user, function(err) {
+          console.log('There is a user, we are logging in');
+          console.log(user);
           if (err) {
             return next(err);
           }
