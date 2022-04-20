@@ -5,6 +5,8 @@
  */
 class Singleton {
 
+  myMessage;
+
   /**
    * Init chat and all its dependencies.
    */
