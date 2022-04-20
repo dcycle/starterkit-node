@@ -1,66 +1,109 @@
 // @flow
-const loggedIn = function(req, res, next) {
-  return next();
-  console.log('zzzzzz');
-  console.log(req.user);
-  if (req.user) {
-    next();
-  } else {
-    res.redirect('/login');
-  }
-}
-
+/**
+ * Singleton representing the whole application.
+ */
 class Singleton {
+
+  /**
+   * Mockable wrapper around the authentication module.
+   */
   authentication() {
     return require('./authentication.js');
   }
-  database() {
-    return require('./database.js');
-  }
-  env() {
-    return require('./env.js');
-  }
+
+  /**
+   * Mockable wrapper around the body-parser module.
+   */
   bodyParser() {
     // $FlowExpectedError
     return require('body-parser');
   }
-  http() {
-    // $FlowExpectedError
-    return require('http');
+
+  /**
+   * Mockable wrapper around the chat module.
+   */
+  chat() {
+    return require('./chat.js');
   }
-  random() {
-    return require('./random.js');
+
+  /**
+   * Mockable wrapper around the database module.
+   */
+  database() {
+    return require('./database.js');
   }
+
+  /**
+   * Mockable wrapper around the express module.
+   */
   express() {
     // $FlowExpectedError
     return require('express');
   }
+
+  /**
+   * Mockable wrapper around the express-session module.
+   */
   expressSessionModule() {
     // $FlowExpectedError
     return require('express-session');
   }
-  socketIo() {
-    // $FlowExpectedError
-    return require('socket.io');
+
+  /**
+   * Mockable wrapper around the env module.
+   */
+  env() {
+    return require('./env.js');
   }
+
+  /**
+   * Mockable wrapper around the http module.
+   */
+  http() {
+    // $FlowExpectedError
+    return require('http');
+  }
+
+  /**
+   * Init the application and all its dependencies.
+   */
   async init() {
     const database = this.database();
     await this.database().init();
     await this.authentication().init(database);
+    await this.chat().init(database);
   }
+
+  /**
+   * Mockable wrapper around the random module.
+   */
+  random() {
+    return require('./random.js');
+  }
+
+  /**
+   * Mockable wrapper around the socket.io module.
+   */
+  socketIo() {
+    // $FlowExpectedError
+    return require('socket.io');
+  }
+
+  /**
+   * Exit gracefully after allowing dependencies to exit gracefully.
+   */
   async exitGracefully() {
     await this.database().exitGracefully();
     process.exit(0);
   }
+
+  /**
+   * Run the application.
+   */
   run(
     port /*:: : string */,
-    staticPath /*:: : string */
+    staticPath /*:: : string */,
   ) {
-    var Message = this.database().mongoose().model('Message',{ name : String, message : String});
-
-    // Constants.
-    const HOST = '0.0.0.0';
-
     // App.
     const app = this.express()();
 
@@ -82,8 +125,10 @@ class Singleton {
     app.use(this.authentication().passport().initialize());
     app.use(this.authentication().passport().session());
 
+    const that = this;
+
     app.get('/messages', (req, res) => {
-      Message.find({},(err, messages)=> {
+      that.chat().message().find({},(err, messages)=> {
         res.send(messages);
       });
     });
@@ -94,14 +139,12 @@ class Singleton {
       console.log('a user is connected');
     });
 
-    Message.find({},(err, messages)=> {
-      console.log('***');
+    this.chat().message().find({},(err, messages)=> {
       console.log(messages);
-      console.log('***');
     });
 
     app.post('/messages', (req, res) => {
-      var message = new Message(req.body);
+      var message = new (that.chat().message())(req.body);
       message.save((err) =>{
         if(err) {
           res.sendStatus(500);
@@ -144,29 +187,19 @@ class Singleton {
       })(req, res, next);
     });
 
-    app.get('/private', loggedIn,
+    app.get('/private', this.authentication().loggedIn,
       (req, res) => {
         res.send({
           bla: "bla",
           user: "a" + req.user,
           isAuthenticated: "b" + req.isAuthenticated,
         });
-        // console.log('receiving a request for /private.')
-        // console.log('we want to get rid of connect-ensure-login')
-        // console.log('https://github.com/jaredhanson/connect-ensure-login/blob/master/lib/ensureLoggedIn.js')
-        // console.log('so we will inspect req')
-        // console.log(req.user)
-        // console.log('aaa')
-        // console.log(req)
-        // res.sendFile('private.html', {root: '/usr/src/app/private'});
       }
     );
 
-    // app.listen(PORT, HOST);
     http.listen(port, function() {
      console.log('listening on *:' + port);
     });
-    console.log(`Running on http://${HOST}:${port}`);
   }
 }
 

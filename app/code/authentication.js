@@ -25,6 +25,18 @@ class Singleton {
     return this;
   }
 
+  /**
+   * Check whether a user is logged in.
+   */
+  loggedIn(req, res, next) {
+    return next();
+    if (req.user) {
+      next();
+    } else {
+      res.redirect('/login');
+    }
+  }
+
   /** Mockable wrapper around require('passport-local-mongoose'). */
   passportLocalMongoose() /*:: : Object */ {
     // $FlowExpectedError
