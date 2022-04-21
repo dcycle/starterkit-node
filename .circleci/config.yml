@@ -3,7 +3,8 @@
 version: 2.1
 jobs:
   build:
-    machine: ubuntu-2004:202201-02
+    machine:
+      image: ubuntu-2004:202201-02
     steps:
       - checkout
       - run:
