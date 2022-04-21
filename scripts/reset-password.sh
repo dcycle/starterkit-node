@@ -10,4 +10,4 @@ if [ -z "$1" ]; then
 fi
 
 export MY_USERNAME="$1"
-docker-compose exec --env MY_USERNAME="$MY_USERNAME" node /bin/bash -c 'node /usr/src/app/app/tools/reset-password.js'
+docker-compose exec -T --env MY_USERNAME="$MY_USERNAME" node /bin/sh -c 'node /usr/src/app/app/tools/reset-password.js'

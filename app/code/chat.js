@@ -5,7 +5,10 @@
  */
 class Singleton {
 
+  // https://github.com/jshint/jshint/issues/3361
+  /* jshint ignore:start */
   myMessage;
+  /* jshint ignore:end */
 
   /**
    * Init chat and all its dependencies.

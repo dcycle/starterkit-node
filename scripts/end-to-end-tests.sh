@@ -14,7 +14,7 @@ docker run --rm \
   --network "$DOCKERNETWORK" \
   -v "$(pwd)"/do-not-commit/screenshots:/artifacts/screenshots \
   -v "$(pwd)"/do-not-commit/dom-captures:/artifacts/dom-captures \
-  dcycle/browsertesting:3
+  dcycle/browsertesting:4
 
 BASE="$(pwd)"
 echo "* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * "
