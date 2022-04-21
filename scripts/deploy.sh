@@ -2,7 +2,7 @@
 #
 # Deploy a local version of node.
 #
-set -ex
+set -e
 
 source ./scripts/lib/start.source.sh
 

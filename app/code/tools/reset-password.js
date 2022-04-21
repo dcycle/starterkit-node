@@ -15,6 +15,10 @@
     console.log('username: ' + username);
     console.log('password: ' + password);
 
-    await app.exitGracefully();
+    setTimeout(async function() {
+           await app.exitGracefully();
+    }, 5000);
+
+
   });
 }());
