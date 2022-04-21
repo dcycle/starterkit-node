@@ -15,19 +15,6 @@ Install Docker and run:
 
     ./scripts/deploy.sh
 
-Authentication
------
-
-Socket.io
------
-
-Testing modules
------
-
-const app = require('./app.js');
-undefined
-> app.init().then(async () => {  users = await app.authentication().allUsers(); console.log(users); })
-
 Resources
 -----
 
