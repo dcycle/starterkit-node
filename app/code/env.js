@@ -15,7 +15,7 @@ class Singleton {
   }
 
   getOrFallback(
-    name, /*:: : string */
+    name /*:: : string */,
     fallback /*:: : string */
   ) {
     const candidate = process.env[name];
