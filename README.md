@@ -15,6 +15,12 @@ Install Docker and run:
 
     ./scripts/deploy.sh
 
+This will give you a URL, username and password.
+
+Now log on using the the credentials provided.
+
+You will be able to use a simple chat application, and log out if you want.
+
 Resources
 -----
 

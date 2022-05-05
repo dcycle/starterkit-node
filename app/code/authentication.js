@@ -29,6 +29,7 @@ class Singleton {
    * Check whether a user is logged in.
    */
   loggedIn(req, res, next) {
+    // req.user and req.isAuthenticated contain authentication info.
     if (req.user) {
       next();
     } else {

@@ -187,15 +187,17 @@ class Singleton {
       })(req, res, next);
     });
 
-    app.get('/private', this.authentication().loggedIn,
+    app.get('/', this.authentication().loggedIn,
       (req, res) => {
-        res.send({
-          bla: "bla",
-          user: "a" + req.user,
-          isAuthenticated: "b" + req.isAuthenticated,
-        });
+        res.sendFile('private.html',
+        { root: '/usr/src/app/private' })
       }
     );
+
+    app.post('/logout', function(req, res){
+      req.logout();
+      res.redirect('/');
+    });
 
     http.listen(port, function() {
      console.log('listening on *:' + port);
