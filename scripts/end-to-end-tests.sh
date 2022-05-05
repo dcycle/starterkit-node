@@ -8,9 +8,13 @@ set -e
 source ./scripts/lib/start.source.sh
 source ./scripts/lib/source-env.source.sh
 
+ADMIN_PASSWORD=$(./scripts/generate-password.sh)
+./scripts/reset-password.sh admin "$ADMIN_PASSWORD"
+
 echo 'Running our tests'
 docker run --rm \
   -v "$(pwd)"/tests/browser-tests:/app/test \
+  -e ADMIN_PASSWORD="$ADMIN_PASSWORD" \
   --network "$DOCKERNETWORK" \
   -v "$(pwd)"/do-not-commit/screenshots:/artifacts/screenshots \
   -v "$(pwd)"/do-not-commit/dom-captures:/artifacts/dom-captures \

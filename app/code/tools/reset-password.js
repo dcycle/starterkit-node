@@ -8,7 +8,7 @@
   const app = require('../app.js');
   app.init().then(async () => {
     const username = String(app.env().required('MY_USERNAME'));
-    const password = app.random().random();
+    const password = app.env().getOrFallback('MY_PASSWORD', app.random().random());
 
     await app.authentication().createOrAlterUser(username, password);
 
@@ -16,7 +16,7 @@
     console.log('password: ' + password);
 
     setTimeout(async function() {
-           await app.exitGracefully();
+      await app.exitGracefully();
     }, 5000);
 
 

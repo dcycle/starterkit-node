@@ -13,6 +13,17 @@ class Singleton {
     }
     return String(candidate);
   }
+
+  getOrFallback(
+    name, /*:: : string */
+    fallback /*:: : string */
+  ) {
+    const candidate = process.env[name];
+    if (typeof candidate === 'undefined' || candidate === '') {
+      return fallback;
+    }
+    return String(candidate);
+  }
 }
 
 // $FlowExpectedError

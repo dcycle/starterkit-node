@@ -190,7 +190,7 @@ class Singleton {
     app.get('/', this.authentication().loggedIn,
       (req, res) => {
         res.sendFile('private.html',
-        { root: '/usr/src/app/private' })
+        { root: '/usr/src/app/private' });
       }
     );
 
