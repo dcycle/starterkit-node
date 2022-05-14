@@ -11,6 +11,9 @@ cat ./scripts/lib/my-ascii-art.txt
 echo ''
 
 source ./scripts/lib/source-env.source.sh
+echo ''
+echo '-----'
+echo 'Pull latest versions of base images.'
 docker pull node:alpine
 docker pull mongo:4
 docker build -t my/starterkit-node .

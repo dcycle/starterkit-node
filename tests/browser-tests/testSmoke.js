@@ -23,8 +23,16 @@ it('It should be possible to log in and see the app', async function() {
     await page.keyboard.press('Enter');
     await page.waitForSelector('#messages');
 
+    const page2 = await browser.newPage();
+
     await testBase.assertInSourceCode(page, 'Send Message');
     await testBase.screenshot(page, 'home', await page.content());
+    await page.type('#message', 'Hello, I am a message');
+    await page.type('#message', 'Hello, I am a message');
+    await page.click('#send');
+
+    await testBase.screenshot(page, 'am2', await page.content());
+    await testBase.screenshot(page2, 'am1', await page.content());
   }
   catch (error) {
     await testBase.showError(error, browser);
