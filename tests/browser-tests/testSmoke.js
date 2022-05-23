@@ -11,6 +11,8 @@ it('It should be possible to log in and see the app', async function() {
   });
   var result = false;
   try {
+    const randomMessage = 'A random number is ' + String(Math.random());
+
     console.log('Testing ' + __filename);
     const page = await browser.newPage();
     console.log('set viewport');
@@ -24,15 +26,14 @@ it('It should be possible to log in and see the app', async function() {
     await page.waitForSelector('#messages');
 
     const page2 = await browser.newPage();
+    await page2.goto('http://node:8080');
 
-    await testBase.assertInSourceCode(page, 'Send Message');
-    await testBase.screenshot(page, 'home', await page.content());
-    await page.type('#message', 'Hello, I am a message');
-    await page.type('#message', 'Hello, I am a message');
+    await testBase.assertInSourceCode(page, 'Send Message', 'home');
+    await page.type('#message', randomMessage);
     await page.click('#send');
 
-    await testBase.screenshot(page, 'am2', await page.content());
-    await testBase.screenshot(page2, 'am1', await page.content());
+    testBase.assertInSourceCode(page, randomMessage, 'sender-page');
+    testBase.assertInSourceCode(page2, randomMessage, 'receiver-page');
   }
   catch (error) {
     await testBase.showError(error, browser);

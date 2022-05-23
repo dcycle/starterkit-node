@@ -27,6 +27,7 @@ exports.assertInSourceCode = async function(page, text, filename="") {
   }
   console.log(' Making sure current URL has the text ');
   console.log('====> ' + text);
+  console.log(' Saving to ' + filename);
   await screenshot(page, filename, content = await page.content());
   try {
     expect(content).to.include(text);

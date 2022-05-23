@@ -8,6 +8,17 @@ About
 
 This project is a quick starter for Node applications on Docker. We have implemented a very simple chat application with authentication (see "Resources", below) using Socket.io, Express, and MongoDB.
 
+Strategies, credentials, and accounts
+-----
+
+This project uses [Passport](https://www.passportjs.org/) for authentication along with the following strategies:
+
+* Username/password
+* Google
+* GitHub
+* SMS
+
+
 Quickstart
 -----
 
