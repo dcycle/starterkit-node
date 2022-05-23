@@ -200,7 +200,7 @@ class Singleton {
         res.redirect('/');
       });
     });
-    
+
     http.listen(port, function() {
      console.log('listening on *:' + port);
     });
