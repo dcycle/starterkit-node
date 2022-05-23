@@ -194,9 +194,11 @@ class Singleton {
       }
     );
 
-    app.post('/logout', function(req, res){
-      req.logout();
-      res.redirect('/');
+    app.post('/logout', function(req, res, next) {
+      req.logout(function(err) {
+        if (err) { return next(err); }
+        res.redirect('/');
+      });
     });
 
     http.listen(port, function() {
