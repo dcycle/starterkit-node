@@ -11,13 +11,11 @@ This project is a quick starter for Node applications on Docker. We have impleme
 Strategies, credentials, and accounts
 -----
 
-This project uses [Passport](https://www.passportjs.org/) for authentication along with the following strategies:
+This project uses [Passport](https://www.passportjs.org/) for authentication along with the "Username/password" strategy.
 
-* Username/password
-* Google
-* GitHub
-* SMS
+You can create a new account or regenerate a random password for an existing account by typing, on the command line:
 
+    ./scripts/reset-password.sh some-username
 
 Quickstart
 -----
