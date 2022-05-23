@@ -2,10 +2,8 @@
 #
 # Run end-to-end tests and keep track of markup and screenshots.
 #
-
 set -e
 
-source ./scripts/lib/start.source.sh
 source ./scripts/lib/source-env.source.sh
 
 ADMIN_PASSWORD=$(./scripts/generate-password.sh)

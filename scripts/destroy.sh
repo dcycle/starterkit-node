@@ -4,7 +4,6 @@
 #
 set -e
 
-source ./scripts/lib/start.source.sh
 source ./scripts/lib/source-env.source.sh
 
 ./scripts/docker-compose.sh down -v
@@ -12,5 +11,3 @@ docker network rm "$DOCKERNETWORK" || echo 'docker network cannot be deleted; mo
 
 rm -rf ./do-not-commit
 rm ./.env
-
-source ./scripts/lib/end.source.sh

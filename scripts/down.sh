@@ -4,10 +4,6 @@
 #
 set -e
 
-source ./scripts/lib/start.source.sh
-
 source ./scripts/lib/source-env.source.sh
 
 ./scripts/docker-compose.sh down
-
-source ./scripts/lib/end.source.sh

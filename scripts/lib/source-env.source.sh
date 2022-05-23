@@ -1,8 +1,5 @@
-#!/bin/bash
-#
 # Make sure we have a working env file.
 #
-set -e
 
 ENVLOC="$BASE/.env"
 

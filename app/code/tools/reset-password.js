@@ -19,6 +19,5 @@
       await app.exitGracefully();
     }, 5000);
 
-
   });
 }());

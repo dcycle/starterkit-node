@@ -8,7 +8,6 @@
 #
 set -e
 
-source ./scripts/lib/start.source.sh
 source ./scripts/lib/source-env.source.sh
 
 COMPOSEFILES='-f docker-compose.yml'
@@ -20,5 +19,3 @@ fi
 # Cannot quote $DOCKER_COMPOSE_FILES here
 # shellcheck disable=SC2086
 docker-compose $COMPOSEFILES "$@"
-
-source ./scripts/lib/start.source.sh
