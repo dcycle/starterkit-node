@@ -25,6 +25,9 @@ it('It should be possible to log in and see the app', async function() {
 
     await testBase.assertInSourceCode(page, 'Send Message');
     await testBase.screenshot(page, 'home', await page.content());
+
+    await page.click('#logout');
+    await testBase.assertInSourceCode(page, 'Login');
   }
   catch (error) {
     await testBase.showError(error, browser);
