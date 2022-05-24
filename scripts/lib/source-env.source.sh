@@ -3,6 +3,10 @@
 
 ENVLOC="./.env"
 
+if [ -z "$TARGET_ENV" ]; then
+  TARGET_ENV=dev
+fi
+
 source ./config/versioned
 if [ ! -f "$ENVLOC" ]; then
   echo " => $ENVLOC did not exist, creating it."
