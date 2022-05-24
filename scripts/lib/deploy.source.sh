@@ -2,8 +2,6 @@
 # fully create or update your environment.
 #
 
-source ./scripts/lib/start.source.sh
-
 # See http://patorjk.com/software/taag/#p=display&f=Ivrit&t=D8%20Starterkit%0A
 cat ./scripts/lib/my-ascii-art.txt
 echo ''
@@ -29,5 +27,3 @@ docker network ls | grep "$DOCKERNETWORK" || docker network create "$DOCKERNETWO
 ./scripts/docker-compose.sh restart
 ./scripts/docker-compose.sh ps
 ./scripts/uli.sh
-
-source ./scripts/lib/end.source.sh

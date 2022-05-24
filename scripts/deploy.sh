@@ -4,15 +4,10 @@
 #
 set -e
 
-if [ "$1" ]; then
+if [ -z "$1" ]; then
+  export TARGET_ENV=dev
+else
   export TARGET_ENV="$1"
 fi
 
-export TARGET_ENV=$(./scripts/lib/calc-target-env.sh)
-
-echo "Target environment is $TARGET_ENV"
-
-#
-#
-#
-# source ./scripts/lib/deploy.source.sh
+source ./scripts/lib/deploy.source.sh
