@@ -1,22 +1,21 @@
 // @flow
 /**
- *
- * You can test this by running:
+ * Provide authentication.
  */
 
-class Singleton {
+class Singleton extends require('./component.js') {
   async init(
-    database /*:: : Object */
+    app /*:: : Object */
   ) /*:: : Object */ {
 
-    const Schema = database.mongoose().Schema;
+    const Schema = app.database().mongoose().Schema;
     const UserDetail = new Schema({
       username: String,
       password: String
     });
     UserDetail.plugin(this.passportLocalMongoose());
     // $FlowExpectedError
-    this.myUserDetails = database.mongoose().model('userInfo', UserDetail, 'userInfo');
+    this.myUserDetails = app.database().mongoose().model('userInfo', UserDetail, 'userInfo');
 
     this.passport().use(this.userDetails().createStrategy());
     this.passport().serializeUser(this.userDetails().serializeUser());

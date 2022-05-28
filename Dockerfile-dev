@@ -7,4 +7,4 @@ ADD docker-resources /docker-resources
 
 RUN /docker-resources/build-dev.sh
 
-CMD [ "forever", "app/server.js" ]
+CMD [ "forever", "-w", "app/server.js" ]

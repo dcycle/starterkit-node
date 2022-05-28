@@ -5,6 +5,7 @@
 # See http://patorjk.com/software/taag/#p=display&f=Ivrit&t=D8%20Starterkit%0A
 cat ./scripts/lib/my-ascii-art.txt
 echo ''
+source ./scripts/lib/hook.source.sh extra-banner-info
 
 source ./scripts/lib/source-env.source.sh
 echo ''
@@ -23,7 +24,11 @@ echo 'The network is then referenced in docker-compose.yml.'
 echo 'See https://github.com/docker/compose/issues/3736.'
 docker network ls | grep "$DOCKERNETWORK" || docker network create "$DOCKERNETWORK"
 
-./scripts/docker-compose.sh up -d --build
+source ./scripts/lib/hook.source.sh set-docker-compose-files
+
+# Cannot quote $DOCKER_COMPOSE_FILES here
+# shellcheck disable=SC2086
+docker-compose $DOCKER_COMPOSE_FILES up -d --build
 ./scripts/docker-compose.sh restart
 ./scripts/docker-compose.sh ps
 ./scripts/uli.sh

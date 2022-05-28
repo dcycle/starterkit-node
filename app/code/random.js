@@ -11,12 +11,6 @@ class Singleton {
       .slice(0, size);
   }
 
-  addTwoNumbers(
-    a /*:: : number */,
-    b /*:: : number */
-  ) /*:: : number */ {
-    return a+b;
-  }
 }
 
 // $FlowExpectedError

@@ -38,8 +38,7 @@ services:
 # See https://github.com/docker/compose/issues/3736.
 networks:
   default:
-    external:
-      name: ${DOCKERNETWORK}
+    name: ${DOCKERNETWORK}
 
 volumes:
   mongo:

@@ -68,10 +68,9 @@ class Singleton {
    * Init the application and all its dependencies.
    */
   async init() {
-    const database = this.database();
-    await this.database().init();
-    await this.authentication().init(database);
-    await this.chat().init(database);
+    await this.database().init(this);
+    await this.authentication().init(this);
+    await this.chat().init(this);
   }
 
   /**

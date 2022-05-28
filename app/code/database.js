@@ -5,8 +5,10 @@
  * Interact with the database.
  */
 
-class Singleton {
-  async init() {
+class Singleton extends require('./component.js') {
+  async init(
+    app /*:: : Object */
+  ) /*:: : Object */ {
     await this.mongoose().connect(this.uri());
   }
   async exitGracefully() {
