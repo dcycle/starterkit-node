@@ -143,4 +143,4 @@ module.exports = new class {
     return ret2;
   }
 
-};
+}();
