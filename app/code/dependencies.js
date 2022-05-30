@@ -125,8 +125,8 @@ module.exports = new class {
     elem /*:: : string */,
     weAreBefore /*:: : array */,
     weAreAfter /*:: : array */,
-    ret /*:: : object */
-  ) /*:: : object */ {
+    ret /*:: : Object */
+  ) /*:: : Object */ {
     let ret2 = ret;
 
     if (typeof ret2.detailedResults[elem] === 'undefined') {
