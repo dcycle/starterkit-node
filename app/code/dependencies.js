@@ -71,14 +71,14 @@ module.exports = new class {
 
     Object.keys(ret.detailedResults).forEach((elem) => {
       ret.detailedResults[elem].weAreBefore.forEach((after) => {
-        ret = that.reorder(elem, after, breakMe, ret);
-        breakMe = ret.breakMe;
-        delete ret.breakMe;
+        const res = that.reorder(elem, after, breakMe, ret);
+        ret = res.ret;
+        breakMe = res.breakMe;
       });
       ret.detailedResults[elem].weAreAfter.forEach((before) => {
-        ret = that.reorder(before, elem, breakMe, ret);
-        breakMe = ret.breakMe;
-        delete ret.breakMe;
+        const res = that.reorder(before, elem, breakMe, ret);
+        ret = res.ret;
+        breakMe = res.breakMe;
       });
     });
 
@@ -95,17 +95,20 @@ module.exports = new class {
   }
 
   reorder(before, after, breakMe, ret) {
-    ret.breakMe = true;
-
     if (breakMe) {
-      return ret;
+      return {
+        ret: ret,
+        breakMe: true,
+      };
     }
 
     const keys = Object.keys(ret.detailedResults);
 
     if (keys.indexOf(before) < keys.indexOf(after)) {
-      ret.breakMe = false;
-      return ret;
+      return {
+        ret: ret,
+        breakMe: false,
+      };
     }
 
     const beforeObj = ret.detailedResults[before];
@@ -118,7 +121,10 @@ module.exports = new class {
       ...ret.detailedResults,
     };
 
-    return ret;
+    return {
+      ret: ret,
+      breakMe: true,
+    };
   }
 
   placeDependency(
