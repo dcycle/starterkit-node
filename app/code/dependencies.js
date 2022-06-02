@@ -4,7 +4,7 @@
  * You can test this by running:
  */
 
-module.exports = new class {
+class Dependencies {
   merge(arr1, arr2) {
     return [...new Set([...arr1 ,...arr2])];
   }
@@ -25,9 +25,9 @@ module.exports = new class {
   }
 
   getInOrder(
-    components /*:: : array */,
-    app /*:: : array */
-  ) /*:: : array */ {
+    components,
+    app
+  ) {
     let ret = {
       errors: [],
       detailedResults: {},
@@ -44,49 +44,57 @@ module.exports = new class {
       ret.errors.push(err.message);
     }
 
-    delete ret.detailedResults;
-
-    return ret;
+    return {
+      errors: ret.errors,
+      results: ret.results,
+    };
   }
 
   orderResults(ret) {
     let i = 0;
+    let res = {
+      ret: ret,
+      reorderDone: false,
+    }
+
     do {
       if (++i > 300) {
-        ret.errors.push('Could not determine dependencies in 300 cycles');
+        res.ret.errors.push('Could not determine dependencies in 300 cycles');
         break;
       }
-      ret = this.reorderOne(ret);
+      res = this.reorderOne(ret);
     }
-    while (!ret.reorderDone);
+    while (!res.reorderDone);
 
-    delete ret.reorderDone;
-    return ret;
+    return res.ret;
   }
 
   reorderOne(ret) {
-    ret.reorderDone = false;
+    let res2 = {
+      ret: ret,
+      reorderDone: false,
+    };
     let breakMe = false;
     const that = this;
 
-    Object.keys(ret.detailedResults).forEach((elem) => {
-      ret.detailedResults[elem].weAreBefore.forEach((after) => {
+    Object.keys(res2.ret.detailedResults).forEach((elem) => {
+      res2.ret.detailedResults[elem].weAreBefore.forEach((after) => {
         const res = that.reorder(elem, after, breakMe, ret);
-        ret = res.ret;
+        res2.ret = res.ret;
         breakMe = res.breakMe;
       });
-      ret.detailedResults[elem].weAreAfter.forEach((before) => {
+      res2.ret.detailedResults[elem].weAreAfter.forEach((before) => {
         const res = that.reorder(before, elem, breakMe, ret);
-        ret = res.ret;
+        res2.ret = res.ret;
         breakMe = res.breakMe;
       });
     });
 
     if (!breakMe) {
-      ret.reorderDone = true;
+      res2.reorderDone = true;
     }
 
-    return ret;
+    return res2;
   }
 
   removeFrom(arr, item) {
@@ -129,8 +137,8 @@ module.exports = new class {
 
   placeDependency(
     elem /*:: : string */,
-    weAreBefore /*:: : array */,
-    weAreAfter /*:: : array */,
+    weAreBefore,
+    weAreAfter,
     ret /*:: : Object */
   ) /*:: : Object */ {
     let ret2 = ret;
@@ -149,4 +157,7 @@ module.exports = new class {
     return ret2;
   }
 
-}();
+};
+
+// $FlowExpectedError
+module.exports = new Dependencies();
