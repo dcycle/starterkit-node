@@ -8,20 +8,26 @@ class Singleton extends require('./component.js') {
     app /*:: : Object */
   ) /*:: : Object */ {
 
-    const Schema = app.database().mongoose().Schema;
+    const Schema = app.component('./database.js').mongoose().Schema;
     const UserDetail = new Schema({
       username: String,
       password: String
     });
     UserDetail.plugin(this.passportLocalMongoose());
     // $FlowExpectedError
-    this.myUserDetails = app.database().mongoose().model('userInfo', UserDetail, 'userInfo');
+    this.myUserDetails = app.component('./database.js').mongoose().model('userInfo', UserDetail, 'userInfo');
 
     this.passport().use(this.userDetails().createStrategy());
     this.passport().serializeUser(this.userDetails().serializeUser());
     this.passport().deserializeUser(this.userDetails().deserializeUser());
 
     return this;
+  }
+
+  dependencies() {
+    return [
+      './database.js',
+    ];
   }
 
   /**

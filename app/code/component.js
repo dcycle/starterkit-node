@@ -9,4 +9,9 @@ module.exports = class {
    app /*:: : Object */
   ) /*:: : Object */ {
   }
+
+  dependencies() {
+    return [];
+  }
+
 };

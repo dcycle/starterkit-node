@@ -7,7 +7,7 @@ class Singleton extends require('./component.js') {
   async init(
     app /*:: : Object */
   ) /*:: : Object */ {
-    this.myMessage = app.database().mongoose().model('Message', {
+    this.myMessage = app.component('./database.js').mongoose().model('Message', {
       name : String,
       message : String,
     });
@@ -17,6 +17,12 @@ class Singleton extends require('./component.js') {
   /* jshint ignore:start */
   myMessage;
   /* jshint ignore:end */
+
+  dependencies() {
+    return [
+      './database.js',
+    ];
+  }
 
   /**
    * Fetch the "Message" model.

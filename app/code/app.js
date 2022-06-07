@@ -5,10 +5,22 @@
 class Singleton {
 
   /**
-   * Mockable wrapper around the authentication module.
+   * Get the components we want. Depedencies and order will be managed later.
    */
-  authentication() {
-    return require('./authentication.js');
+  components() {
+    return [
+      './chat.js',
+      './authentication.js',
+    ];
+  }
+
+  /**
+   * Mockable wrapper around require().
+   */
+  component(
+    component /*:: : string */
+  ) {
+    return require(component);
   }
 
   /**
@@ -17,20 +29,6 @@ class Singleton {
   bodyParser() {
     // $FlowExpectedError
     return require('body-parser');
-  }
-
-  /**
-   * Mockable wrapper around the chat module.
-   */
-  chat() {
-    return require('./chat.js');
-  }
-
-  /**
-   * Mockable wrapper around the database module.
-   */
-  database() {
-    return require('./database.js');
   }
 
   /**
@@ -68,9 +66,15 @@ class Singleton {
    * Init the application and all its dependencies.
    */
   async init() {
-    await this.database().init(this);
-    await this.authentication().init(this);
-    await this.chat().init(this);
+    const components = this.component('./dependencies.js')
+      .getInOrder(this.components(), this);
+    if (components.errors.length) {
+      console.log('Errors occured during initialization phase:');
+      console.log(components.errors);
+    }
+    for (const component of components.results) {
+      await this.component(component).init(this);
+    }
   }
 
   /**
@@ -92,7 +96,7 @@ class Singleton {
    * Exit gracefully after allowing dependencies to exit gracefully.
    */
   async exitGracefully() {
-    await this.database().exitGracefully();
+    await this.component('./database.js').exitGracefully();
     process.exit(0);
   }
 
@@ -121,13 +125,13 @@ class Singleton {
     });
 
     app.use(expressSession);
-    app.use(this.authentication().passport().initialize());
-    app.use(this.authentication().passport().session());
+    app.use(this.component('./authentication.js').passport().initialize());
+    app.use(this.component('./authentication.js').passport().session());
 
     const that = this;
 
     app.get('/messages', (req, res) => {
-      that.chat().message().find({},(err, messages)=> {
+      that.component('./chat.js').message().find({},(err, messages)=> {
         res.send(messages);
       });
     });
@@ -138,12 +142,12 @@ class Singleton {
       console.log('a user is connected');
     });
 
-    this.chat().message().find({},(err, messages)=> {
+    this.component('./chat.js').message().find({},(err, messages)=> {
       console.log(messages);
     });
 
     app.post('/messages', (req, res) => {
-      var message = new (that.chat().message())(req.body);
+      var message = new (that.component('./chat.js').message())(req.body);
       message.save((err) =>{
         if(err) {
           res.sendStatus(500);
@@ -159,7 +163,7 @@ class Singleton {
     );
 
     app.post('/login', (req, res, next) => {
-      this.authentication().passport().authenticate('local',
+      this.component('./authentication.js').passport().authenticate('local',
       (err, user, info) => {
         if (err) {
           console.log('error during /login');
@@ -186,7 +190,7 @@ class Singleton {
       })(req, res, next);
     });
 
-    app.get('/', this.authentication().loggedIn,
+    app.get('/', this.component('./authentication.js').loggedIn,
       (req, res) => {
         res.sendFile('private.html',
         { root: '/usr/src/app/private' });

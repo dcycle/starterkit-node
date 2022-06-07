@@ -10,7 +10,7 @@
     const username = String(app.env().required('MY_USERNAME'));
     const password = app.env().getOrFallback('MY_PASSWORD', app.random().random());
 
-    await app.authentication().createOrAlterUser(username, password);
+    await app.component('./authentication.js').createOrAlterUser(username, password);
 
     console.log('username: ' + username);
     console.log('password: ' + password);
