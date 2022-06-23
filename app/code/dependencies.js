@@ -55,7 +55,7 @@ class Dependencies {
     let res = {
       ret: ret,
       reorderDone: false,
-    }
+    };
 
     do {
       if (++i > 300) {
@@ -157,7 +157,7 @@ class Dependencies {
     return ret2;
   }
 
-};
+}
 
 // $FlowExpectedError
 module.exports = new Dependencies();

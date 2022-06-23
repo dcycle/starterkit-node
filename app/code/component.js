@@ -10,7 +10,7 @@ module.exports = class {
   ) /*:: : Object */ {
   }
 
-  dependencies() {
+  dependencies() /*:: : Array<string> */ {
     return [];
   }
 
