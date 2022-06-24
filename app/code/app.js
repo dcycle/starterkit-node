@@ -20,16 +20,7 @@ class Singleton {
   component(
     component /*:: : string */
   ) {
-    // Getting "The parameter passed to `require` must be a string literal.
-    // [unsupported-syntax]".
-    switch(component) {
-      case './database.js':
-      case './chat.js':
-      case './authentication.js':
-        return require(component);
-      default:
-        throw 'Unknown component ' + component;
-    }
+    return require(component);
   }
 
   /**
