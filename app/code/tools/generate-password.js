@@ -7,10 +7,8 @@
   'use strict';
   const app = require('../app.js');
   app.init().then(async () => {
-    console.log(app.random().random());
+    console.log(app.component('./random.js').random());
 
-    setTimeout(async function() {
-      await app.exitGracefully();
-    }, 5000);
+    await app.exitGracefully();
   });
 }());

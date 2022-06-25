@@ -78,13 +78,6 @@ class Singleton {
   }
 
   /**
-   * Mockable wrapper around the random module.
-   */
-  random() {
-    return require('./random.js');
-  }
-
-  /**
    * Mockable wrapper around the socket.io module.
    */
   socketIo() {

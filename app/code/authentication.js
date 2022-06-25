@@ -75,14 +75,14 @@ class Singleton extends require('./component.js') {
   }
 
   /** Register a user, throw an error if there is an issue. */
-  registerUser(
+  async registerUser(
     username /*:: : string */,
     password /*:: : string */
   ) {
 
     this.validateUsername(username);
     this.validatePassword(password);
-    this.userDetails().register({username: username, active: false}, password);
+    await this.userDetails().register({username: username, active: false}, password);
   }
 
   /** Validate a username, throw an error if it does not validate. */
