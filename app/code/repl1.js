@@ -26,17 +26,29 @@ const prompt = `${nodeVersion} → `;
 
 const util = require("util");
 
+// Function that takes an object o1 and returns another function
+// that takes an object o2 to extend it with the o1 properties as
+// read-only
+const extendWith = properties => context => {
+  Object.entries(properties).forEach(([k, v]) => {
+    Object.defineProperty(context, k, {
+      configurable: false,
+      enumerable: true,
+      value: v,
+    });
+  });
+};
+
+
 // Start the REPL
 const repl = Repl.start({ prompt });
 
-Object.defineProperty(repl.context, "noop", {
-  configurable: false,
-  enumerable: true,
-  value: () => {},
-});
-
-repl.context.identity = x => x;
-repl.context.isString = x => typeof x === "string" || x instanceof String;
-repl.context.timeout = util.promisify(setTimeout);
+// Extend the REPL context as read-only
+extendWith({
+  noop: () => {},
+  identity: x => x,
+  isString: x => typeof x === "string" || x instanceof String,
+  timeout: util.promisify(setTimeout),
+})(repl.context);
 
 repl.on("exit", sayBye);
