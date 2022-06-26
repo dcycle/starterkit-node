@@ -14,4 +14,5 @@ npm install \
   passport-local-mongoose \
   socket.io \
   express-session \
+  faker \
   http

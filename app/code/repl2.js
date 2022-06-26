@@ -39,18 +39,12 @@ const extendWith = properties => context => {
   });
 };
 
+global.noop = () => {};
+global.identity = x => x;
+global.isString = x => typeof x === "string" || x instanceof String;
 
 // Start the REPL
-const repl = Repl.start({ prompt });
-
-repl.defineCommand("welcome", {
-  help: "Prints the welcome message again",
-  action() {
-    this.clearBufferedCommand();
-    sayWelcome();
-    this.displayPrompt();
-  },
-});
+const repl = Repl.start({ useGlobal: true });
 
 const initializeContext = extendWith({
   noop: () => {},
