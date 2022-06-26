@@ -1,3 +1,5 @@
+console.log('AAAcli')
+
 const { colorize } = require("./utils");
 
 const user = colorize("magenta", process.env.USER);

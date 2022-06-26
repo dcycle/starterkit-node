@@ -10,7 +10,7 @@ class Singleton extends require('./component.js') {
 
     const port = 8001;
 
-    require('./repl').listen(port, () => console.log("repl server listening on port " + port));
+    require('./repl2/index.js').listen(port, () => console.log("repl server listening on port " + port));
 
     return this;
   }

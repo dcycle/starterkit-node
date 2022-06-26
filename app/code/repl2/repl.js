@@ -1,14 +1,12 @@
+console.log('AAArepl')
+
 const Repl = require("repl");
 const { extendWith, colorize, defineCommands } = require("./utils");
 const { sayWelcome, sayBye, sayDoc, prompt } = require("./cli");
-const services = require("../services");
-const R = require("ramda");
 
 // Define a context initializer
 const initializeContext = context => {
   extendWith({
-    R,
-    services,
   })(context);
 };
 
