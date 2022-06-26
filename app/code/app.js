@@ -250,6 +250,7 @@ class Singleton {
 
     this.eachComponent(async function(component) {
       if (typeof that.component(component).run === 'function') {
+        console.log(component + ' has a run() function; calling it.');
         that.component(component).run(that);
       }
       else {

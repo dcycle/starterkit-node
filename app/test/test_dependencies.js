@@ -95,6 +95,44 @@ test('Dependencies calculated correctly', t => {
         results: ['c', 'b', 'a'],
       },
     },
+    {
+      message: 'no dependencies',
+      app: new class {
+        component(name) {
+          switch (name) {
+            case 'a':
+              return DependencyTestHelper.mockDependency([]);
+
+            default:
+              throw 'Unknown component ' + name;
+          }
+        }
+      }(),
+      in: ['a'],
+      expected: {
+        errors: [],
+        results: ['a'],
+      },
+    },
+    {
+      message: 'no dependencies() method',
+      app: new class {
+        component(name) {
+          switch (name) {
+            case 'a':
+              return {};
+
+            default:
+              throw 'Unknown component ' + name;
+          }
+        }
+      }(),
+      in: ['a'],
+      expected: {
+        errors: [],
+        results: ['a'],
+      },
+    },
   ].forEach(function(data) {
     var output = my.getInOrder(data.in, data.app);
 

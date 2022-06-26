@@ -12,6 +12,7 @@ class Dependencies {
   getUnorderedRecursive(done, components, app, ret) {
     const that = this;
     components.forEach((elem, index) => {
+      ret = that.placeDependency(elem, [], [], ret);
       if (typeof app.component(elem).dependencies === 'function') {
         app.component(elem).dependencies().forEach((dependency) => {
           ret = that.placeDependency(dependency, [elem], [], ret);

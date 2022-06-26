@@ -15,4 +15,4 @@ echo ""
 echo "See The Node.js command line interface (CLI) in project README."
 echo ""
 
-docker-compose exec node /bin/sh -c 'node app/tools/repl.js'
+docker-compose exec node /bin/sh -c 'node app/tools/repl.js localhost:8001'

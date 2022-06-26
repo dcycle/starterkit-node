@@ -1,47 +1,28 @@
-// See https://medium.com/trabe/mastering-the-node-js-repl-part-3-c0374be0d1bf
-// See "The app CLI" in README.md.
+#!/usr/bin/env node
+const net = require("net");
 
-const Repl = require("repl");
+const args = process.argv.slice(2);
+if (args.length < 1) {
+  console.log("USAGE: repl <HOST:PORT>");
+  process.exit(1);
+}
 
-const repl = Repl.start('> ');
+const url = args[0];
+const [host, port] = url.split(":");
 
-const extendWith = properties => context => {
-  Object.entries(properties).forEach(([k, v]) => {
-    Object.defineProperty(context, k, {
-      configurable: false,
-      enumerable: true,
-      value: v,
-    });
-  });
-};
+const socket = net.connect(parseInt(port), host);
 
-repl.defineCommand("welcome", {
-  help: "Prints the welcome message again",
-  action() {
-    this.clearBufferedCommand();
-    sayWelcome();
-    this.displayPrompt();
-  },
+process.stdin.pipe(socket);
+socket.pipe(process.stdout);
+
+socket.on("connect", () => {
+  process.stdin.setRawMode(true);
 });
 
-const sayWelcome = function() {
-  'welcome';
-}
+socket.on("close", () => {
+  process.exit(0);
+});
 
-const sayBye = function() {
-  'bye';
-}
-
-// Define a context initializer
-const initializeContext = context => {
-  extendWith({
-    services: require("../app.js"),
-  })(context);
-};
-
-sayWelcome();
-
-initializeContext(repl.context);
-
-repl.on("reset", initializeContext);
-repl.on("exit", sayBye);
+process.on("exit", () => {
+  socket.end();
+});
