@@ -4,9 +4,12 @@ const Repl = require("repl");
 const { extendWith, colorize, defineCommands } = require("./utils");
 const { sayWelcome, sayBye, sayDoc, prompt } = require("./cli");
 
+const app = require('../app.js');
+
 // Define a context initializer
 const initializeContext = context => {
   extendWith({
+    app: app,
   })(context);
 };
 
