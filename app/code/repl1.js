@@ -51,4 +51,10 @@ extendWith({
   timeout: util.promisify(setTimeout),
 })(repl.context);
 
+repl.on("reset", extendWith({
+  noop: () => {},
+  identity: x => x,
+  isString: x => typeof x === "string" || x instanceof String,
+  timeout: util.promisify(setTimeout),
+}));
 repl.on("exit", sayBye);
