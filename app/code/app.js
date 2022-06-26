@@ -1,8 +1,18 @@
 // @flow
+
+let numUsers = 0;
+
 /**
  * Singleton representing the whole application.
  */
 class Singleton {
+
+  /**
+   * Get the number of currently connected users.
+   */
+  numUsers() {
+    return numUsers;
+  }
 
   /**
    * Get the components we want. Depedencies and order will be managed later.
@@ -66,6 +76,8 @@ class Singleton {
    * Init the application and all its dependencies.
    */
   async init() {
+    this.inited = true;
+
     const components = this.component('./dependencies.js')
       .getInOrder(this.components(), this);
     if (components.errors.length) {
@@ -131,8 +143,12 @@ class Singleton {
 
     var io = this.socketIo()(http);
 
-    io.on('connection', () =>{
-      console.log('a user is connected');
+    io.on('connection', (socket) => {
+      io.emit('updateNumUsers', ++numUsers);
+
+      socket.on('disconnect', () => {
+        io.emit('updateNumUsers', --numUsers);
+      });
     });
 
     this.component('./chat.js').message().find({},(err, messages)=> {
