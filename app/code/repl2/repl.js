@@ -1,5 +1,3 @@
-console.log('AAArepl')
-
 const Repl = require("repl");
 const { extendWith, colorize, defineCommands } = require("./utils");
 const { sayWelcome, sayBye, sayDoc, prompt } = require("./cli");

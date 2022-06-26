@@ -90,9 +90,9 @@ class Singleton {
     }
     catch (err) {
       console.log('An error occurred during the initialization phase.');
-      console.log(err)
+      console.log(err);
       console.log('For your safety, we will exit now.');
-      process.exit(1)
+      process.exit(1);
     }
   }
 
@@ -102,7 +102,7 @@ class Singleton {
     if (components.errors.length) {
       console.log('Errors occurred during initialization phase:');
       console.log(components.errors);
-      throw 'Errors occurred while fetching dependencies, see console.'
+      throw 'Errors occurred while fetching dependencies, see console.';
     }
     return components.results;
   }

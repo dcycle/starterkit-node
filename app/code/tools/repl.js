@@ -16,7 +16,9 @@ process.stdin.pipe(socket);
 socket.pipe(process.stdout);
 
 socket.on("connect", () => {
-  process.stdin.setRawMode(true);
+  if(process.stdin instanceof require('tty').ReadStream){
+    process.stdin.setRawMode(true);
+  }
 });
 
 socket.on("close", () => {

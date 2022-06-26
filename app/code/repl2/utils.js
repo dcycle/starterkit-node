@@ -1,5 +1,3 @@
-console.log('utils')
-
 // Color functions
 const colors = { red: "31", green: "32", yellow: "33", blue: "34", magenta: "35" };
 const colorize = (color, s) => `\x1b[${colors[color]}m${s}\x1b[0m`;
