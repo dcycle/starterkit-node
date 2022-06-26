@@ -17,6 +17,7 @@ class Singleton extends require('./component.js') {
     // $FlowExpectedError
     this.myUserDetails = app.component('./database.js').mongoose().model('userInfo', UserDetail, 'userInfo');
 
+    this.setFlagBool('initialized', true);
     this.passport().use(this.userDetails().createStrategy());
     this.passport().serializeUser(this.userDetails().serializeUser());
     this.passport().deserializeUser(this.userDetails().deserializeUser());
@@ -55,6 +56,8 @@ class Singleton extends require('./component.js') {
 
   /** Get UserDetails model. */
   userDetails() /*:: : Object */ {
+    this.assertFlag('initialized', true);
+
     // $FlowExpectedError
     return this.myUserDetails;
   }

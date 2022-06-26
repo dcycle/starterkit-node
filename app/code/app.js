@@ -21,6 +21,7 @@ class Singleton {
     return [
       './chat.js',
       './authentication.js',
+      './repl.js',
     ];
   }
 
@@ -76,16 +77,45 @@ class Singleton {
    * Init the application and all its dependencies.
    */
   async init() {
-    this.inited = true;
+    try {
+      const that = this;
 
+      await this.eachComponentAsync(async function(component) {
+        if (typeof that.component(component).init === 'function') {
+          await that.component(component).init(that);
+        }
+      });
+
+      this.inited = true;
+    }
+    catch (err) {
+      console.log('An error occurred during the initialization phase.');
+      console.log(err)
+      console.log('For your safety, we will exit now.');
+      process.exit(1)
+    }
+  }
+
+  componentsWithDependencies() {
     const components = this.component('./dependencies.js')
       .getInOrder(this.components(), this);
     if (components.errors.length) {
-      console.log('Errors occured during initialization phase:');
+      console.log('Errors occurred during initialization phase:');
       console.log(components.errors);
+      throw 'Errors occurred while fetching dependencies, see console.'
     }
-    for (const component of components.results) {
-      await this.component(component).init(this);
+    return components.results;
+  }
+
+  async eachComponentAsync(callback) {
+    for (const component of this.componentsWithDependencies()) {
+      await callback(component);
+    }
+  }
+
+  eachComponent(callback) {
+    for (const component of this.componentsWithDependencies()) {
+      callback(component);
     }
   }
 
@@ -109,8 +139,9 @@ class Singleton {
    * Run the application.
    */
   run(
-    port /*:: : string */,
+    port /*:: : number */,
     staticPath /*:: : string */,
+    cliPort /*:: : number */,
   ) {
     // App.
     const app = this.express()();
@@ -214,7 +245,16 @@ class Singleton {
     });
 
     http.listen(port, function() {
-     console.log('listening on *:' + port);
+      console.log('listening on *:' + port);
+    });
+
+    this.eachComponent(async function(component) {
+      if (typeof that.component(component).run === 'function') {
+        that.component(component).run(that);
+      }
+      else {
+        console.log(component + ' has no run() function; moving on.');
+      }
     });
   }
 }

@@ -15,8 +15,7 @@ fi
 source "$ENVLOC"
 
 if [ -z "$ENVIRONMENT_USAGE" ]; then
-  echo "ENVIRONMENT_USAGE does not exist in $ENVLOC"
-  # ENVIRONMENT_USAGE does not exist, we'll set it later.
+  echo "ENVIRONMENT_USAGE does not exist in $ENVLOC, it will be set later. Moving on."
 else
   if [ "$ENVIRONMENT_USAGE" != "$TARGET_ENV" ]; then
     >&2 echo "Environments are not the same: $ENVIRONMENT_USAGE != $TARGET_ENV"

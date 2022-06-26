@@ -1,33 +1,21 @@
-const Repl = require("repl");
-const { extendWith, colorize, defineCommands, clearRequireCache } = require("./utils");
-const { sayWelcome, sayBye, sayDoc, prompt } = require("./cli");
+// @flow
+/**
+ * Provide authentication.
+ */
 
-// Define a context initializer
-const initializeContext = context => {
-  clearRequireCache();
+class Singleton extends require('./component.js') {
+  async run(
+    app /*:: : Object */
+  ) /*:: : Object */ {
 
-  extendWith({
-    R: require("ramda"),
-    services: require("../../services"),
-  })(context);
-};
+    const port = 8001;
 
-sayWelcome();
+    require('repl').listen(port, () => console.log("repl server listening on port " + port));
 
-const repl = Repl.start({ prompt });
+    return this;
+  }
 
-defineCommands({
-  doc: {
-    help: "Get information about the loaded modules",
-    action() {
-      this.clearBufferedCommand();
-      sayDoc();
-      this.displayPrompt();
-    },
-  },
-})(repl);
+}
 
-initializeContext(repl.context);
-
-repl.on("reset", initializeContext);
-repl.on("exit", sayBye);
+// $FlowExpectedError
+module.exports = new Singleton();

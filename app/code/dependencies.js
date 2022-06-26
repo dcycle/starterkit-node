@@ -12,14 +12,16 @@ class Dependencies {
   getUnorderedRecursive(done, components, app, ret) {
     const that = this;
     components.forEach((elem, index) => {
-      app.component(elem).dependencies().forEach((dependency) => {
-        ret = that.placeDependency(dependency, [elem], [], ret);
-        ret = that.placeDependency(elem, [], [dependency], ret);
+      if (typeof app.component(elem).dependencies === 'function') {
+        app.component(elem).dependencies().forEach((dependency) => {
+          ret = that.placeDependency(dependency, [elem], [], ret);
+          ret = that.placeDependency(elem, [], [dependency], ret);
 
-        if (!components.includes(dependency)) {
-          ret = that.getUnorderedRecursive(that.merge(done, components), [dependency], app, ret);
-        }
-      });
+          if (!components.includes(dependency)) {
+            ret = that.getUnorderedRecursive(that.merge(done, components), [dependency], app, ret);
+          }
+        });
+      }
     });
     return ret;
   }
