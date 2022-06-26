@@ -29,7 +29,12 @@ const util = require("util");
 // Start the REPL
 const repl = Repl.start({ prompt });
 
-repl.context.noop = () => {};
+Object.defineProperty(repl.context, "noop", {
+  configurable: false,
+  enumerable: true,
+  value: () => {},
+});
+
 repl.context.identity = x => x;
 repl.context.isString = x => typeof x === "string" || x instanceof String;
 repl.context.timeout = util.promisify(setTimeout);
