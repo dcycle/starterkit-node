@@ -23,7 +23,9 @@ const sayBye = say(`
   Goodbye, ${user}!
 `);
 
-module.exports = {
+const module_exports /*:: : Object */ = {
   sayBye,
   sayDoc,
 };
+
+module.exports = module_exports;

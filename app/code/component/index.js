@@ -4,7 +4,7 @@
  * You can test this by running:
  */
 
-module.exports = class {
+const module_exports /*:: : Object */ = class {
   async init(
     app /*:: : Object */
   ) /*:: : Object */ {
@@ -16,10 +16,13 @@ module.exports = class {
   ) {
     const err = 'Expecting ' + flagName + ' to be ' + JSON.stringify(value);
 
+    // $FlowFixMe
     if (typeof this.flags === 'undefined') {
       throw err + ' but no flags are set';
     }
+    // $FlowFixMe
     if (this.flags[flagName] !== value) {
+      // $FlowFixMe
       throw err + ' but it is ' + JSON.stringify(this.flags[flagName]);
     }
   }
@@ -28,9 +31,12 @@ module.exports = class {
     flagName /*:: : string */,
     value
   ) {
+    // $FlowFixMe
     if (typeof this.flags === 'undefined') {
+      // $FlowFixMe
       this.flags = {};
     }
+    // $FlowFixMe
     this.flags[flagName] = value;
   }
 
@@ -46,3 +52,5 @@ module.exports = class {
   }
 
 };
+
+module.exports = module_exports;

@@ -1,7 +1,7 @@
 const test = require('ava');
 const sinon = require('sinon');
 
-let my = require('/mycode/dependencies.js');
+let my = require('/mycode/dependencies/index.js');
 
 class DependencyTestHelper {
   static mockDependency(dependencies) {

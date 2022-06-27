@@ -1,6 +1,6 @@
 const Repl = require("repl");
 const { extendWith, colorize, defineCommands } = require("./utils");
-const { sayBye, sayDoc, prompt } = require("./cli");
+const { sayBye, sayDoc } = require("./cli");
 
 const app = require('../app.js');
 
@@ -11,7 +11,7 @@ const initializeContext = context => {
   })(context);
 };
 
-const start = socket => {
+const start /*:: : function */ = socket => {
   const repl = Repl.start({
     input: socket,
     output: socket,
@@ -22,8 +22,10 @@ const start = socket => {
     doc: {
       help: "Get information about the loaded modules",
       action() {
+        // $FlowFixMe
         this.clearBufferedCommand();
         sayDoc(socket);
+        // $FlowFixMe
         this.displayPrompt();
       },
     },

@@ -24,8 +24,10 @@ const defineCommands = commands => repl => {
   });
 };
 
-module.exports = {
+const module_exports /*:: : Object */ = {
   colorize,
   extendWith,
   defineCommands,
 };
+
+module.exports = module_exports;

@@ -9,8 +9,10 @@
   'use strict';
   const app = require('../app.js');
   app.init().then(async () => {
-    const username = String(app.env().required('MY_USERNAME'));
-    const password = app.env().getOrFallback('MY_PASSWORD', app.component('./random/index.js').random());
+    const env = app.component('./env/index.js');
+
+    const username = String(env.required('MY_USERNAME'));
+    const password = env.getOrFallback('MY_PASSWORD', app.component('./random/index.js').random());
 
     await app.component('./authentication/index.js').createOrAlterUser(username, password);
 

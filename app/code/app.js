@@ -31,6 +31,7 @@ class Singleton {
   component(
     component /*:: : string */
   ) {
+    // $FlowFixMe
     return require(component);
   }
 
@@ -78,8 +79,6 @@ class Singleton {
           await that.component(component).init(that);
         }
       });
-
-      this.inited = true;
     }
     catch (err) {
       console.log('An error occurred during the initialization phase.');
