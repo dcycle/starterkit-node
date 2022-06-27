@@ -62,7 +62,7 @@ The sandbox cli is completely unaware of the database or your running process.
 
 If you want to run code against your running application once you have deployed it (see Quickstart, above), thus having access to your database, as well as any information stored in memory by your app's process, you can use the app CLI:
 
-    ./scripts/ndoe-cli-app.sh
+    ./scripts/node-cli-app.sh
 
 We achieve this using the Node REPL (see the Resources section below for further reading on the technical aspects of this).
 
@@ -72,11 +72,19 @@ To demonstrate this, you can first log into your application using the credentia
 
 The purpose of the app CLI is to have access to this information in your running application instance. Here is how.
 
-    require('./app/app.js').numUsers();
+    ./scripts/node-cli-app.sh
 
+    app.numUsers();
 
+## Piping commands to the CLI
 
+You can **pipe** commands to the cli, like this:
 
+    echo 'require("./app/random.js").random()' | ./scripts/node-cli-app.sh
+
+or
+
+    echo 'require("./app/random.js").random()' | ./scripts/node-cli-sandbox.sh
 
 Resources
 -----

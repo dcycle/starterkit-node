@@ -20,6 +20,8 @@ echo '=> Incremental deployment'
 ./scripts/deploy.sh
 echo '=> End-to-end tests'
 ./scripts/end-to-end-tests.sh
+echo '=> Command-line tests'
+./scripts/command-line-tests.sh
 echo '=> Destroy'
 ./scripts/destroy.sh
 

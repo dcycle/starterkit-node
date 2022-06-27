@@ -19,20 +19,11 @@ const sayDoc = say(`
     * ${colorize("green", "services")}: The application's service layer
 `);
 
-const sayWelcome = say(`
-  Hello, ${user}!
-  You're running the Node.js REPL in ${cwd}
-`);
-
 const sayBye = say(`
   Goodbye, ${user}!
 `);
 
-const prompt = `${nodeVersion} → `;
-
 module.exports = {
-  sayWelcome,
   sayBye,
   sayDoc,
-  prompt,
 };

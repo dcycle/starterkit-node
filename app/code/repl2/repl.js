@@ -1,6 +1,6 @@
 const Repl = require("repl");
 const { extendWith, colorize, defineCommands } = require("./utils");
-const { sayWelcome, sayBye, sayDoc, prompt } = require("./cli");
+const { sayBye, sayDoc, prompt } = require("./cli");
 
 const app = require('../app.js');
 
@@ -12,11 +12,7 @@ const initializeContext = context => {
 };
 
 const start = socket => {
-  console.log("repl client connected");
-  sayWelcome(socket);
-
   const repl = Repl.start({
-    prompt,
     input: socket,
     output: socket,
     terminal: true,
