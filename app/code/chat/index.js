@@ -3,11 +3,11 @@
 /**
  * Chat functionality.
  */
-class Singleton extends require('./component.js') {
+class Singleton extends require('../component/index.js') {
   async init(
     app /*:: : Object */
   ) /*:: : Object */ {
-    this.myMessage = app.component('./database.js').mongoose().model('Message', {
+    this.myMessage = app.component('./database/index.js').mongoose().model('Message', {
       name : String,
       message : String,
     });
@@ -20,7 +20,7 @@ class Singleton extends require('./component.js') {
 
   dependencies() {
     return [
-      './database.js',
+      './database/index.js',
     ];
   }
 

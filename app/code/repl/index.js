@@ -3,14 +3,14 @@
  * Provide authentication.
  */
 
-class Singleton extends require('./component.js') {
+class Singleton extends require('../component/index.js') {
   async run(
     app /*:: : Object */
   ) /*:: : Object */ {
 
     const port = 8001;
 
-    require('./repl2/index.js').listen(port, () => console.log("repl server listening on port " + port));
+    require('./index2.js').listen(port, () => console.log("repl server listening on port " + port));
 
     return this;
   }

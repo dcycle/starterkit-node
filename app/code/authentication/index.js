@@ -3,19 +3,19 @@
  * Provide authentication.
  */
 
-class Singleton extends require('./component.js') {
+class Singleton extends require('../component/index.js') {
   async init(
     app /*:: : Object */
   ) /*:: : Object */ {
 
-    const Schema = app.component('./database.js').mongoose().Schema;
+    const Schema = app.component('./database/index.js').mongoose().Schema;
     const UserDetail = new Schema({
       username: String,
       password: String
     });
     UserDetail.plugin(this.passportLocalMongoose());
     // $FlowExpectedError
-    this.myUserDetails = app.component('./database.js').mongoose().model('userInfo', UserDetail, 'userInfo');
+    this.myUserDetails = app.component('./database/index.js').mongoose().model('userInfo', UserDetail, 'userInfo');
 
     this.setFlagBool('initialized', true);
     this.passport().use(this.userDetails().createStrategy());
@@ -27,7 +27,7 @@ class Singleton extends require('./component.js') {
 
   dependencies() {
     return [
-      './database.js',
+      './database/index.js',
     ];
   }
 

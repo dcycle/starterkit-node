@@ -5,7 +5,7 @@
  * Interact with the database.
  */
 
-class Singleton extends require('./component.js') {
+class Singleton extends require('../component/index.js') {
   async init(
     app /*:: : Object */
   ) /*:: : Object */ {
@@ -14,19 +14,21 @@ class Singleton extends require('./component.js') {
   async exitGracefully() {
     await this.mongoose().disconnect();
   }
+  dependencies() {
+    return [
+      './env/index.js',
+    ];
+  }
   mongoose() {
     // $FlowExpectedError
     return require('mongoose');
   }
-  env() {
-    return require('./env.js');
-  }
   uri() {
-    const user = String(this.env().required('MONGO_USER'));
-    const pass = String(this.env().required('MONGO_PASS'));
-    const host = String(this.env().required('MONGO_HOST'));
-    const port = String(this.env().required('MONGO_PORT'));
-    const db = String(this.env().required('MONGO_DB'));
+    const user = String(require('../env/index.js').required('MONGO_USER'));
+    const pass = String(require('../env/index.js').required('MONGO_PASS'));
+    const host = String(require('../env/index.js').required('MONGO_HOST'));
+    const port = String(require('../env/index.js').required('MONGO_PORT'));
+    const db = String(require('../env/index.js').required('MONGO_DB'));
 
     return 'mongodb://' + user + ':' + pass + '@' + host + ':' + port + '/' + db + '?authSource=admin';
   }

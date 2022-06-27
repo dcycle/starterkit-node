@@ -19,9 +19,9 @@ class Singleton {
    */
   components() {
     return [
-      './chat.js',
-      './authentication.js',
-      './repl.js',
+      './chat/index.js',
+      './authentication/index.js',
+      './repl/index.js',
     ];
   }
 
@@ -59,13 +59,6 @@ class Singleton {
   }
 
   /**
-   * Mockable wrapper around the env module.
-   */
-  env() {
-    return require('./env.js');
-  }
-
-  /**
    * Mockable wrapper around the http module.
    */
   http() {
@@ -97,7 +90,7 @@ class Singleton {
   }
 
   componentsWithDependencies() {
-    const components = this.component('./dependencies.js')
+    const components = this.component('./dependencies/index.js')
       .getInOrder(this.components(), this);
     if (components.errors.length) {
       console.log('Errors occurred during initialization phase:');
@@ -131,7 +124,7 @@ class Singleton {
    * Exit gracefully after allowing dependencies to exit gracefully.
    */
   async exitGracefully() {
-    await this.component('./database.js').exitGracefully();
+    await this.component('./database/index.js').exitGracefully();
     process.exit(0);
   }
 
@@ -155,19 +148,19 @@ class Singleton {
     app.use(bodyParser.urlencoded({extended: false}));
 
     const expressSession = this.expressSessionModule()({
-      secret: this.env().required('EXPRESS_SESSION_SECRET'),
+      secret: this.component('./env/index.js').required('EXPRESS_SESSION_SECRET'),
       resave: false,
       saveUninitialized: false
     });
 
     app.use(expressSession);
-    app.use(this.component('./authentication.js').passport().initialize());
-    app.use(this.component('./authentication.js').passport().session());
+    app.use(this.component('./authentication/index.js').passport().initialize());
+    app.use(this.component('./authentication/index.js').passport().session());
 
     const that = this;
 
     app.get('/messages', (req, res) => {
-      that.component('./chat.js').message().find({},(err, messages)=> {
+      that.component('./chat/index.js').message().find({},(err, messages)=> {
         res.send(messages);
       });
     });
@@ -182,12 +175,12 @@ class Singleton {
       });
     });
 
-    this.component('./chat.js').message().find({},(err, messages)=> {
+    this.component('./chat/index.js').message().find({},(err, messages)=> {
       console.log(messages);
     });
 
     app.post('/messages', (req, res) => {
-      var message = new (that.component('./chat.js').message())(req.body);
+      var message = new (that.component('./chat/index.js').message())(req.body);
       message.save((err) =>{
         if(err) {
           res.sendStatus(500);
@@ -203,7 +196,7 @@ class Singleton {
     );
 
     app.post('/login', (req, res, next) => {
-      this.component('./authentication.js').passport().authenticate('local',
+      this.component('./authentication/index.js').passport().authenticate('local',
       (err, user, info) => {
         if (err) {
           console.log('error during /login');
@@ -230,7 +223,7 @@ class Singleton {
       })(req, res, next);
     });
 
-    app.get('/', this.component('./authentication.js').loggedIn,
+    app.get('/', this.component('./authentication/index.js').loggedIn,
       (req, res) => {
         res.sendFile('private.html',
         { root: '/usr/src/app/private' });

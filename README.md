@@ -52,9 +52,9 @@ This allows you to test Javascript in isolation and does not interact with your 
 
     1 + 1;
 
-You can also interact with modules in your application, but they will not have been initialized, and they will not have access to your current application's state (for example, they cannot know how many users are currently connected, because that information is stored in memory in the application's process). For example, if you want to test the included ./random.js module, you can run, in the sandbox:
+You can also interact with modules in your application, but they will not have been initialized, and they will not have access to your current application's state (for example, they cannot know how many users are currently connected, because that information is stored in memory in the application's process). For example, if you want to test the included ./random/index.js module, you can run, in the sandbox:
 
-    require('./app/random.js').random();
+    require('./app/random/index.js').random();
 
 The sandbox cli is completely unaware of the database or your running process.
 
@@ -80,11 +80,11 @@ The purpose of the app CLI is to have access to this information in your running
 
 You can **pipe** commands to the cli, like this:
 
-    echo 'require("./app/random.js").random()' | ./scripts/node-cli-app.sh
+    echo 'require("./app/random/index.js").random()' | ./scripts/node-cli-app.sh
 
 or
 
-    echo 'require("./app/random.js").random()' | ./scripts/node-cli-sandbox.sh
+    echo 'require("./app/random/index.js").random()' | ./scripts/node-cli-sandbox.sh
 
 Resources
 -----
