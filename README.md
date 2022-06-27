@@ -76,6 +76,8 @@ The purpose of the app CLI is to have access to this information in your running
 
     app.numUsers();
 
+This should give you the same number of users online as you see in the web interface.
+
 ## Piping commands to the CLI
 
 You can **pipe** commands to the cli, like this:
