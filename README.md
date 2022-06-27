@@ -80,7 +80,7 @@ The purpose of the app CLI is to have access to this information in your running
 
 You can **pipe** commands to the cli, like this:
 
-    echo 'require("./app/random/index.js").random()' | ./scripts/node-cli-app.sh
+    echo 'app.component("./random/index.js").random()' | ./scripts/node-cli-app.sh
 
 or
 
