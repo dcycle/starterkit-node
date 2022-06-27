@@ -6,8 +6,8 @@ set -e
 
 echo "Making sure random numbers are different each time."
 
-RAND1=$(echo 'console.log(require("./app/random/index.js").random())' | ./scripts/node-cli-sandbox.sh)
-RAND2=$(echo 'console.log(require("./app/random/index.js").random())' | ./scripts/node-cli-sandbox.sh)
+RAND1=$(echo 'app.component("./random/index.js").random()' | ./scripts/node-cli-app.sh)
+RAND2=$(echo 'app.component("./random/index.js").random()' | ./scripts/node-cli-app.sh)
 
 echo "First"
 echo "$RAND1"
