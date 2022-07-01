@@ -22,6 +22,7 @@ class Singleton {
       './chat/index.js',
       './authentication/index.js',
       './repl/index.js',
+      './express/index.js',
     ];
   }
 
@@ -41,14 +42,6 @@ class Singleton {
   bodyParser() {
     // $FlowExpectedError
     return require('body-parser');
-  }
-
-  /**
-   * Mockable wrapper around the express module.
-   */
-  express() {
-    // $FlowExpectedError
-    return require('express');
   }
 
   /**
@@ -135,16 +128,13 @@ class Singleton {
     staticPath /*:: : string */,
     cliPort /*:: : number */,
   ) {
-    // App.
-    const app = this.express()();
-
     // $FlowExpectedError
-    const http = this.http().Server(app);
+    const http = this.http().Server(this.component('./express/index.js').expressApp());
 
-    app.use(this.express().static(staticPath));
+    this.component('./express/index.js').expressApp().use(this.component('./express/index.js').express().static(staticPath));
     var bodyParser = this.bodyParser();
-    app.use(bodyParser.json());
-    app.use(bodyParser.urlencoded({extended: false}));
+    this.component('./express/index.js').expressApp().use(bodyParser.json());
+    this.component('./express/index.js').expressApp().use(bodyParser.urlencoded({extended: false}));
 
     const expressSession = this.expressSessionModule()({
       secret: this.component('./env/index.js').required('EXPRESS_SESSION_SECRET'),
@@ -152,13 +142,13 @@ class Singleton {
       saveUninitialized: false
     });
 
-    app.use(expressSession);
-    app.use(this.component('./authentication/index.js').passport().initialize());
-    app.use(this.component('./authentication/index.js').passport().session());
+    this.component('./express/index.js').expressApp().use(expressSession);
+    this.component('./express/index.js').expressApp().use(this.component('./authentication/index.js').passport().initialize());
+    this.component('./express/index.js').expressApp().use(this.component('./authentication/index.js').passport().session());
 
     const that = this;
 
-    app.get('/messages', (req, res) => {
+    this.component('./express/index.js').expressApp().get('/messages', (req, res) => {
       that.component('./chat/index.js').message().find({},(err, messages)=> {
         res.send(messages);
       });
@@ -178,7 +168,7 @@ class Singleton {
       console.log(messages);
     });
 
-    app.post('/messages', (req, res) => {
+    this.component('./express/index.js').expressApp().post('/messages', (req, res) => {
       var message = new (that.component('./chat/index.js').message())(req.body);
       message.save((err) =>{
         if(err) {
@@ -189,12 +179,12 @@ class Singleton {
       });
     });
 
-    app.get('/login',
+    this.component('./express/index.js').expressApp().get('/login',
       (req, res) => res.sendFile('login.html',
       { root: '/usr/src/app/private' })
     );
 
-    app.post('/login', (req, res, next) => {
+    this.component('./express/index.js').expressApp().post('/login', (req, res, next) => {
       this.component('./authentication/index.js').passport().authenticate('local',
       (err, user, info) => {
         if (err) {
@@ -222,14 +212,14 @@ class Singleton {
       })(req, res, next);
     });
 
-    app.get('/', this.component('./authentication/index.js').loggedIn,
+    this.component('./express/index.js').expressApp().get('/', this.component('./authentication/index.js').loggedIn,
       (req, res) => {
         res.sendFile('private.html',
         { root: '/usr/src/app/private' });
       }
     );
 
-    app.post('/logout', function(req, res, next) {
+    this.component('./express/index.js').expressApp().post('/logout', function(req, res, next) {
       req.logout(function(err) {
         if (err) { return next(err); }
         res.redirect('/');

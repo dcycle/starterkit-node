@@ -21,6 +21,7 @@ class Singleton extends require('../component/index.js') {
   dependencies() {
     return [
       './database/index.js',
+      './socket/index.js',
     ];
   }
 

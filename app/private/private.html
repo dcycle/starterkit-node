@@ -70,7 +70,7 @@
         $.post('/messages', message)
       }
 
-      var socket = io();
+      var socket = io.connect(window.location.origin,{query:'loggeduser=user1'});
 
       function updateNumUsers(users) {
         $("#numusers").html(users);
