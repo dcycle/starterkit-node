@@ -123,11 +123,12 @@ class Singleton {
   ) {
     // $FlowExpectedError
     const http = this.component('./express/index.js').httpServer();
+    const expressApp = this.component('./express/index.js').expressApp();
 
-    this.component('./express/index.js').expressApp().use(this.component('./express/index.js').express().static(staticPath));
+    expressApp.use(this.component('./express/index.js').express().static(staticPath));
     var bodyParser = this.bodyParser();
-    this.component('./express/index.js').expressApp().use(bodyParser.json());
-    this.component('./express/index.js').expressApp().use(bodyParser.urlencoded({extended: false}));
+    expressApp.use(bodyParser.json());
+    expressApp.use(bodyParser.urlencoded({extended: false}));
 
     const expressSession = this.expressSessionModule()({
       secret: this.component('./env/index.js').required('EXPRESS_SESSION_SECRET'),
@@ -135,13 +136,13 @@ class Singleton {
       saveUninitialized: false
     });
 
-    this.component('./express/index.js').expressApp().use(expressSession);
-    this.component('./express/index.js').expressApp().use(this.component('./authentication/index.js').passport().initialize());
-    this.component('./express/index.js').expressApp().use(this.component('./authentication/index.js').passport().session());
+    expressApp.use(expressSession);
+    expressApp.use(this.component('./authentication/index.js').passport().initialize());
+    expressApp.use(this.component('./authentication/index.js').passport().session());
 
     const that = this;
 
-    this.component('./express/index.js').expressApp().get('/messages', (req, res) => {
+    expressApp.get('/messages', (req, res) => {
       that.component('./chat/index.js').message().find({},(err, messages)=> {
         res.send(messages);
       });
@@ -161,7 +162,7 @@ class Singleton {
       console.log(messages);
     });
 
-    this.component('./express/index.js').expressApp().post('/messages', (req, res) => {
+    expressApp.post('/messages', (req, res) => {
       var message = new (that.component('./chat/index.js').message())(req.body);
       message.save((err) =>{
         if(err) {
@@ -172,12 +173,12 @@ class Singleton {
       });
     });
 
-    this.component('./express/index.js').expressApp().get('/login',
+    expressApp.get('/login',
       (req, res) => res.sendFile('login.html',
       { root: '/usr/src/app/private' })
     );
 
-    this.component('./express/index.js').expressApp().post('/login', (req, res, next) => {
+    expressApp.post('/login', (req, res, next) => {
       this.component('./authentication/index.js').passport().authenticate('local',
       (err, user, info) => {
         if (err) {
@@ -205,14 +206,14 @@ class Singleton {
       })(req, res, next);
     });
 
-    this.component('./express/index.js').expressApp().get('/', this.component('./authentication/index.js').loggedIn,
+    expressApp.get('/', this.component('./authentication/index.js').loggedIn,
       (req, res) => {
         res.sendFile('private.html',
         { root: '/usr/src/app/private' });
       }
     );
 
-    this.component('./express/index.js').expressApp().post('/logout', function(req, res, next) {
+    expressApp.post('/logout', function(req, res, next) {
       req.logout(function(err) {
         if (err) { return next(err); }
         res.redirect('/');
