@@ -8,17 +8,7 @@
 (async function () {
   'use strict';
   const app = require('../app.js');
-  app.init({
-    'modules': {
-      './chat/index.js': {},
-      './authentication/index.js': {},
-      './repl/index.js': {},
-      './express/index.js': {},
-      './staticPath/index.js': {
-        'paths': ['/usr/src/app/static']
-      },
-    },
-  }).then(async () => {
+  app.init().then(async () => {
     const env = app.component('./env/index.js');
 
     const username = String(env.required('MY_USERNAME'));
