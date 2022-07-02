@@ -56,6 +56,7 @@ class Singleton {
 
       this._config = config;
       console.log(this.component('./config/index.js').config());
+      console.log(this._config);
 
       const that = this;
 
