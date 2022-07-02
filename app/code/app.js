@@ -53,14 +53,6 @@ class Singleton {
   }
 
   /**
-   * Mockable wrapper around the http module.
-   */
-  http() {
-    // $FlowExpectedError
-    return require('http');
-  }
-
-  /**
    * Init the application and all its dependencies.
    */
   async init() {
@@ -129,7 +121,7 @@ class Singleton {
     cliPort /*:: : number */,
   ) {
     // $FlowExpectedError
-    const http = this.http().Server(this.component('./express/index.js').expressApp());
+    const http = this.component('./express/index.js').httpServer();
 
     this.component('./express/index.js').expressApp().use(this.component('./express/index.js').express().static(staticPath));
     var bodyParser = this.bodyParser();

@@ -13,5 +13,4 @@ npm install \
   passport \
   passport-local-mongoose \
   socket.io \
-  express-session \
-  http
+  express-session
