@@ -18,12 +18,7 @@ class Singleton {
    * Get the components we want. Depedencies and order will be managed later.
    */
   components() {
-    return [
-      './chat/index.js',
-      './authentication/index.js',
-      './repl/index.js',
-      './express/index.js',
-    ];
+    return Object.keys(this._config.modules);
   }
 
   /**
@@ -55,8 +50,10 @@ class Singleton {
   /**
    * Init the application and all its dependencies.
    */
-  async init() {
+  async init(config) {
     try {
+      this._config = config;
+
       const that = this;
 
       await this.eachComponentAsync(async function(component) {
