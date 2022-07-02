@@ -1,0 +1,9 @@
+---
+modules:
+  ./authentication/index.js': {}
+  ./repl/index.js': {}
+  ./express/index.js': {}
+  ./staticPath/index.js':
+    paths:
+      - /usr/src/app/static
+  ./chat/index.js': {}

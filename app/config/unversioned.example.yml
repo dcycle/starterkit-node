@@ -1,0 +1,7 @@
+# This can be used for API keys or anything which differs from one
+# environment to another.
+---
+modules:
+  ./someModule/index.js: {
+    'super-secret-api-key': 'princess',
+  }

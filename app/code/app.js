@@ -52,7 +52,10 @@ class Singleton {
    */
   async init(config) {
     try {
+      await this.component('./config/index.js').init(this);
+
       this._config = config;
+      console.log(this.component('./config/index.js').config());
 
       const that = this;
 

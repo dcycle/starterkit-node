@@ -13,4 +13,6 @@ npm install \
   passport \
   passport-local-mongoose \
   socket.io \
-  express-session
+  express-session \
+  js-yaml \
+  deepmerge

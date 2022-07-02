@@ -9,6 +9,7 @@ services:
       - "./app/private:/usr/src/app/private"
       - "./app/code:/usr/src/app/app"
       - "./app/test:/usr/src/app/test"
+      - "./app/config:/usr/src/app/config"
     links:
       - mongo:mongo
     environment:
