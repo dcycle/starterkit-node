@@ -47,6 +47,10 @@ class Singleton {
     return require('express-session');
   }
 
+  config() {
+    return this._config;
+  }
+
   /**
    * Init the application and all its dependencies.
    */
@@ -125,7 +129,6 @@ class Singleton {
     const http = this.component('./express/index.js').httpServer();
     const expressApp = this.component('./express/index.js').expressApp();
 
-    expressApp.use(this.component('./express/index.js').express().static(staticPath));
     var bodyParser = this.bodyParser();
     expressApp.use(bodyParser.json());
     expressApp.use(bodyParser.urlencoded({extended: false}));
