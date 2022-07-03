@@ -31,14 +31,6 @@ class Singleton {
     return require(component);
   }
 
-  /**
-   * Mockable wrapper around the body-parser module.
-   */
-  bodyParser() {
-    // $FlowExpectedError
-    return require('body-parser');
-  }
-
   config() {
     return this.component('./config/index.js').config();
   }
@@ -123,10 +115,6 @@ class Singleton {
     // $FlowExpectedError
     const http = this.component('./express/index.js').httpServer();
     const expressApp = this.component('./express/index.js').expressApp();
-
-    var bodyParser = this.bodyParser();
-    expressApp.use(bodyParser.json());
-    expressApp.use(bodyParser.urlencoded({extended: false}));
 
     const expressSession = this.component('express-session')({
       secret: this.component('./env/index.js').required('EXPRESS_SESSION_SECRET'),
