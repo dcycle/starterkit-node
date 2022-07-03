@@ -27,4 +27,4 @@ class Env {
 }
 
 // $FlowExpectedError
-module.exports = new Singleton();
+module.exports = new Env();

@@ -14,4 +14,4 @@ class Random {
 }
 
 // $FlowExpectedError
-module.exports = new Singleton();
+module.exports = new Random();

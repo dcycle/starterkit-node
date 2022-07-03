@@ -22,4 +22,4 @@ class Socket extends require('../component/index.js') {
 }
 
 // $FlowExpectedError
-module.exports = new Singleton();
+module.exports = new Socket();

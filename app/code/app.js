@@ -219,4 +219,4 @@ class App {
 }
 
 // $FlowExpectedError
-module.exports = new Singleton();
+module.exports = new App();
