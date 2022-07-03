@@ -25,6 +25,7 @@ class Singleton extends require('../component/index.js') {
   }
 
   express() {
+    // $FlowFixMe
     return require('express');
   }
   httpServer() {

@@ -29,6 +29,7 @@ class Singleton extends require('../component/index.js') {
   add(file, existing) {
     let ret = existing;
 
+    // $FlowFixMe
     const merge = require('deepmerge');
 
     const newyaml = this.fileToObject(file);

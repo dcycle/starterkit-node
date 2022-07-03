@@ -4,8 +4,6 @@
 #
 set -e
 
-mv /docker-resources/node/package.json /usr/src/app/package.json
-
 npm install \
   express \
   mongoose \

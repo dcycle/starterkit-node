@@ -50,7 +50,7 @@ class Singleton extends require('../component/index.js') {
   }
 
   passport() {
-    // $FlowExpectedError
+    // $FlowFixMe
     return require('passport');
   }
 
