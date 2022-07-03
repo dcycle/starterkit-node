@@ -1,8 +1,8 @@
 // @flow
 /**
- * My database module.
+ * My socket module.
  *
- * Interact with the database.
+ * Interact with socket.io.
  */
 
 class Singleton extends require('../component/index.js') {
