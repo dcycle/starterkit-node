@@ -18,7 +18,7 @@ class Singleton {
    * Get the components we want. Depedencies and order will be managed later.
    */
   components() {
-    return Object.keys(this._config.modules);
+    return Object.keys(this.config().modules);
   }
 
   /**
@@ -48,32 +48,41 @@ class Singleton {
   }
 
   config() {
-    return this._config;
+    return this.component('./config/index.js').config();
   }
 
   /**
    * Init the application and all its dependencies.
+   *
+   * This is done in two phases: the bootstrap, which is core functionality
+   * for loading YML configuration from ./app/config/*; then, to initialize
+   * the actual application functionality.
    */
   async init() {
-    try {
-      await this.component('./config/index.js').init(this);
+    await this.initBootstrap();
+    await this.initModules();
+  }
 
-      this._config = this.component('./config/index.js').config();
+  /**
+   * Bootstrap the application, required before loading modules.
+   */
+  async initBootstrap() {
+    await this.component('./config/index.js').init(this);
+  }
 
-      const that = this;
+  /**
+   * Load all modules and their dependencies.
+   *
+   * Your configuration, which is the active modules, are in ./app/config
+   */
+  async initModules() {
+    const that = this;
 
-      await this.eachComponentAsync(async function(component) {
-        if (typeof that.component(component).init === 'function') {
-          await that.component(component).init(that);
-        }
-      });
-    }
-    catch (err) {
-      console.log('An error occurred during the initialization phase.');
-      console.log(err);
-      console.log('For your safety, we will exit now.');
-      process.exit(1);
-    }
+    await this.eachComponentAsync(async function(component) {
+      if (typeof that.component(component).init === 'function') {
+        await that.component(component).init(that);
+      }
+    });
   }
 
   componentsWithDependencies() {
