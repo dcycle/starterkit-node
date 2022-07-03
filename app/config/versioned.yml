@@ -2,8 +2,10 @@
 modules:
   ./chat/index.js: {}
   ./authentication/index.js: {}
-  ./repl/index.js: {}
-  ./express/index.js: {}
+  ./repl/index.js:
+    port: 8001
+  ./express/index.js:
+    port: 8080
   ./staticPath/index.js:
     paths:
       - /usr/src/app/static

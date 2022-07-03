@@ -118,11 +118,7 @@ class Singleton {
   /**
    * Run the application.
    */
-  run(
-    port /*:: : number */,
-    staticPath /*:: : string */,
-    cliPort /*:: : number */,
-  ) {
+  run() {
     // $FlowExpectedError
     const http = this.component('./express/index.js').httpServer();
     const expressApp = this.component('./express/index.js').expressApp();
@@ -219,10 +215,6 @@ class Singleton {
         if (err) { return next(err); }
         res.redirect('/');
       });
-    });
-
-    http.listen(port, function() {
-      console.log('listening on *:' + port);
     });
 
     this.eachComponent(async function(component) {

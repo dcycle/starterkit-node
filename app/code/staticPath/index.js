@@ -13,7 +13,7 @@ class Singleton extends require('../component/index.js') {
     const expressModule = app.component('./express/index.js').express();
 
     app.config().modules['./staticPath/index.js'].paths.forEach((e) => {
-      expressApp.use(expressModule.static('/usr/src/app/static'));
+      expressApp.use(expressModule.static(e));
     });
   }
   dependencies() {

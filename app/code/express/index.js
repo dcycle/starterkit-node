@@ -14,6 +14,16 @@ class Singleton extends require('../component/index.js') {
   }
   async exitGracefully() {
   }
+
+  async run(
+    app /*:: : Object */
+  ) /*:: : Object */ {
+    const port = app.config().modules['./express/index.js'].port;
+    this.httpServer().listen(port, function() {
+      console.log('listening on *:' + port);
+    });
+  }
+
   express() {
     return require('express');
   }
