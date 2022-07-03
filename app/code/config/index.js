@@ -29,9 +29,9 @@ class Singleton extends require('../component/index.js') {
   add(file, existing) {
     let ret = existing;
 
-    const merge = require('deepmerge')
+    const merge = require('deepmerge');
 
-    const newyaml = this.fileToObject(file)
+    const newyaml = this.fileToObject(file);
 
     ret = merge(existing, newyaml);
 
@@ -43,13 +43,13 @@ class Singleton extends require('../component/index.js') {
     const fs   = require('fs');
 
     if (!fs.existsSync(file)) {
-      return {}
+      return {};
     }
 
     const obj = yaml.load(fs.readFileSync(file, 'utf8'));
 
     if (obj === null) {
-      return {}
+      return {};
     }
 
     return obj;
