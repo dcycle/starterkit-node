@@ -39,14 +39,6 @@ class Singleton {
     return require('body-parser');
   }
 
-  /**
-   * Mockable wrapper around the express-session module.
-   */
-  expressSessionModule() {
-    // $FlowExpectedError
-    return require('express-session');
-  }
-
   config() {
     return this.component('./config/index.js').config();
   }
@@ -136,7 +128,7 @@ class Singleton {
     expressApp.use(bodyParser.json());
     expressApp.use(bodyParser.urlencoded({extended: false}));
 
-    const expressSession = this.expressSessionModule()({
+    const expressSession = this.component('express-session')({
       secret: this.component('./env/index.js').required('EXPRESS_SESSION_SECRET'),
       resave: false,
       saveUninitialized: false
