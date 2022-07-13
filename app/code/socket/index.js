@@ -9,6 +9,8 @@ class Socket extends require('../component/index.js') {
   async init(
     app /*:: : Object */
   ) /*:: : Object */ {
+    const http = app.component('./express/index.js').http();
+    this._socketIoHttp = this.socketIo()(http);
   }
   async exitGracefully() {
   }
@@ -18,6 +20,27 @@ class Socket extends require('../component/index.js') {
   socketIo() {
     // $FlowExpectedError
     return require('socket.io');
+  }
+  socketIoHttp() {
+    return this._socketIoHttp;
+  }
+  dependencies() {
+    return [
+      './express/index.js',
+    ];
+  }
+  async run(
+    app /*:: : Object */
+  ) /*:: : Object */ {
+    const io = this.socketIoHttp();
+
+    io.on('connection', (socket) => {
+      io.emit('updateNumUsers', ++numUsers);
+
+      socket.on('disconnect', () => {
+        io.emit('updateNumUsers', --numUsers);
+      });
+    });
   }
 }
 

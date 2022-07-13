@@ -134,15 +134,7 @@ class App {
       });
     });
 
-    var io = this.socketIo()(http);
-
-    io.on('connection', (socket) => {
-      io.emit('updateNumUsers', ++numUsers);
-
-      socket.on('disconnect', () => {
-        io.emit('updateNumUsers', --numUsers);
-      });
-    });
+    const io = this.component('./socket/index.js').socketIoHttp();
 
     this.component('./chat/index.js').message().find({},(err, messages)=> {
       console.log(messages);
