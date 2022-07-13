@@ -5,19 +5,21 @@
  * Interact with socket.io.
  */
 
+let numUsers = 0;
+
 class Socket extends require('../component/index.js') {
   async init(
     app /*:: : Object */
   ) /*:: : Object */ {
-    const http = app.component('./express/index.js').http();
+    const http = app.component('./express/index.js').httpServer();
     this._socketIoHttp = this.socketIo()(http);
-    const io = this.socketIoHttp();
 
-    io.on('connection', (socket) => {
-      io.emit('updateNumUsers', ++numUsers);
+    const that = this;
+    this._socketIoHttp.on('connection', (socket) => {
+      that._socketIoHttp.emit('updateNumUsers', ++numUsers);
 
       socket.on('disconnect', () => {
-        io.emit('updateNumUsers', --numUsers);
+        that._socketIoHttp.emit('updateNumUsers', --numUsers);
       });
     });
   }

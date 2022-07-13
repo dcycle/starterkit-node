@@ -1,7 +1,5 @@
 // @flow
 
-let numUsers = 0;
-
 /**
  * Singleton representing the whole application.
  */
