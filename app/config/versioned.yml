@@ -1,7 +1,7 @@
 ---
 modules:
   ./chat/index.js: {}
-  ./authentication/index.js: {}
+  ./userPassAuth/index.js: {}
   ./numUsers/index.js: {}
   ./repl/index.js:
     port: 8001
