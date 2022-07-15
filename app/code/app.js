@@ -2,14 +2,84 @@
 
 /**
  * Singleton representing the whole application.
+ *
+ * This is not meant to be edited unless if you want to fiddle with the core
+ * functionality such as which configuration module to use (see
+ * configModuleName()).
+ *
+ * For regular usage, you can modify ./app/config/versioned.yml and
+ * ./app/config/unversioned.yml which will tell the app which components
+ * (modules) to load.
+ *
+ * Each component can then have dependencies, an async init() method and a non-
+ * async run() method, which are called automatically in the right order.
  */
 class App {
 
   /**
-   * Get the components we want. Depedencies and order will be managed later.
+   * Get the configuration module name to use.
+   *
+   * The configuration module is responsible for loading configuration,
+   * normally from ./app/config/versioned.yml and ./app/config/unversioned.yml.
+   *
+   * If you want to do anything funky, you can modify the config to use here.
    */
-  components() {
-    return Object.keys(this.config().modules);
+  configModuleName() {
+    return './config/index.js';
+  }
+
+  /**
+   * Get the components we want. Depedencies and order will be managed later.
+   *
+   * The components should be in the form of an object, where keys, such
+   * as './staticPath/index.js', represent components, and values, such as
+   * {}, or { paths: ['/usr/src/app/static'] }, represent configuration to pass
+   * to those components.
+   *
+   * The components do not include dependencies. For that, call
+   * componentsWithDependencies().
+   *
+   * componentsWithDependencies() will return required components including
+   * dependencies in the order in which they need to be loaded, and will not
+   * include configuration values.
+   *
+   * Therefore if you need to pass configuration values to a dependency of a
+   * a module, you might want to consider adding the dependency to the module
+   * list in ./app/config/versioned.yml or ./app/config/unversioned.yml.
+   */
+  components() /*:: : object */ {
+    // https://stackoverflow.com/a/1535650/1207752
+    if (typeof this.components.ret == 'undefined') {
+      this.components.ret = Object.keys(this.config().modules);
+    }
+    return this.components.ret;
+  }
+
+  /**
+   * Get all components, with dependencies, in the order we want to load them.
+   *
+   * This will return an array of all components that need to be loaded,
+   * including dependencies, but without configuration.
+   *
+   * If you need a component's configuration options (for example
+   * './staticPath/index.js' might define _where_ its static files are located),
+   * then use the components() method.
+   */
+  componentsWithDependencies() /*:: : array[string] */ {
+    // https://stackoverflow.com/a/1535650/1207752
+    if (typeof this.componentsWithDependencies.ret == 'undefined') {
+      // It has not... perform the initialization
+
+      const components = this.component('./dependencies/index.js')
+        .getInOrder(this.components(), this);
+      if (components.errors.length) {
+        console.log('Errors occurred during initialization phase:');
+        console.log(components.errors);
+        throw 'Errors occurred while fetching dependencies, see console.';
+      }
+      this.componentsWithDependencies.ret = components.results;
+    }
+    return this.componentsWithDependencies.ret;
   }
 
   /**
@@ -22,8 +92,18 @@ class App {
     return require(component);
   }
 
-  config() {
-    return this.component('./config/index.js').config();
+  /**
+   * Get the site configuration from ./app/config/*.
+   *
+   * This will be a combination of ./app/config/versioned.yml and
+   * ./app/config/unversioned.yml (unless you change the return value of
+   * configModuleName()).
+   */
+  config()  /*:: : object */ {
+    if (typeof this.config.ret == 'undefined') {
+      this.config.ret = this.component(this.configModuleName()).config();
+    }
+    return this.config.ret;
   }
 
   /**
@@ -42,13 +122,11 @@ class App {
    * Bootstrap the application, required before loading modules.
    */
   async initBootstrap() {
-    await this.component('./config/index.js').init(this);
+    await this.component(this.configModuleName()).init(this);
   }
 
   /**
    * Load all modules and their dependencies.
-   *
-   * Your configuration, which is the active modules, are in ./app/config
    */
   async initModules() {
     const that = this;
@@ -58,17 +136,6 @@ class App {
         await that.component(component).init(that);
       }
     });
-  }
-
-  componentsWithDependencies() {
-    const components = this.component('./dependencies/index.js')
-      .getInOrder(this.components(), this);
-    if (components.errors.length) {
-      console.log('Errors occurred during initialization phase:');
-      console.log(components.errors);
-      throw 'Errors occurred while fetching dependencies, see console.';
-    }
-    return components.results;
   }
 
   async eachComponentAsync(callback) {
@@ -104,7 +171,6 @@ class App {
    */
   run() {
     // $FlowExpectedError
-    const http = this.component('./express/index.js').httpServer();
     const expressApp = this.component('./express/index.js').expressApp();
 
     const expressSession = this.component('express-session')({
