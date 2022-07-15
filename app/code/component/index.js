@@ -10,6 +10,11 @@ const module_exports /*:: : Object */ = class {
   ) /*:: : Object */ {
   }
 
+  async run(
+    app /*:: : Object */
+  ) /*:: : Object */ {
+  }
+
   assertFlag(
     flagName /*:: : string */,
     value

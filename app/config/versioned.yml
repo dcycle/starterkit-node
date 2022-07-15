@@ -2,6 +2,7 @@
 modules:
   ./chat/index.js: {}
   ./authentication/index.js: {}
+  ./numUsers/index.js: {}
   ./repl/index.js:
     port: 8001
   ./express/index.js:

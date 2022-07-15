@@ -13,15 +13,6 @@ class Socket extends require('../component/index.js') {
   ) /*:: : Object */ {
     const http = app.component('./express/index.js').httpServer();
     this._socketIoHttp = this.socketIo()(http);
-
-    const that = this;
-    this._socketIoHttp.on('connection', (socket) => {
-      that._socketIoHttp.emit('updateNumUsers', ++numUsers);
-
-      socket.on('disconnect', () => {
-        that._socketIoHttp.emit('updateNumUsers', --numUsers);
-      });
-    });
   }
   async exitGracefully() {
   }
