@@ -6,13 +6,6 @@
 class App {
 
   /**
-   * Get the number of currently connected users.
-   */
-  numUsers() {
-    return numUsers;
-  }
-
-  /**
    * Get the components we want. Depedencies and order will be managed later.
    */
   components() {
