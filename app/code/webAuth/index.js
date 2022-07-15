@@ -14,12 +14,12 @@ class WebAuth extends require('../component/index.js') {
   async run(
     app /*:: : Object */
   ) /*:: : Object */ {
-    // app.component('./express/index.js').expressApp().post('/logout', function(req, res, next) {
-    //   req.logout(function(err) {
-    //     if (err) { return next(err); }
-    //     res.redirect('/');
-    //   });
-    // });
+    app.component('./express/index.js').expressApp().post('/logout', function(req, res, next) {
+      req.logout(function(err) {
+        if (err) { return next(err); }
+        res.redirect('/');
+      });
+    });
   }
 
 }

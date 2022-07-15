@@ -248,13 +248,6 @@ class App {
       }
     );
 
-    expressApp.post('/logout', function(req, res, next) {
-      req.logout(function(err) {
-        if (err) { return next(err); }
-        res.redirect('/');
-      });
-    });
-
     this.eachComponent(async function(component) {
       if (typeof that.component(component).run === 'function') {
         console.log(component + ' has a run() function; calling it.');
