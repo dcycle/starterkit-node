@@ -15,7 +15,7 @@ set -e
 >&2 echo "This runs against your running application and is useful to"
 >&2 echo "test node commands against your running application, for example:"
 >&2 echo ""
->&2 echo "require('./app/app.js').numUsers();"
+>&2 echo "app.component('./numUsers/index.js').numUsers();"
 >&2 echo ""
 >&2 echo "See The Node.js command line interface (CLI) in project README."
 >&2 echo ""

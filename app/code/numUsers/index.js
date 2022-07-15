@@ -5,20 +5,26 @@
  * Interact with socket.io.
  */
 
-let numUsers = 0;
-
 class Socket extends require('../component/index.js') {
   async init(
     app /*:: : Object */
   ) /*:: : Object */ {
     const that = this;
+    this._numUsers = 0;
     this.socket().socketIoHttp().on('connection', (socket) => {
-      this.socket().socketIoHttp().emit('updateNumUsers', ++numUsers);
+      that.socket().socketIoHttp().emit('updateNumUsers', this.numUsers(1));
 
       socket.on('disconnect', () => {
-        this.socket().socketIoHttp().emit('updateNumUsers', --numUsers);
+        that.socket().socketIoHttp().emit('updateNumUsers', this.numUsers(-1));
       });
     });
+  }
+
+  numUsers(
+    increment = 0 /*:: : int */
+  ) {
+    this._numUsers = Math.max(increment, this._numUsers + increment);
+    return this._numUsers;
   }
 
   /**

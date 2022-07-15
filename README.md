@@ -74,7 +74,7 @@ The purpose of the app CLI is to have access to this information in your running
 
     ./scripts/node-cli-app.sh
 
-    app.numUsers();
+    app.component('./numUsers/index.js').numUsers();
 
 This should give you the same number of users online as you see in the web interface.
 
