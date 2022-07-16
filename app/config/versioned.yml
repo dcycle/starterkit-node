@@ -1,6 +1,6 @@
 ---
 modules:
-  ./chat/index.js: {}
+  ./chatWeb/index.js: {}
   ./userPassAuth/index.js: {}
   ./numUsers/index.js: {}
   ./repl/index.js:

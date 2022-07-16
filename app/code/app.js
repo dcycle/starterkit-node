@@ -241,12 +241,12 @@ class App {
       })(req, res, next);
     });
 
-    expressApp.get('/', this.component('./authentication/index.js').loggedIn,
-      (req, res) => {
-        res.sendFile('private.html',
-        { root: '/usr/src/app/private' });
-      }
-    );
+    // expressApp.get('/', [this.component('./authentication/index.js').loggedIn],
+    //   (req, res) => {
+    //     res.sendFile('private.html',
+    //     { root: '/usr/src/app/private' });
+    //   }
+    // );
 
     this.eachComponent(async function(component) {
       if (typeof that.component(component).run === 'function') {
