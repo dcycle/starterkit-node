@@ -18,7 +18,7 @@ class WebAuth extends require('../component/index.js') {
     this._app = app;
 
     app.config().modules['./webAuth/index.js'].authenticated.forEach((e) => {
-      app.component('./express/index.js').addMiddleware(e, [
+      app.component('./express/index.js').addMiddleware('chat', [
         app.component('./authentication/index.js').loggedIn])
     });
 
@@ -35,7 +35,6 @@ class WebAuth extends require('../component/index.js') {
       });
     });
   }
-
 
 }
 
