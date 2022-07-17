@@ -8,7 +8,21 @@ class WebAuth extends require('../component/index.js') {
   dependencies() {
     return [
       './authentication/index.js',
+      './express/index.js',
     ];
+  }
+
+  async init(
+    app /*:: : Object */
+  ) /*:: : Object */ {
+    this._app = app;
+
+    app.config().modules['./webAuth/index.js'].authenticated.forEach((e) => {
+      app.component('./express/index.js').addMiddleware(e, [
+        app.component('./authentication/index.js').loggedIn])
+    });
+
+    return this;
   }
 
   async run(
@@ -21,6 +35,7 @@ class WebAuth extends require('../component/index.js') {
       });
     });
   }
+
 
 }
 

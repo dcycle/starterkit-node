@@ -15,12 +15,19 @@ class ChatWeb extends require('../component/index.js') {
   async run(
     app /*:: : Object */
   ) /*:: : Object */ {
-    app.component('./express/index.js').expressApp().get('/', [app.component('./authentication/index.js').loggedIn],
-      (req, res) => {
+    // app.component('./express/index.js').expressApp().get('/', [app.component('./authentication/index.js').loggedIn],
+    //   (req, res) => {
+    //     res.sendFile('private.html',
+    //     { root: '/usr/src/app/private' });
+    //   }
+    // );
+
+    app.component('./express/index.js').addRoute('chat', 'get', '/', (req, res) => {
         res.sendFile('private.html',
         { root: '/usr/src/app/private' });
       }
     );
+
   }
 
 }

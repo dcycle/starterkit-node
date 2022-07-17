@@ -1,5 +1,8 @@
 ---
 modules:
+  ./webAuth/index.js:
+    authenticated:
+      - chat
   ./chatWeb/index.js: {}
   ./userPassAuth/index.js: {}
   ./numUsers/index.js: {}
