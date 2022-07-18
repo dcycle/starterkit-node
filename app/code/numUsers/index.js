@@ -21,7 +21,7 @@ class Socket extends require('../component/index.js') {
   }
 
   numUsers(
-    increment = 0 /*:: : int */
+    increment /*:: : number */ = 0
   ) {
     this._numUsers = Math.max(increment, this._numUsers + increment);
     return this._numUsers;

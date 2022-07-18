@@ -36,7 +36,7 @@ class Express extends require('../component/index.js') {
   }
 
   addMiddleware(id, callback) {
-    if (!Object.hasOwn(this._middlewares, id)) {
+    if (!this._middlewares.hasOwnProperty(id)) {
       this._middlewares[id] = [];
     }
 

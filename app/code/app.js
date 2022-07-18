@@ -47,11 +47,19 @@ class App {
    * a module, you might want to consider adding the dependency to the module
    * list in ./app/config/versioned.yml or ./app/config/unversioned.yml.
    */
-  components() /*:: : object */ {
+  components() /*:: : Object */ {
     // https://stackoverflow.com/a/1535650/1207752
+    // https://github.com/facebook/flow/issues/8689
+    // $FlowFixMe[method-unbinding]
     if (typeof this.components.ret == 'undefined') {
+      // https://stackoverflow.com/a/1535650/1207752
+      // https://github.com/facebook/flow/issues/8689
+      // $FlowFixMe[method-unbinding]
       this.components.ret = Object.keys(this.config().modules);
     }
+    // https://stackoverflow.com/a/1535650/1207752
+    // https://github.com/facebook/flow/issues/8689
+    // $FlowFixMe[method-unbinding]
     return this.components.ret;
   }
 
@@ -65,8 +73,10 @@ class App {
    * './staticPath/index.js' might define _where_ its static files are located),
    * then use the components() method.
    */
-  componentsWithDependencies() /*:: : array[string] */ {
+  componentsWithDependencies() /*:: : Array<string> */ {
     // https://stackoverflow.com/a/1535650/1207752
+    // https://github.com/facebook/flow/issues/8689
+    // $FlowFixMe[method-unbinding]
     if (typeof this.componentsWithDependencies.ret == 'undefined') {
       // It has not... perform the initialization
 
@@ -77,8 +87,14 @@ class App {
         console.log(components.errors);
         throw 'Errors occurred while fetching dependencies, see console.';
       }
+      // https://stackoverflow.com/a/1535650/1207752
+      // https://github.com/facebook/flow/issues/8689
+      // $FlowFixMe[method-unbinding]
       this.componentsWithDependencies.ret = components.results;
     }
+    // https://stackoverflow.com/a/1535650/1207752
+    // https://github.com/facebook/flow/issues/8689
+    // $FlowFixMe[method-unbinding]
     return this.componentsWithDependencies.ret;
   }
 
@@ -99,10 +115,16 @@ class App {
    * ./app/config/unversioned.yml (unless you change the return value of
    * configModuleName()).
    */
-  config()  /*:: : object */ {
+  config()  /*:: : Object */ {
+    // https://github.com/facebook/flow/issues/8689
+    // $FlowFixMe[method-unbinding]
     if (typeof this.config.ret == 'undefined') {
+      // https://github.com/facebook/flow/issues/8689
+      // $FlowFixMe[method-unbinding]
       this.config.ret = this.component(this.configModuleName()).config();
     }
+    // https://github.com/facebook/flow/issues/8689
+    // $FlowFixMe[method-unbinding]
     return this.config.ret;
   }
 
@@ -114,8 +136,10 @@ class App {
    * the actual application functionality.
    */
   async init() {
+    console.log('Init step starting...');
     await this.initBootstrap();
     await this.initModules();
+    console.log('...init step complete.');
   }
 
   /**
@@ -133,7 +157,11 @@ class App {
 
     await this.eachComponentAsync(async function(component) {
       if (typeof that.component(component).init === 'function') {
+        console.log('[x] ' + component + ' has an init() function; calling it.');
         await that.component(component).init(that);
+      }
+      else {
+        console.log('[ ] ' + component + ' has no init() function; moving on.');
       }
     });
   }
@@ -170,6 +198,8 @@ class App {
    * Run the application.
    */
   run() {
+    console.log('Run step starting...');
+
     // $FlowExpectedError
     const expressApp = this.component('./express/index.js').expressApp();
 
@@ -193,9 +223,9 @@ class App {
 
     const io = this.component('./socket/index.js').socketIoHttp();
 
-    this.component('./chat/index.js').message().find({},(err, messages)=> {
-      console.log(messages);
-    });
+    // this.component('./chat/index.js').message().find({},(err, messages)=> {
+    //   console.log(messages);
+    // });
 
     expressApp.post('/messages', (req, res) => {
       var message = new (that.component('./chat/index.js').message())(req.body);
@@ -250,13 +280,15 @@ class App {
 
     this.eachComponent(async function(component) {
       if (typeof that.component(component).run === 'function') {
-        console.log(component + ' has a run() function; calling it.');
+        console.log('[x] ' + component + ' has a run() function; calling it.');
         that.component(component).run(that);
       }
       else {
-        console.log(component + ' has no run() function; moving on.');
+        console.log('[ ] ' + component + ' has no run() function; moving on.');
       }
     });
+
+    console.log('...run step complete.');
   }
 }
 
