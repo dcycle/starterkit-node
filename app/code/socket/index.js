@@ -5,8 +5,6 @@
  * Interact with socket.io.
  */
 
-let numUsers = 0;
-
 class Socket extends require('../component/index.js') {
   async init(
     app /*:: : Object */
