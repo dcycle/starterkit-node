@@ -179,14 +179,6 @@ class App {
   }
 
   /**
-   * Mockable wrapper around the socket.io module.
-   */
-  socketIo() {
-    // $FlowExpectedError
-    return require('socket.io');
-  }
-
-  /**
    * Exit gracefully after allowing dependencies to exit gracefully.
    */
   async exitGracefully() {
@@ -200,6 +192,8 @@ class App {
   run() {
     console.log('Run step starting...');
 
+    const that = this;
+
     // $FlowExpectedError
     const expressApp = this.component('./express/index.js').expressApp();
 
@@ -212,16 +206,6 @@ class App {
     expressApp.use(expressSession);
     expressApp.use(this.component('./authentication/index.js').passport().initialize());
     expressApp.use(this.component('./authentication/index.js').passport().session());
-
-    const that = this;
-
-    expressApp.get('/messages', (req, res) => {
-      that.component('./chat/index.js').message().find({},(err, messages)=> {
-        res.send(messages);
-      });
-    });
-
-    const io = this.component('./socket/index.js').socketIoHttp();
 
     expressApp.get('/login',
       (req, res) => res.sendFile('login.html',
