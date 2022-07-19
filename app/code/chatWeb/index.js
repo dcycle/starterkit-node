@@ -8,7 +8,7 @@ class ChatWeb extends require('../component/index.js') {
   dependencies() {
     return [
       './express/index.js',
-      './chat/index.js',
+      './chatApi/index.js',
     ];
   }
 
@@ -23,12 +23,17 @@ class ChatWeb extends require('../component/index.js') {
     // );
 
     const path = app.config().modules['./chatWeb/index.js'].path;
+    const io = app.component('./socket/index.js').socketIoHttp();
 
     app.component('./express/index.js').addRoute('chat', 'get', path, (req, res) => {
         res.sendFile('private.html',
         { root: '/usr/src/app/private' });
       }
     );
+
+    app.component('./chat/index.js').addHook((message) => {
+      io.emit('message', message);
+    });
 
   }
 

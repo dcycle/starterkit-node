@@ -26,6 +26,31 @@ class Chat extends require('../component/index.js') {
     ];
   }
 
+  addHook(hook) {
+    this._hooks = this.hooks();
+    this._hooks.push(hook);
+  }
+
+  hooks() {
+    if (typeof this._hooks === 'undefined') {
+      this._hooks = [];
+    }
+    return this._hooks;
+  }
+
+  invoke(message) {
+    for (const hook of this._hooks) {
+      hook(message);
+    }
+  }
+
+  addMessage(messageObject) {
+    const message = this.message()(messageObject);
+    message.save((err) => {
+      this.invoke(messageObject);
+    });
+  }
+
   /**
    * Fetch the "Message" model.
    */
