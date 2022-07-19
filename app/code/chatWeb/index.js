@@ -22,7 +22,9 @@ class ChatWeb extends require('../component/index.js') {
     //   }
     // );
 
-    app.component('./express/index.js').addRoute('chat', 'get', '/', (req, res) => {
+    const path = app.config().modules['./chatWeb/index.js'].path;
+
+    app.component('./express/index.js').addRoute('chat', 'get', path, (req, res) => {
         res.sendFile('private.html',
         { root: '/usr/src/app/private' });
       }

@@ -3,7 +3,8 @@ modules:
   ./webAuth/index.js:
     authenticated:
       - chat
-  ./chatWeb/index.js: {}
+  ./chatWeb/index.js:
+    path: '/'
   ./userPassAuth/index.js: {}
   ./numUsers/index.js: {}
   ./repl/index.js:

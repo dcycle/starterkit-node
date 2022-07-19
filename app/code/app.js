@@ -223,10 +223,6 @@ class App {
 
     const io = this.component('./socket/index.js').socketIoHttp();
 
-    // this.component('./chat/index.js').message().find({},(err, messages)=> {
-    //   console.log(messages);
-    // });
-
     expressApp.post('/messages', (req, res) => {
       var message = new (that.component('./chat/index.js').message())(req.body);
       message.save((err) =>{
@@ -270,13 +266,6 @@ class App {
 
       })(req, res, next);
     });
-
-    // expressApp.get('/', [this.component('./authentication/index.js').loggedIn],
-    //   (req, res) => {
-    //     res.sendFile('private.html',
-    //     { root: '/usr/src/app/private' });
-    //   }
-    // );
 
     this.eachComponent(async function(component) {
       if (typeof that.component(component).run === 'function') {

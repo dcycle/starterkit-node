@@ -30,6 +30,11 @@ class Chat extends require('../component/index.js') {
    * Fetch the "Message" model.
    */
   message() {
+    // Sample usage:
+    // this.message().find({},(err, messages)=> {
+    //   return messages;
+    // });
+
     return this.myMessage;
   }
 
