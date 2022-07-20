@@ -4,7 +4,17 @@
  */
 
 class Random {
-  random(size = 32) {
+
+  /**
+   * Generate a string of "size" bypes which can look something like
+   * lJSyYJKpb0aNdfaqbcjIprmg9nKi69Em.
+   */
+  random(
+    size /*:: : number */ = 32
+  ) /*:: : string */ {
+    if (size <= 0) {
+      return '';
+    }
     return require('crypto')
       .randomBytes(size)
       .toString('base64')
