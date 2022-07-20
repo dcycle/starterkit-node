@@ -31,45 +31,39 @@ class Express extends require('../component/index.js') {
     return this;
   }
 
-  addRoute(id, method, path, callback) {
-    this.expressApp()[method]([path], this.middlewares(id), callback);
+  addRoute(id, verb, path, callback) {
+    this.expressApp()[verb]([path], this.middlewares(id, verb), callback);
   }
 
-  addMiddleware(id, callback) {
-    if (!this._middlewares.hasOwnProperty(id)) {
-      this._middlewares[id] = [];
+  routeKey(id, verb) {
+    return id + ':' + verb;
+  }
+
+  addMiddleware(id, verb, callback) {
+    const key = this.routeKey(id, verb);
+
+    if (!this._middlewares.hasOwnProperty(key)) {
+      this._middlewares[key] = [];
     }
 
-    this._middlewares[id].push(callback);
+    this._middlewares[key].push(callback);
   }
 
-  middlewares(id) {
+  middlewares(id, verb) {
+    const key = this.routeKey(id, verb);
+
     let ret = [
       (req, res, next) => {
-        res.send('Please make sure you specify the access rules for the path ' + id);
+        res.send('Please make sure you specify the access rules for the path ' + id + ' with verb ' + verb);
       }
     ];
 
-    if (typeof this._middlewares[id] !== 'undefined' && this._middlewares[id] !== []) {
-      ret = this._middlewares[id];
+    if (typeof this._middlewares[key] !== 'undefined' && this._middlewares[key] !== []) {
+      ret = this._middlewares[key];
     }
 
     return ret;
   }
-
-  // app.component('./express/index.js').expressApp().get('/', [app.component('./authentication/index.js').loggedIn],
-  //   (req, res) => {
-  //     res.sendFile('private.html',
-  //     { root: '/usr/src/app/private' });
-  //   }
-  // );
-
-  // app.component('./express/index.js').addRoute('chat', 'get', '/', (req, res) => {
-  //     res.sendFile('private.html',
-  //     { root: '/usr/src/app/private' });
-  //   }
-  // );
-
 
   express() {
     // $FlowFixMe

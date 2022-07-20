@@ -2,7 +2,12 @@
 modules:
   ./webAuth/index.js:
     authenticated:
-      - chat
+      - route: chat
+        verb: get
+      - route: chatApi
+        verb: get
+      - route: chatApi
+        verb: post
   ./chatWeb/index.js:
     path: '/'
   ./userPassAuth/index.js: {}
