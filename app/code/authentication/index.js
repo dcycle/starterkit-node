@@ -39,7 +39,6 @@ class Authentication extends require('../component/index.js') {
     if (req.user) {
       next();
     } else {
-      console.log(Object.keys(req));
       res.redirect('/login');
     }
   }
