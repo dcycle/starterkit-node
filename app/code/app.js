@@ -194,19 +194,6 @@ class App {
 
     const that = this;
 
-    // $FlowExpectedError
-    const expressApp = this.component('./express/index.js').expressApp();
-
-    const expressSession = this.component('express-session')({
-      secret: this.component('./env/index.js').required('EXPRESS_SESSION_SECRET'),
-      resave: false,
-      saveUninitialized: false
-    });
-
-    expressApp.use(expressSession);
-    expressApp.use(this.component('./authentication/index.js').passport().initialize());
-    expressApp.use(this.component('./authentication/index.js').passport().session());
-
     this.eachComponent(async function(component) {
       if (typeof that.component(component).run === 'function') {
         console.log('[x] ' + component + ' has a run() function; calling it.');

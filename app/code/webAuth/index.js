@@ -9,6 +9,8 @@ class WebAuth extends require('../component/index.js') {
     return [
       './authentication/index.js',
       './express/index.js',
+      './env/index.js',
+      'express-session',
     ];
   }
 
@@ -28,6 +30,19 @@ class WebAuth extends require('../component/index.js') {
   async run(
     app /*:: : Object */
   ) /*:: : Object */ {
+    // $FlowExpectedError
+    const expressApp = app.component('./express/index.js').expressApp();
+
+    const expressSession = app.component('express-session')({
+      secret: app.component('./env/index.js').required('EXPRESS_SESSION_SECRET'),
+      resave: false,
+      saveUninitialized: false
+    });
+
+    expressApp.use(expressSession);
+    expressApp.use(app.component('./authentication/index.js').passport().initialize());
+    expressApp.use(app.component('./authentication/index.js').passport().session());
+
     app.component('./express/index.js').expressApp().post('/logout', function(req, res, next) {
       req.logout(function(err) {
         if (err) { return next(err); }
