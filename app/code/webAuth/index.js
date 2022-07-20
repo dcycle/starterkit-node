@@ -19,6 +19,18 @@ class WebAuth extends require('../component/index.js') {
   ) /*:: : Object */ {
     this._app = app;
 
+    const expressApp = app.component('./express/index.js').expressApp();
+
+    const expressSession = app.component('express-session')({
+      secret: app.component('./env/index.js').required('EXPRESS_SESSION_SECRET'),
+      resave: false,
+      saveUninitialized: false
+    });
+
+    expressApp.use(expressSession);
+    expressApp.use(app.component('./authentication/index.js').passport().initialize());
+    expressApp.use(app.component('./authentication/index.js').passport().session());
+
     app.config().modules['./webAuth/index.js'].authenticated.forEach((e) => {
       app.component('./express/index.js').addMiddleware(e.route, e.verb, [
         app.component('./authentication/index.js').loggedIn]);
@@ -31,17 +43,6 @@ class WebAuth extends require('../component/index.js') {
     app /*:: : Object */
   ) /*:: : Object */ {
     // $FlowExpectedError
-    const expressApp = app.component('./express/index.js').expressApp();
-
-    const expressSession = app.component('express-session')({
-      secret: app.component('./env/index.js').required('EXPRESS_SESSION_SECRET'),
-      resave: false,
-      saveUninitialized: false
-    });
-
-    expressApp.use(expressSession);
-    expressApp.use(app.component('./authentication/index.js').passport().initialize());
-    expressApp.use(app.component('./authentication/index.js').passport().session());
 
     app.component('./express/index.js').expressApp().post('/logout', function(req, res, next) {
       req.logout(function(err) {
