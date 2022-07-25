@@ -11,6 +11,11 @@ modules:
   ./chatWeb/index.js:
     path: '/'
   ./userPassAuth/index.js: {}
+  ./mail/index.js:
+    servers:
+      mailhog:
+        server: mail
+        port: 1025
   ./numUsers/index.js: {}
   ./repl/index.js:
     port: 8001

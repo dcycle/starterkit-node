@@ -13,4 +13,5 @@ npm install \
   socket.io \
   express-session \
   js-yaml \
+  nodemailer \
   deepmerge

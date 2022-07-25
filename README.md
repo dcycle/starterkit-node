@@ -3,6 +3,14 @@ Dcycle Node.js starterkit
 
 [![CircleCI](https://circleci.com/gh/dcycle/starterkit-node/tree/master.svg?style=svg)](https://circleci.com/gh/dcycle/starterkit-node/tree/master)
 
+* About
+* Strategies, credentials, and accounts
+* Quickstart
+* Creating new users
+* Sending emails
+* The Node.js command line interface (CLI)
+* Resources
+
 About
 -----
 
@@ -36,6 +44,16 @@ Creating new users
 You can run:
 
     ./scripts/reset-password.sh some-new-user
+
+Sending emails
+-----
+
+Your node application can send emails using SMTP. For that you need an SMTP server. In development, we use MailHog. Here is how it works:
+
+Start your instance using `./scripts/deploy.sh`.
+
+Once you have a running instance you will have access to mailhog.
+
 
 The Node.js command line interface (CLI)
 -----
