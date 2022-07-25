@@ -7,4 +7,4 @@ class Mail extends require('../component/index.js') {
 }
 
 // $FlowExpectedError
-module.exports = new Express();
+module.exports = new Mail();
