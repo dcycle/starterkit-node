@@ -36,6 +36,7 @@ class Smtp extends require('../component/index.js') {
       };
 
       if (typeof server.user !== 'undefined' && server.user !== "") {
+        // $FlowFixMe
         transportInfo.auth = {
           user: server.user,
           pass: server.pass,
