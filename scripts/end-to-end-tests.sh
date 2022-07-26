@@ -11,7 +11,9 @@ ADMIN_PASSWORD=$(./scripts/generate-password.sh)
 
 echo 'Sending an email'
 
-echo "app.component('./mail/index.js').sendMailInDefaultServer({from: 'test@example.com', to: 'test@example.com', subject: 'This message was sent by node.', html: '<p>Hello</p>', text: 'Hello'});" | ./scripts/node-cli-app.sh
+TOKEN=$(./scripts/generate-password.sh)
+
+echo "app.component('./mail/index.js').sendMailInDefaultServer({from: 'test@example.com', to: 'test@example.com', subject: 'This message was sent by node: $TOKEN.', html: '<p>Hello</p>', text: 'Hello'});" | ./scripts/node-cli-app.sh
 
 echo 'Waiting for our email to be received by MailHog'
 
@@ -21,6 +23,7 @@ echo 'Running our tests'
 docker run --rm \
   -v "$(pwd)"/tests/browser-tests:/app/test \
   -e ADMIN_PASSWORD="$ADMIN_PASSWORD" \
+  -e TOKEN="$TOKEN" \
   --network "$DOCKERNETWORK" \
   -v "$(pwd)"/do-not-commit/screenshots:/artifacts/screenshots \
   -v "$(pwd)"/do-not-commit/dom-captures:/artifacts/dom-captures \
