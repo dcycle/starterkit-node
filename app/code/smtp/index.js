@@ -1,6 +1,10 @@
 // @flow
 /**
- * Send mail.
+ * Send mail using SMTP.
+ *
+ * Normally you would set up configuration in ./app/config/versioned.yml and
+ * ./app/config/unversioned.yml, defining one or more servers, and defining
+ * your default server. Then you would send mail as described in ./README.md.
  */
 
 class Smtp extends require('../component/index.js') {

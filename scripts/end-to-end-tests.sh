@@ -17,7 +17,7 @@ echo "app.component('./mail/index.js').sendMailInDefaultServer({from: 'test@exam
 
 echo 'Waiting for our email to be received by MailHog'
 
-sleep 2
+sleep 5
 
 echo 'Running our tests'
 docker run --rm \

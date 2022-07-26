@@ -5,6 +5,8 @@ modules:
   ./someModule/index.js: {
     'super-secret-api-key': 'princess',
   }
+  # You could have something like this in production if you want to use a
+  # real mail server instead of MailHog, the default for development.
   ./mail/index.js:
     defaultServer:
       name: myServer
