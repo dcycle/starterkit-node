@@ -5,3 +5,15 @@ modules:
   ./someModule/index.js: {
     'super-secret-api-key': 'princess',
   }
+  ./mail/index.js:
+    defaultServer:
+      name: myServer
+      component: smtp:
+  ./smtp/index.js:
+    servers:
+      myServer:
+        host: smtp.sendgrid.net
+        port: 465
+        secure: true
+        user: apikey
+        pass: SUPER-SECRET-SENDGRID-API-KEY

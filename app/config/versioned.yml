@@ -12,10 +12,17 @@ modules:
     path: '/'
   ./userPassAuth/index.js: {}
   ./mail/index.js:
+    defaultServer:
+      name: mailhog
+      component: smtp: 
+  ./smtp/index.js:
     servers:
       mailhog:
-        server: mail
+        host: mail
         port: 1025
+        secure: false
+        user: ""
+        pass: ""
   ./numUsers/index.js: {}
   ./repl/index.js:
     port: 8001
