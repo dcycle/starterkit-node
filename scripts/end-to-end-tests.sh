@@ -15,10 +15,6 @@ TOKEN=$(./scripts/generate-password.sh)
 
 echo "app.component('./mail/index.js').sendMailInDefaultServer({from: 'test@example.com', to: 'test@example.com', subject: 'This message was sent by node: $TOKEN.', html: '<p>Hello</p>', text: 'Hello'});" | ./scripts/node-cli-app.sh
 
-echo 'Waiting for our email to be received by MailHog'
-
-sleep 5
-
 echo 'Running our tests'
 docker run --rm \
   -v "$(pwd)"/tests/browser-tests:/app/test \
