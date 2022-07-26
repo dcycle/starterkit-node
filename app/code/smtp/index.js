@@ -28,15 +28,22 @@ class Smtp extends require('../component/index.js') {
         throw 'Server ' + serverName + ' does not exist.';
       }
 
-      this._servers[serverName] = this.nodemailer().createTransport({
+      let transportInfo = {
         host: server.host,
         port: server.port,
         secure: server.secure,
-        auth: {
-          user: server.user,
-          pass: server.pass,
-        },
-      });
+      }
+
+      if (typeof server.user !== 'undefined') {
+        transportInfo += {
+          auth: {
+            user: server.user,
+            pass: server.pass,
+          },
+        };
+      }
+      
+      this._servers[serverName] = this.nodemailer().createTransport();
     }
 
     return this._servers[serverName];
