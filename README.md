@@ -60,8 +60,15 @@ You can send an email by running:
 
 Then, on the prompt:
 
-   
+    app.component('./mail/index.js').sendMailInDefaultServer({from: 'test@example.com', to: 'test@example.com', subject: 'Hello World', html: '<p>Hello</p>', text: 'Hello'}, (error, info) => { console.log(error); console.log(info); });
 
+Then, you can run:
+
+    docker-compose ps
+
+And visit the URL for MailHog, and you will see your message.
+
+If you would like to use a real SMTP mail server, for production for example, then create a new file `./app/config/unversioned.yml` based on `./app/config/unversioned.example.yml`, and in the myServer section, put your actual SMTP information. The `./app/config/unversioned.example.yml` is not in version control, so you need to edit it directly on your production server.
 
 The Node.js command line interface (CLI)
 -----
