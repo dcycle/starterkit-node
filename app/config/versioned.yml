@@ -14,7 +14,7 @@ modules:
   ./mail/index.js:
     defaultServer:
       name: mailhog
-      component: smtp: 
+      component: './smtp/index.js'
   ./smtp/index.js:
     servers:
       mailhog:

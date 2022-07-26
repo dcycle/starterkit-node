@@ -3,7 +3,7 @@
  * Send mail.
  */
 
-class Mail extends require('../component/index.js') {
+class Smtp extends require('../component/index.js') {
 
   async init(
     app /*:: : Object */
@@ -45,4 +45,4 @@ class Mail extends require('../component/index.js') {
 }
 
 // $FlowExpectedError
-module.exports = new Mail();
+module.exports = new Smtp();

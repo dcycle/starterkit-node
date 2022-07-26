@@ -55,6 +55,8 @@ Start your instance using `./scripts/deploy.sh`.
 Once you have a running instance you will have access to mailhog.
 
 
+
+
 The Node.js command line interface (CLI)
 -----
 

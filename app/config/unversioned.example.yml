@@ -8,7 +8,7 @@ modules:
   ./mail/index.js:
     defaultServer:
       name: myServer
-      component: smtp:
+      component: './smtp/index.js'
   ./smtp/index.js:
     servers:
       myServer:
