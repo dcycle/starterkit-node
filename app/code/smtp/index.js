@@ -16,6 +16,7 @@ class Smtp extends require('../component/index.js') {
   }
 
   nodemailer() {
+    // $FlowFixMe
     return require('nodemailer');
   }
 
@@ -32,18 +33,16 @@ class Smtp extends require('../component/index.js') {
         host: server.host,
         port: server.port,
         secure: server.secure,
-      }
+      };
 
-      if (typeof server.user !== 'undefined') {
-        transportInfo += {
-          auth: {
-            user: server.user,
-            pass: server.pass,
-          },
+      if (typeof server.user !== 'undefined' && server.user !== "") {
+        transportInfo.auth = {
+          user: server.user,
+          pass: server.pass,
         };
       }
-      
-      this._servers[serverName] = this.nodemailer().createTransport();
+
+      this._servers[serverName] = this.nodemailer().createTransport(transportInfo);
     }
 
     return this._servers[serverName];

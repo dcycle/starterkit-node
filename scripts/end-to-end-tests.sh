@@ -9,6 +9,14 @@ source ./scripts/lib/source-env.source.sh
 ADMIN_PASSWORD=$(./scripts/generate-password.sh)
 ./scripts/reset-password.sh admin "$ADMIN_PASSWORD"
 
+echo 'Sending an email'
+
+echo "app.component('./mail/index.js').sendMailInDefaultServer({from: 'test@example.com', to: 'test@example.com', subject: 'This message was sent by node.', html: '<p>Hello</p>', text: 'Hello'});" | ./scripts/node-cli-app.sh
+
+echo 'Waiting for our email to be received by MailHog'
+
+sleep 2
+
 echo 'Running our tests'
 docker run --rm \
   -v "$(pwd)"/tests/browser-tests:/app/test \
