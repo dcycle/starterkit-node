@@ -5,10 +5,12 @@
  * Interact with socket.io.
  */
 
-class Socket extends require('../component/index.js') {
+class NumUsers extends require('../component/index.js') {
   async init(
     app /*:: : Object */
   ) /*:: : Object */ {
+    super.init(app);
+
     const that = this;
     this._numUsers = 0;
     this.socket().socketIoHttp().on('connection', (socket) => {
@@ -18,6 +20,8 @@ class Socket extends require('../component/index.js') {
         that.socket().socketIoHttp().emit('updateNumUsers', this.numUsers(-1));
       });
     });
+
+    return this;
   }
 
   numUsers(
@@ -47,4 +51,4 @@ class Socket extends require('../component/index.js') {
 }
 
 // $FlowExpectedError
-module.exports = new Socket();
+module.exports = new NumUsers();

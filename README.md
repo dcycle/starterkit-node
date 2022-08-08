@@ -161,11 +161,12 @@ For example, the class defined in ./app/code/staticPath/index.js is called Stati
 
 ###  Plugins: how modules can share information with each other
 
-Some components, ./app/code/dashboardApi/index.js, can request information from other components. In the the dashboardApi, it can attempt to get all information that other components wish to expose on a dashboard. For example, Chat may want to expose the current total number of messages.
+Some components, such ./dashboardApi/index.js, can request information from other components. In the case of dashboardApi, it can attempt to get all information that other components wish to expose on a dashboard. For example, Chat may want to expose the current total number of messages, and Authentication may wish to expose the total number of user account.
 
 You can _invoke_ plugins like this:
 
-    app.invokePlugin('dashboardApi', 'all', function(result) {
+    app.invokePlugin('dashboardApi', 'all', function(component, result) {
+      console.log(component + ' responds:');
       console.log(result);
     });
 
@@ -175,7 +176,7 @@ In this case, the system will look in each of its components, including its depe
 
     ./app/code/*/plugins/dashboardApi/all.js
 
-For example ./app/code/chat/plugins/dashboardApi/all.js fits the bill, but there could eventually be others.
+For example ./app/code/chat/plugins/dashboardApi/all.js fits the bill, as does ./app/code/authentication/plugins/dashboardApi/all.js, but there could eventually be others.
 
 The Node.js command line interface (CLI)
 -----

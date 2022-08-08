@@ -7,6 +7,7 @@ class Authentication extends require('../component/index.js') {
   async init(
     app /*:: : Object */
   ) /*:: : Object */ {
+    super.init(app);
 
     const Schema = app.component('./database/index.js').mongoose().Schema;
     const UserDetail = new Schema({

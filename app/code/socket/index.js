@@ -9,8 +9,12 @@ class Socket extends require('../component/index.js') {
   async init(
     app /*:: : Object */
   ) /*:: : Object */ {
+    super.init(app);
+
     const http = app.component('./express/index.js').httpServer();
     this._socketIoHttp = this.socketIo()(http);
+
+    return this;
   }
   async exitGracefully() {
   }

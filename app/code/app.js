@@ -200,11 +200,11 @@ class App {
     let promises = [];
     for (const component of this.componentsWithDependencies()) {
       if (typeof that.component(component).invokePlugin === 'function') {
-        promises.push(that.component(component).invokePlugin(componentName, pluginName));
+        that.component(component).invokePlugin(componentName, pluginName, (result) => {
+          callback(component, result);
+        });
       }
     }
-    Promise.all(promises)
-      .then((result) => callback(result));
   }
 
   /**

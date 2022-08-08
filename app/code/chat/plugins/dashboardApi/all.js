@@ -4,13 +4,13 @@
  * Chat Dahsboard Api All plugin.
  */
 class PluginChatDashboardApiAll {
-  invoke(app) {
-    console.log('invoking')
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        resolve("GeeksforGeeks");
-      }, 1000);
-    });
+  invoke(app, callback) {
+    var that = this;
+    setTimeout(function() {
+      callback([
+        app.c('DashboardSingleNumber').toArray('Chat messages', Math.floor(Math.random() * 100)),
+      ]);
+    }, 2000);
   }
 }
 

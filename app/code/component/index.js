@@ -12,6 +12,12 @@ const module_exports /*:: : Object */ = class {
     return this;
   }
 
+  assertInitialized() {
+    if (typeof this._app === 'undefined') {
+      throw this.componentName() + ' has not been initialized';
+    }
+  }
+
   /**
    * Make the first letter of a string lowercase.
    */
@@ -24,16 +30,19 @@ const module_exports /*:: : Object */ = class {
    * Get the full path to the component including the trailing slash.
    */
   componentDir() {
-    const className = this.constructor.name;
-    return '/usr/src/app/app/' + this.lowerFirstLetter(className) + '/';
+    return '/usr/src/app/app/' + this.lowerFirstLetter(this.componentName()) + '/';
   }
 
-  invokePlugin(componentName, pluginName) {
+  componentName() {
+    return this.constructor.name;
+  }
+
+  invokePlugin(componentName, pluginName, callback) {
+    this.assertInitialized();
     const candidateFilename = this.componentDir() + 'plugins/' + componentName + '/' + pluginName + '.js';
     if (require('fs').existsSync(candidateFilename)) {
-      return require(candidateFilename).invoke(this._app);
+      require(candidateFilename).invoke(this._app, callback);
     }
-    return new Promise((resolve, reject) => {});
   }
 
   async run(

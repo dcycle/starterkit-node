@@ -9,7 +9,11 @@ class Database extends require('../component/index.js') {
   async init(
     app /*:: : Object */
   ) /*:: : Object */ {
+    super.init(app);
+
     await this.mongoose().connect(this.uri());
+
+    return this;
   }
   async exitGracefully() {
     await this.mongoose().disconnect();
