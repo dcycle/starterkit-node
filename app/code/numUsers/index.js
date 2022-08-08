@@ -1,6 +1,6 @@
 // @flow
 /**
- * My socket module.
+ * Get the number of users connected to socket.io.
  *
  * Interact with socket.io.
  */

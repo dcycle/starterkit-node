@@ -33,3 +33,4 @@ modules:
   ./staticPath/index.js:
     paths:
       - /usr/src/app/static
+  ./dashboardApi/index.js: {}

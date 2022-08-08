@@ -8,6 +8,14 @@ Dcycle Node.js starterkit
 * Quickstart
 * Creating new users
 * Sending emails
+* Dcycle Node Starterkit design patterns
+  * Component-based modular system
+  * Some components require initialization
+  * Components can require dependencies at runtime
+  * Defining which modules, and their configuration, to load via a yaml file
+  * Defining unversioned configuration for environment-specific configuration and sensitive data
+  * Components's class names are the same as their directory names but start with an uppercase letter
+  * Plugins: how modules can share information with each other
 * The Node.js command line interface (CLI)
 * Resources
 
@@ -70,6 +78,105 @@ And visit the URL for MailHog, and you will see your message.
 
 If you would like to use a real SMTP mail server, for production for example, then create a new file `./app/config/unversioned.yml` based on `./app/config/unversioned.example.yml`, and in the myServer section, put your actual SMTP information. The `./app/config/unversioned.example.yml` is not in version control, so you need to edit it directly on your production server.
 
+Dcycle Node Starterkit design patterns
+-----
+
+In your own project, you are welcome to delete everything in ./app/code except ./app/code/server.js and put your own code in ./app/code/server.js.
+
+If you are interested in keeping the structure of the current project, here are some design patterns we have used to make things easier.
+
+### Component-based modular system
+
+We have split our code in a series of components which are our custom node modules; they are all singleton class objects. The simplest one is ./app/code/random/index.js. It is self-contained and self explanatory; it serves to make random numbers.
+
+You can try it by running:
+
+    echo 'app.c("random").random()' | ./scripts/node-cli.sh
+
+### Some components require initialization
+
+Components like ./app/code/database/index.js require initialization before use. That is why ./app/code/server.js calls app.init() before app.run(). app.init() initializes all components that need to be initialized before the application can be run.
+
+### Components can require dependencies at runtime
+
+Some components, like ./app/code/chatWeb/index.js, require that other components be initiliazed before they themselves can bre initialized and eventually run.
+
+In the case of ChatWeb, its dependency chain is as follows:
+
+* ChatWeb depends on Express and ChatApi
+* Express has no dependencies
+* ChatApi depends on Express and Chat
+* Chat depends on Database and BodyParser
+* BodyParser depends on Express
+* Database depends on Env
+
+We use a simple dependency manager, ./app/code/dependencies/index.js, to calculate the dependency chain. You can try it at:
+
+    echo "app.c('dependencies').getInOrder(['./chatWeb/index.js'], app);" | ./scripts/node-cli.sh
+
+This should give you a result or ordered dependencies:
+
+    {
+      errors: [],
+      results: [
+        './express/index.js',
+        './bodyParser/index.js',
+        './env/index.js',
+        './database/index.js',
+        './chat/index.js',
+        './chatApi/index.js',
+        './chatWeb/index.js'
+      ]
+    }
+
+This is used internally to initialize dependencies in the correct order. For example, in this example the database needs to be fully initialized beofre chatWeb (the web interface of our chat program) can be used.
+
+### Defining which modules, and their configuration, to load via a yaml file
+
+You can change which components are used by changing the yaml file ./app/config/versioned.yml, and, optionally, ./app/config/unversioned.yml, the latter being ignored in version control.
+
+Different modules can have configuration. For example, ChatWeb needs to know on which path it should be active. That is why you will see, in ./app/config/versioned.yml, the following:
+
+    modules:
+      ...
+      ./chatWeb/index.js:
+        path: '/'
+
+This tells our system that we want chatWeb to load; and, furthermore, we want to tell it that its path should be '/'. You can install the chat application on a different path if you want by changing that.
+
+### Defining unversioned configuration for environment-specific configuration and sensitive data
+
+Configuration can differ between environments. Here are some examples:
+
+* The default mail server might be the included MailHog test server by default, but, on production, you'd use your own server.
+* Certain components might require API keys. This can be achieved using environment variables, but you can also define unversioned configuration in ./app/config/unversioned.yml
+
+Take a look at ./app/config/unversioned.example.yml which is an example for a file you can create called ./app/config/unversioned.example.yml.
+
+It shows you how to change the default mail server, and include API keys if you so desire.
+
+### Components's class names are the same as their directory names but start with an uppercase letter
+
+For example, the class defined in ./app/code/staticPath/index.js is called StaticPath. This is more than a convention: all classes must have the same name as their directory except that they start with an uppercase letter. All our code, particularly loading plugins, depends on this.
+
+###  Plugins: how modules can share information with each other
+
+Some components, ./app/code/dashboardApi/index.js, can request information from other components. In the the dashboardApi, it can attempt to get all information that other components wish to expose on a dashboard. For example, Chat may want to expose the current total number of messages.
+
+You can _invoke_ plugins like this:
+
+    app.invokePlugin('dashboardApi', 'all', function(result) {
+      console.log(result);
+    });
+
+Indeed this is what DashboardApi does.
+
+In this case, the system will look in each of its components, including its dependencies, for files that look like:
+
+    ./app/code/*/plugins/dashboardApi/all.js
+
+For example ./app/code/chat/plugins/dashboardApi/all.js fits the bill, but there could eventually be others.
+
 The Node.js command line interface (CLI)
 -----
 
@@ -79,23 +186,17 @@ There are two ways to interact with Node.js:
 
 Whether or not your application has been started using ./scripts/deploy.sh (see Quickstart, above), you can type:
 
-    ./scripts/node-cli-sandbox.sh
+    docker-compose run --rm node /bin/sh -c 'node'
 
 This allows you to test Javascript in isolation and does not interact with your running application. The simplest example is running:
 
     1 + 1;
 
-You can also interact with modules in your application, but they will not have been initialized, and they will not have access to your current application's state (for example, they cannot know how many users are currently connected, because that information is stored in memory in the application's process). For example, if you want to test the included ./random/index.js module, you can run, in the sandbox:
-
-    require('./app/random/index.js').random();
-
-The sandbox cli is completely unaware of the database or your running process.
-
 ### The app CLI
 
 If you want to run code against your running application once you have deployed it (see Quickstart, above), thus having access to your database, as well as any information stored in memory by your app's process, you can use the app CLI:
 
-    ./scripts/node-cli-app.sh
+    ./scripts/node-cli.sh
 
 We achieve this using the Node REPL (see the Resources section below for further reading on the technical aspects of this).
 
@@ -105,7 +206,7 @@ To demonstrate this, you can first log into your application using the credentia
 
 The purpose of the app CLI is to have access to this information in your running application instance. Here is how.
 
-    ./scripts/node-cli-app.sh
+    ./scripts/node-cli.sh
 
     app.component('./numUsers/index.js').numUsers();
 
@@ -115,11 +216,7 @@ This should give you the same number of users online as you see in the web inter
 
 You can **pipe** commands to the cli, like this:
 
-    echo 'app.component("./random/index.js").random()' | ./scripts/node-cli-app.sh
-
-or
-
-    echo 'require("./app/random/index.js").random()' | ./scripts/node-cli-sandbox.sh
+    echo 'app.c("random").random()' | ./scripts/node-cli.sh
 
 Resources
 -----

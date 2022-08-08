@@ -8,6 +8,32 @@ const module_exports /*:: : Object */ = class {
   async init(
     app /*:: : Object */
   ) /*:: : Object */ {
+    this._app = app;
+    return this;
+  }
+
+  /**
+   * Make the first letter of a string lowercase.
+   */
+  lowerFirstLetter(string) {
+    // https://stackoverflow.com/a/1026087/1207752
+    return string.charAt(0).toLowerCase() + string.slice(1);
+  }
+
+  /**
+   * Get the full path to the component including the trailing slash.
+   */
+  componentDir() {
+    const className = this.constructor.name;
+    return '/usr/src/app/app/' + this.lowerFirstLetter(className) + '/';
+  }
+
+  invokePlugin(componentName, pluginName) {
+    const candidateFilename = this.componentDir() + 'plugins/' + componentName + '/' + pluginName + '.js';
+    if (require('fs').existsSync(candidateFilename)) {
+      return require(candidateFilename).invoke(this._app);
+    }
+    return new Promise((resolve, reject) => {});
   }
 
   async run(
