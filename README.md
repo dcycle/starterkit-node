@@ -65,7 +65,7 @@ Once you have a running instance you will have access to mailhog.
 
 You can send an email by running:
 
-   ./scripts/node-cli-app.js
+   ./scripts/node-cli.js
 
 Then, on the prompt:
 
