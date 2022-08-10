@@ -5,12 +5,11 @@
  */
 class PluginChatDashboardApiAll {
   invoke(app, callback) {
-    var that = this;
-    setTimeout(function() {
+    app.c('chat').message().find({},(err, messages)=> {
       callback([
-        app.c('DashboardSingleNumber').toArray('Chat messages', Math.floor(Math.random() * 100)),
+        new (app.class('dashboardApi/dashboardSingleNumber'))('Chat messages', messages.length),
       ]);
-    }, 2000);
+    });
   }
 }
 

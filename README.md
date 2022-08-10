@@ -16,6 +16,7 @@ Dcycle Node.js starterkit
   * Defining unversioned configuration for environment-specific configuration and sensitive data
   * Components's class names are the same as their directory names but start with an uppercase letter
   * Plugins: how modules can share information with each other
+  * Components can define classes
 * The Node.js command line interface (CLI)
 * Resources
 
@@ -177,6 +178,22 @@ In this case, the system will look in each of its components, including its depe
     ./app/code/*/plugins/dashboardApi/all.js
 
 For example ./app/code/chat/plugins/dashboardApi/all.js fits the bill, as does ./app/code/authentication/plugins/dashboardApi/all.js, but there could eventually be others.
+
+### Components can define classes
+
+Some components, such as dashboardApi, can define classes:
+
+* ./app/code/dashboardApi/src/dashboardSingleNumber.js
+* ./app/code/dashboardApi/src/dashboardElement.js
+
+Objects of these classes can be created by calling a very primitive autoloader:
+
+    const dashboardSingleNumber = app.class('dashboardApi/dashboardSingleNumber');
+    const myObject = new dashboardSingleNumber('hello', 100);
+    myObject.getTitle();
+    // hello
+    myObject.getNumber();
+    // 100
 
 The Node.js command line interface (CLI)
 -----

@@ -28,6 +28,13 @@ class App {
     return './config/index.js';
   }
 
+  class(identifier) {
+    const parts = identifier.split('/');
+    const componentName = parts.shift();
+    const rest = parts.join();
+    return this.component('./' + componentName + '/src/' + rest + '.js');
+  }
+
   /**
    * Get the components we want. Depedencies and order will be managed later.
    *
@@ -201,7 +208,13 @@ class App {
     for (const component of this.componentsWithDependencies()) {
       if (typeof that.component(component).invokePlugin === 'function') {
         that.component(component).invokePlugin(componentName, pluginName, (result) => {
+          // Functions declared within loops referencing an outer scoped variable
+          // may lead to confusing semantics. (callback). This may be true, but
+          // I'm not sure how to do this otherwise: every single plugin is given
+          // the chance to call the callback.
+          /* jshint ignore:start */
           callback(component, result);
+          /* jshint ignore:end */
         });
       }
     }

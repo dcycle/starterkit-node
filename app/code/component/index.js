@@ -13,9 +13,13 @@ const module_exports /*:: : Object */ = class {
   }
 
   assertInitialized() {
-    if (typeof this._app === 'undefined') {
+    if (typeof this.app() === 'undefined') {
       throw this.componentName() + ' has not been initialized';
     }
+  }
+
+  app() {
+    return this._app;
   }
 
   /**
@@ -41,7 +45,7 @@ const module_exports /*:: : Object */ = class {
     this.assertInitialized();
     const candidateFilename = this.componentDir() + 'plugins/' + componentName + '/' + pluginName + '.js';
     if (require('fs').existsSync(candidateFilename)) {
-      require(candidateFilename).invoke(this._app, callback);
+      require(candidateFilename).invoke(this.app(), callback);
     }
   }
 
