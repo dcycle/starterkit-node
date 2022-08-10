@@ -8,6 +8,7 @@ const module_exports /*:: : Object */ = class {
   async init(
     app /*:: : Object */
   ) /*:: : Object */ {
+    // $FlowFixMe
     this._app = app;
     return this;
   }
@@ -19,6 +20,7 @@ const module_exports /*:: : Object */ = class {
   }
 
   app() {
+    // $FlowFixMe
     return this._app;
   }
 
@@ -45,6 +47,7 @@ const module_exports /*:: : Object */ = class {
     this.assertInitialized();
     const candidateFilename = this.componentDir() + 'plugins/' + componentName + '/' + pluginName + '.js';
     if (require('fs').existsSync(candidateFilename)) {
+      // $FlowFixMe
       require(candidateFilename).invoke(this.app(), callback);
     }
   }
