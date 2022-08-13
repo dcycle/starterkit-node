@@ -7,7 +7,7 @@
  * your default server. Then you would send mail as described in ./README.md.
  */
 
-class Smtp extends ______'../______/index.js') {
+class Smtp extends require('../service/index.js') {
 
   async init(
     app /*:: : Object */
@@ -21,7 +21,7 @@ class Smtp extends ______'../______/index.js') {
 
   nodemailer() {
     // $FlowFixMe
-    return ______'nodemailer');
+    return require('nodemailer');
   }
 
   server(serverName) {

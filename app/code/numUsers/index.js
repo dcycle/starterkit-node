@@ -5,7 +5,7 @@
  * Interact with socket.io.
  */
 
-class NumUsers extends ______'../______/index.js') {
+class NumUsers extends require('../service/index.js') {
   async init(
     app /*:: : Object */
   ) /*:: : Object */ {
@@ -13,11 +13,14 @@ class NumUsers extends ______'../______/index.js') {
 
     const that = this;
     this._numUsers = 0;
-    this.socket().socketIoHttp().on('connection', (socket) => {
-      that.socket().socketIoHttp().emit('updateNumUsers', this.numUsers(1));
+
+    const socketIoHttp = app.service('socekt').socketIoHttp();
+
+    socketIoHttp.on('connection', (socket) => {
+      socketIoHttp.emit('updateNumUsers', this.numUsers(1));
 
       socket.on('disconnect', () => {
-        that.socket().socketIoHttp().emit('updateNumUsers', this.numUsers(-1));
+        socketIoHttp.emit('updateNumUsers', this.numUsers(-1));
       });
     });
 
@@ -32,19 +35,11 @@ class NumUsers extends ______'../______/index.js') {
   }
 
   /**
-   * Mockable wrapper around our socket module.
-   */
-  socket() {
-    // $FlowExpectedError
-    return ______'../socket/index.js');
-  }
-
-  /**
    * {@inheritdoc}
    */
   dependencies() {
     return [
-      './socket/index.js',
+      'socket',
     ];
   }
 

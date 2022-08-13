@@ -1,14 +1,14 @@
 // @flow
 /**
- * Allows other ______s to expose information to a dashboard.
+ * Allows other services to expose information to a dashboard.
  */
 
-class DashboardApi extends ______'../______/index.js') {
+class DashboardApi extends require('../service/index.js') {
 
   all() {
     console.log('starting to invoke');
-    this._app.invokePlugin('dashboardApi', 'all', function(______Name, result) {
-      console.log(______Name);
+    this._app.invokePlugin('dashboardApi', 'all', function(serviceName, result) {
+      console.log(serviceName);
       console.log(result);
     });
     console.log('ending invoke');

@@ -5,7 +5,7 @@
  * Interact with the database.
  */
 
-class Express extends ______'../______/index.js') {
+class Express extends require('../service/index.js') {
   async init(
     app /*:: : Object */
   ) /*:: : Object */ {
@@ -23,7 +23,7 @@ class Express extends ______'../______/index.js') {
   async run(
     app /*:: : Object */
   ) /*:: : Object */ {
-    const port = app.config().modules['./express/index.js'].port;
+    const port = app.config().modules['./express'].port;
     this.httpServer().listen(port, function() {
       console.log('listening on *:' + port);
     });
@@ -67,14 +67,14 @@ class Express extends ______'../______/index.js') {
 
   express() {
     // $FlowFixMe
-    return ______'express');
+    return require('express');
   }
   httpServer() {
     return this._httpServer;
   }
   http() {
     // $FlowExpectedError
-    return ______'node:http');
+    return require('node:http');
   }
   expressApp() {
     return this._expressApp;

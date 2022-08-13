@@ -15,14 +15,14 @@ const module_exports /*:: : Object */ = class {
 
   assertInitialized() {
     if (typeof this.app() === 'undefined') {
-      throw this.______Name() + ' has not been initialized';
+      throw this.serviceName() + ' has not been initialized';
     }
   }
 
   config(
     key /*:: : string */
   ) {
-    return this.app().config().modules['./' +  this.lowerFirstLetter(this.______Name()) + '/index.js'][key];
+    return this.app().config().modules['./' +  this.lowerFirstLetter(this.serviceName()) + '/index.js'][key];
   }
 
   app() {
@@ -31,7 +31,7 @@ const module_exports /*:: : Object */ = class {
   }
 
   privateRoot() {
-    return '/usr/src/app/code/' + this.______File() + '/web/private';
+    return '/usr/src/app/code/' + this.serviceFile() + '/web/private';
   }
 
   /**
@@ -43,26 +43,26 @@ const module_exports /*:: : Object */ = class {
   }
 
   /**
-   * Get the full path to the ______ including the trailing slash.
+   * Get the full path to the service including the trailing slash.
    */
-  ______Dir() {
-    return '/usr/src/app/app/' + this.______File() + '/';
+  serviceDir() {
+    return '/usr/src/app/app/' + this.serviceFile() + '/';
   }
 
-  ______File() {
-    return this.lowerFirstLetter(this.______Name());
+  serviceFile() {
+    return this.lowerFirstLetter(this.serviceName());
   }
 
-  ______Name() {
+  serviceName() {
     return this.constructor.name;
   }
 
-  invokePlugin(______Name, pluginName, callback) {
+  invokePlugin(serviceName, pluginName, callback) {
     this.assertInitialized();
-    const candidateFilename = this.______Dir() + 'plugins/' + ______Name + '/' + pluginName + '.js';
-    if (______'fs').existsSync(candidateFilename)) {
+    const candidateFilename = this.serviceDir() + 'plugins/' + serviceName + '/' + pluginName + '.js';
+    if (require('fs').existsSync(candidateFilename)) {
       // $FlowFixMe
-      ______candidateFilename).invoke(this.app(), callback);
+      require(candidateFilename).invoke(this.app(), callback);
     }
   }
 

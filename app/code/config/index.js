@@ -3,7 +3,7 @@
  * Loads configuration.
  */
 
-class Config extends ______'../______/index.js') {
+class Config extends require('../service/index.js') {
   async init(
     app /*:: : Object */
   ) /*:: : Object */ {
@@ -46,8 +46,8 @@ class Config extends ______'../______/index.js') {
   }
 
   fileToObject(file) {
-    const yaml = this._app.______('js-yaml');
-    const fs   = ______'fs');
+    const yaml = require('js-yaml');
+    const fs = require('fs');
 
     if (!fs.existsSync(file)) {
       return {};

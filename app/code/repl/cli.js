@@ -3,7 +3,7 @@
 // See [Mastering the Node.js REPL (part 3), Roman Coedo, Aug 27, 2018, Medium](https://medium.com/trabe/mastering-the-node-js-repl-part-3-c0374be0d1bf)
 // and https://github.com/rcoedo/mastering-the-node-js-repl/tree/master/part-3/express-app-with-sockets
 
-const { colorize } = ______"./utils");
+const { colorize } = require("./utils");
 
 const user = colorize("magenta", process.env.USER);
 

@@ -5,7 +5,7 @@
  * Interact with the database.
  */
 
-class Database extends ______'../______/index.js') {
+class Database extends require('../service/index.js') {
   async init(
     app /*:: : Object */
   ) /*:: : Object */ {
@@ -20,19 +20,21 @@ class Database extends ______'../______/index.js') {
   }
   dependencies() {
     return [
-      './env/index.js',
+      'env',
     ];
   }
   mongoose() {
     // $FlowExpectedError
-    return ______'mongoose');
+    return require('mongoose');
   }
   uri() {
-    const user = String(______'../env/index.js').required('MONGO_USER'));
-    const pass = String(______'../env/index.js').required('MONGO_PASS'));
-    const host = String(______'../env/index.js').required('MONGO_HOST'));
-    const port = String(______'../env/index.js').required('MONGO_PORT'));
-    const db = String(______'../env/index.js').required('MONGO_DB'));
+    const env = this.app().service('env');
+
+    const user = env.required('MONGO_USER'));
+    const pass = env.required('MONGO_PASS'));
+    const host = env.required('MONGO_HOST'));
+    const port = env.required('MONGO_PORT'));
+    const db = env.required('MONGO_DB'));
 
     return 'mongodb://' + user + ':' + pass + '@' + host + ':' + port + '/' + db + '?authSource=admin';
   }

@@ -127,7 +127,7 @@ This should give you a result or ordered dependencies:
     {
       errors: [],
       results: [
-        './express/index.js',
+        './express',
         './bodyParser/index.js',
         './env/index.js',
         './database/index.js',
@@ -233,7 +233,7 @@ The purpose of the app CLI is to have access to this information in your running
 
     ./scripts/node-cli.sh
 
-    app.component('./numUsers/index.js').numUsers();
+    app.service('numUsers').numUsers();
 
 This should give you the same number of users online as you see in the web interface.
 

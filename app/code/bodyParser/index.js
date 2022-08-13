@@ -3,14 +3,14 @@
  * Puts a body property in the req.
  */
 
-class BodyParser extends ______'../______/index.js') {
+class BodyParser extends require('../service/index.js') {
   async init(
     app /*:: : Object */
   ) /*:: : Object */ {
     super.init(app);
 
-    const expressApp = app.______('./express/index.js').expressApp();
-    const bodyParser = app.______('body-parser');
+    const expressApp = app.service('express').expressApp();
+    const bodyParser = app.require('body-parser');
 
     expressApp.use(bodyParser.json());
     expressApp.use(bodyParser.urlencoded({extended: false}));
@@ -19,7 +19,7 @@ class BodyParser extends ______'../______/index.js') {
   }
   dependencies() {
     return [
-      './express/index.js',
+      'express',
     ];
   }
 }

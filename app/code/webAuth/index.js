@@ -3,14 +3,13 @@
  * Abstract class providing web authentication.
  */
 
-class WebAuth extends ______'../______/index.js') {
+class WebAuth extends require('../service/index.js') {
 
   dependencies() {
     return [
-      './authentication/index.js',
-      './express/index.js',
-      './env/index.js',
-      'express-session',
+      'authentication',
+      'express',
+      'env',
     ];
   }
 
@@ -19,21 +18,21 @@ class WebAuth extends ______'../______/index.js') {
   ) /*:: : Object */ {
     this._app = app;
 
-    const expressApp = app.______('./express/index.js').expressApp();
+    const expressApp = app.service('express').expressApp();
 
-    const expressSession = app.______('express-session')({
-      secret: app.______('./env/index.js').required('EXPRESS_SESSION_SECRET'),
+    const expressSession = app.require('express-session')({
+      secret: app.service('env/index.js').required('EXPRESS_SESSION_SECRET'),
       resave: false,
       saveUninitialized: false
     });
 
     expressApp.use(expressSession);
-    expressApp.use(app.______('./authentication/index.js').passport().initialize());
-    expressApp.use(app.______('./authentication/index.js').passport().session());
+    expressApp.use(app.service('authentication/index.js').passport().initialize());
+    expressApp.use(app.service('authentication/index.js').passport().session());
 
     app.config().modules['./webAuth/index.js'].authenticated.forEach((e) => {
-      app.______('./express/index.js').addMiddleware(e.route, e.verb, [
-        app.______('./authentication/index.js').loggedIn]);
+      app.service('express').addMiddleware(e.route, e.verb, [
+        app.service('authentication/index.js').loggedIn]);
     });
 
     return this;
@@ -44,7 +43,7 @@ class WebAuth extends ______'../______/index.js') {
   ) /*:: : Object */ {
     // $FlowExpectedError
 
-    app.______('./express/index.js').expressApp().post('/logout', function(req, res, next) {
+    app.service('express').expressApp().post('/logout', function(req, res, next) {
       req.logout(function(err) {
         if (err) { return next(err); }
         res.redirect('/');

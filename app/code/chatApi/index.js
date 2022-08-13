@@ -3,12 +3,12 @@
  * Abstract class providing web authentication.
  */
 
-class ChatApi extends ______'../______/index.js') {
+class ChatApi extends require('../service/index.js') {
 
   dependencies() {
     return [
-      './express/index.js',
-      './chat/index.js',
+      'express',
+      'chat',
     ];
   }
 

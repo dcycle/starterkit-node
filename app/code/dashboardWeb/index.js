@@ -3,12 +3,12 @@
  * Web dashboard.
  */
 
-class DashboardWeb extends ______'../______/index.js') {
+class DashboardWeb extends require('../service/index.js') {
 
   dependencies() {
     return [
-      './dashboardApi/index.js',
-      './socket/index.js',
+      'dashboardApi',
+      'socket',
     ];
   }
 

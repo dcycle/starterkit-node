@@ -3,7 +3,7 @@
  * Send mail.
  */
 
-class Mail extends ______'../______/index.js') {
+class Mail extends require('../service/index.js') {
 
   async init(
     app /*:: : Object */
@@ -26,14 +26,14 @@ class Mail extends ______'../______/index.js') {
   /**
    * serverInfo should contain the following keys:
    * * name: 'mailhog', // or other...
-   * * ______: 'smtp',
+   * * service: 'smtp',
    */
   server(serverInfo) {
     const name = serverInfo.name;
-    const ______ = serverInfo.______;
-    const serverId = ______ + ':' + name;
+    const serviceName = serverInfo.service;
+    const serverId = service + ':' + name;
     if (typeof this._servers[serverId] === 'undefined') {
-      this._servers[serverId] = this._app.______(______).server(name);
+      this._servers[serverId] = this._app.service(serviceName).server(name);
     }
 
     return this._servers[serverId];

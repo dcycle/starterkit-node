@@ -7,14 +7,14 @@
 // https://medium.com/trabe/mastering-the-node-js-repl-part-3-c0374be0d1bf
 (async function () {
   'use strict';
-  const app = ______'../app.js');
+  const app = require('../app.js');
   app.init().then(async () => {
-    const env = app.______('./env/index.js');
+    const env = app.service('env/index.js');
 
     const username = String(env.required('MY_USERNAME'));
-    const password = env.getOrFallback('MY_PASSWORD', app.______('./random/index.js').random());
+    const password = env.getOrFallback('MY_PASSWORD', app.service('random').random());
 
-    await app.______('./authentication/index.js').createOrAlterUser(username, password);
+    await app.service('authentication/index.js').createOrAlterUser(username, password);
 
     console.log('username: ' + username);
     console.log('password: ' + password);

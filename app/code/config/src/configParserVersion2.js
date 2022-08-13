@@ -24,7 +24,7 @@ class ConfigParserVersion2 {
     let ret = existing;
 
     // $FlowFixMe
-    const merge = ______'deepmerge');
+    const merge = require('deepmerge');
 
     const newyaml = this.fileToObject(file);
 

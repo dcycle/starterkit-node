@@ -13,7 +13,7 @@ echo 'Sending an email'
 
 TOKEN=$(./scripts/generate-password.sh)
 
-echo "app.component('./mail/index.js').sendMailInDefaultServer({from: 'test@example.com', to: 'test@example.com', subject: 'This message was sent by node: $TOKEN.', html: '<p>Hello</p>', text: 'Hello'});" | ./scripts/node-cli.sh
+echo "app.service('mail').sendMailInDefaultServer({from: 'test@example.com', to: 'test@example.com', subject: 'This message was sent by node: $TOKEN.', html: '<p>Hello</p>', text: 'Hello'});" | ./scripts/node-cli.sh
 
 echo 'Running our tests'
 docker run --rm \

@@ -5,13 +5,13 @@
  * Interact with socket.io.
  */
 
-class Socket extends ______'../______/index.js') {
+class Socket extends require('../service/index.js') {
   async init(
     app /*:: : Object */
   ) /*:: : Object */ {
     super.init(app);
 
-    const http = app.______('./express/index.js').httpServer();
+    const http = app.service('express').httpServer();
     this._socketIoHttp = this.socketIo()(http);
 
     return this;
@@ -23,14 +23,14 @@ class Socket extends ______'../______/index.js') {
    */
   socketIo() {
     // $FlowExpectedError
-    return ______'socket.io');
+    return require('socket.io');
   }
   socketIoHttp() {
     return this._socketIoHttp;
   }
   dependencies() {
     return [
-      './express/index.js',
+      'express',
     ];
   }
   async run(

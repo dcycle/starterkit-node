@@ -3,11 +3,11 @@
  * Provide user/pass authentication.
  */
 
-class UserPassAuth extends ______'../______/index.js') {
+class UserPassAuth extends require('../service/index.js') {
 
   dependencies() {
     return [
-      './webAuth/index.js',
+      'webAuth',
     ];
   }
 
@@ -15,7 +15,7 @@ class UserPassAuth extends ______'../______/index.js') {
     app /*:: : Object */
   ) /*:: : Object */ {
 
-    const expressApp = app.______('./express/index.js').expressApp();
+    const expressApp = app.service('express').expressApp();
 
     expressApp.get('/login',
       (req, res) => res.sendFile('login.html',
@@ -23,7 +23,7 @@ class UserPassAuth extends ______'../______/index.js') {
     );
 
     expressApp.post('/login', (req, res, next) => {
-      app.______('./authentication/index.js').passport().authenticate('local',
+      app.service('authentication/index.js').passport().authenticate('local',
       (err, user, info) => {
         if (err) {
           console.log('error during /login');

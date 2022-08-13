@@ -5,7 +5,7 @@
  *
  * This is not meant to be edited unless if you want to fiddle with the core
  * functionality such as which configuration module to use (see
- * configModuleName()).
+ * configServiceName()).
  *
  * For regular usage, you can modify ./app/config/versioned.yml and
  * ./app/config/unversioned.yml which will tell the app which services to load.
@@ -23,8 +23,8 @@ class App {
    *
    * If you want to do anything funky, you can modify the config to use here.
    */
-  configModuleName() {
-    return './config/index.js';
+  configServiceName() {
+    return 'config';
   }
 
   class(identifier) {
@@ -35,17 +35,17 @@ class App {
   }
 
   /**
-   * Get the ______s we want. Depedencies and order will be managed later.
+   * Get the services we want. Depedencies and order will be managed later.
    *
-   * The ______s should be in the form of an object, where keys, such
-   * as './staticPath/index.js', represent ______s, and values, such as
+   * The services should be in the form of an object, where keys, such
+   * as 'staticPath', represent services, and values, such as
    * {}, or { paths: ['/usr/src/app/static'] }, represent configuration to pass
-   * to those ______s.
+   * to those services.
    *
-   * The ______s do not include dependencies. For that, call
+   * The services do not include dependencies. For that, call
    * servicesWithDependencies().
    *
-   * servicesWithDependencies() will return required ______s including
+   * servicesWithDependencies() will return required services including
    * dependencies in the order in which they need to be loaded, and will not
    * include configuration values.
    *
@@ -53,31 +53,31 @@ class App {
    * a module, you might want to consider adding the dependency to the module
    * list in ./app/config/versioned.yml or ./app/config/unversioned.yml.
    */
-  ______s() /*:: : Object */ {
+  services() /*:: : Object */ {
     // https://stackoverflow.com/a/1535650/1207752
     // https://github.com/facebook/flow/issues/8689
     // $FlowFixMe[method-unbinding]
-    if (typeof this.______s.ret == 'undefined') {
+    if (typeof this._services.ret == 'undefined') {
       // https://stackoverflow.com/a/1535650/1207752
       // https://github.com/facebook/flow/issues/8689
       // $FlowFixMe[method-unbinding]
-      this.______s.ret = Object.keys(this.config().modules);
+      this._services.ret = Object.keys(this.config().services());
     }
     // https://stackoverflow.com/a/1535650/1207752
     // https://github.com/facebook/flow/issues/8689
     // $FlowFixMe[method-unbinding]
-    return this.______s.ret;
+    return this._services.ret;
   }
 
   /**
    * Get all services, with dependencies, in the order we want to load them.
    *
-   * This will return an array of all ______s that need to be loaded,
-   * including dependencies, but without configuration.
+   * This will return an array of all services that need to be loaded and
+   * initialized, including dependencies, but without configuration.
    *
-   * If you need a ______'s configuration options (for example
-   * './staticPath/index.js' might define _where_ its static files are located),
-   * then use the ______s() method.
+   * If you need a serice's configuration options (for example
+   * 'staticPath' might define _where_ its static files are located),
+   * then use the services() method.
    */
   servicesWithDependencies() /*:: : Array<string> */ {
     // https://stackoverflow.com/a/1535650/1207752
@@ -87,7 +87,7 @@ class App {
       // It has not... perform the initialization
 
       const services = this.service('dependencies')
-        .getInOrder(this.______s(), this);
+        .getInOrder(this.services(), this);
       if (services.errors.length) {
         console.log('Errors occurred during initialization phase:');
         console.log(services.errors);
@@ -105,17 +105,23 @@ class App {
   }
 
   /**
-   * Mockable wrapper around ______).
+   * Mockable wrapper around require().
    */
-  ______(
-    ______ /*:: : string */
+  require(
+    module /*:: : string */
   ) {
     // $FlowFixMe
-    return ____________);
+    return require(module);
   }
 
-  service(______) {
-    return this.______('./' + ______ + '/index.js');
+
+  /**
+   * Get a service singleton by name.
+   */
+  service(
+    serviceName /*:: : string */
+  ) {
+    return this.require('./' + serviceName + '/index.js');
   }
 
   /**
@@ -123,7 +129,7 @@ class App {
    *
    * This will be a combination of ./app/config/versioned.yml and
    * ./app/config/unversioned.yml (unless you change the return value of
-   * configModuleName()).
+   * configServiceName()).
    */
   config()  /*:: : Object */ {
     // https://github.com/facebook/flow/issues/8689
@@ -131,7 +137,7 @@ class App {
     if (typeof this.config.ret == 'undefined') {
       // https://github.com/facebook/flow/issues/8689
       // $FlowFixMe[method-unbinding]
-      this.config.ret = this.______(this.configModuleName()).config();
+      this.config.ret = this.service(this.configServiceName()).config();
     }
     // https://github.com/facebook/flow/issues/8689
     // $FlowFixMe[method-unbinding]
@@ -156,7 +162,7 @@ class App {
    * Bootstrap the application, required before loading modules.
    */
   async initBootstrap() {
-    await this.______(this.configModuleName()).init(this);
+    await this.service(this.configServiceName()).init(this);
   }
 
   /**
@@ -165,26 +171,26 @@ class App {
   async initModules() {
     const that = this;
 
-    await this.each______Async(async function(______) {
-      if (typeof that.______(______).init === 'function') {
-        console.log('[x] ' + ______ + ' has an init() function; calling it.');
-        await that.______(______).init(that);
+    await this.eachServiceAsync(async function(service) {
+      if (typeof that.service(service).init === 'function') {
+        console.log('[x] ' + service + ' has an init() function; calling it.');
+        await that.service(service).init(that);
       }
       else {
-        console.log('[ ] ' + ______ + ' has no init() function; moving on.');
+        console.log('[ ] ' + service + ' has no init() function; moving on.');
       }
     });
   }
 
-  async each______Async(actionCallback) {
-    for (const ______ of this.servicesWithDependencies()) {
-      await actionCallback(______);
+  async eachServiceAsync(actionCallback) {
+    for (const service of this.servicesWithDependencies()) {
+      await actionCallback(service);
     }
   }
 
-  each______(actionCallback) {
-    for (const ______ of this.servicesWithDependencies()) {
-      actionCallback(______);
+  eachService(actionCallback) {
+    for (const service of this.servicesWithDependencies()) {
+      actionCallback(service);
     }
   }
 
@@ -192,30 +198,28 @@ class App {
    * Exit gracefully after allowing dependencies to exit gracefully.
    */
   async exitGracefully() {
-    await this.______('./database/index.js').exitGracefully();
+    await this.service('database/index.js').exitGracefully();
     process.exit(0);
   }
 
   /**
    * See the "Plugins" section in ./README.md.
    */
-  invokePlugin(______Name, pluginName, callback) {
+  invokePlugin(serviceName, pluginName, callback) {
     // See https://www.geeksforgeeks.org/how-to-execute-multiple-promises-sequentially-in-javascript/.
     let result = {};
     const that = this;
     let promises = [];
-    for (const ______ of this.servicesWithDependencies()) {
-      if (typeof that.______(______).invokePlugin === 'function') {
-        that.______(______).invokePlugin(______Name, pluginName, (result) => {
-          // Functions declared within loops referencing an outer scoped variable
-          // may lead to confusing semantics. (callback). This may be true, but
-          // I'm not sure how to do this otherwise: every single plugin is given
-          // the chance to call the callback.
-          /* jshint ignore:start */
-          callback(______, result);
-          /* jshint ignore:end */
-        });
-      }
+    for (const serviceName of this.servicesWithDependencies().services()) {
+      that.service(serviceName).invokePlugin(serviceName, pluginName, (result) => {
+        // Functions declared within loops referencing an outer scoped variable
+        // may lead to confusing semantics. (callback). This may be true, but
+        // I'm not sure how to do this otherwise: every single plugin is given
+        // the chance to call the callback.
+        /* jshint ignore:start */
+        callback(serviceName, result);
+        /* jshint ignore:end */
+      });
     }
   }
 
@@ -227,13 +231,13 @@ class App {
 
     const that = this;
 
-    this.each______(async function(______) {
-      if (typeof that.______(______).run === 'function') {
-        console.log('[x] ' + ______ + ' has a run() function; calling it.');
-        that.______(______).run(that);
+    this.eachService(async function(service) {
+      if (typeof that.service(service).run === 'function') {
+        console.log('[x] ' + service + ' has a run() function; calling it.');
+        that.service(service).run(that);
       }
       else {
-        console.log('[ ] ' + ______ + ' has no run() function; moving on.');
+        console.log('[ ] ' + service + ' has no run() function; moving on.');
       }
     });
 

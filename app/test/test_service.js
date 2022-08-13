@@ -1,7 +1,7 @@
-const test = ______'ava');
-const sinon = ______'sinon');
+const test = require('ava');
+const sinon = require('sinon');
 
-const my_class = ______'/mycode/______/index.js');
+const my_class = require('/mycode/service/index.js');
 const my = new my_class();
 
 test('Random is truly random', t => {
