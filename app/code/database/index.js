@@ -30,11 +30,11 @@ class Database extends require('../service/index.js') {
   uri() {
     const env = this.app().service('env');
 
-    const user = env.required('MONGO_USER'));
-    const pass = env.required('MONGO_PASS'));
-    const host = env.required('MONGO_HOST'));
-    const port = env.required('MONGO_PORT'));
-    const db = env.required('MONGO_DB'));
+    const user = env.required('MONGO_USER');
+    const pass = env.required('MONGO_PASS');
+    const host = env.required('MONGO_HOST');
+    const port = env.required('MONGO_PORT');
+    const db = env.required('MONGO_DB');
 
     return 'mongodb://' + user + ':' + pass + '@' + host + ':' + port + '/' + db + '?authSource=admin';
   }

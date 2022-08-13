@@ -38,7 +38,6 @@ class Config extends require('../service/index.js') {
     switch (version) {
       case '2':
         return this._app.class('config/configParserVersion2');
-        break;
 
       default:
         throw candidate + ' has unsupported version ' + version;

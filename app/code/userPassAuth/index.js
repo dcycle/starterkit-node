@@ -23,7 +23,7 @@ class UserPassAuth extends require('../service/index.js') {
     );
 
     expressApp.post('/login', (req, res, next) => {
-      app.service('authentication/index.js').passport().authenticate('local',
+      app.service('authentication').passport().authenticate('local',
       (err, user, info) => {
         if (err) {
           console.log('error during /login');

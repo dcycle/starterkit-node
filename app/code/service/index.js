@@ -22,7 +22,7 @@ const module_exports /*:: : Object */ = class {
   config(
     key /*:: : string */
   ) {
-    return this.app().config().modules['./' +  this.lowerFirstLetter(this.serviceName()) + '/index.js'][key];
+    return this.app().config().modules[this.lowerFirstLetter(this.serviceName())][key];
   }
 
   app() {

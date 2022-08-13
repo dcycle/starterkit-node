@@ -5,7 +5,7 @@
 
 const Repl = require('repl');
 const { extendWith, colorize, defineCommands } = require("./utils");
-const { sayBye, sayDoc } = require()"./cli");
+const { sayBye, sayDoc } = require("./cli");
 
 const app = require('../app.js');
 

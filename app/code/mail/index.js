@@ -18,7 +18,7 @@ class Mail extends require('../service/index.js') {
   defaultServer() {
     const app = this._app;
 
-    const defaultServerName = app.config().modules['./mail/index.js'].defaultServer;
+    const defaultServerName = app.config().modules['mail'].defaultServer;
 
     return this.server(defaultServerName);
   }

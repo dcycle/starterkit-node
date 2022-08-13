@@ -9,14 +9,14 @@ class Authentication extends require('../service/index.js') {
   ) /*:: : Object */ {
     super.init(app);
 
-    const Schema = app.service('database/index.js').mongoose().Schema;
+    const Schema = app.service('database').mongoose().Schema;
     const UserDetail = new Schema({
       username: String,
       password: String
     });
     UserDetail.plugin(this.passportLocalMongoose());
     // $FlowExpectedError
-    this.myUserDetails = app.service('database/index.js').mongoose().model('userInfo', UserDetail, 'userInfo');
+    this.myUserDetails = app.service('database').mongoose().model('userInfo', UserDetail, 'userInfo');
 
     this.setFlagBool('initialized', true);
     this.passport().use(this.userDetails().createStrategy());

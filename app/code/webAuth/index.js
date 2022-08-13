@@ -21,18 +21,18 @@ class WebAuth extends require('../service/index.js') {
     const expressApp = app.service('express').expressApp();
 
     const expressSession = app.require('express-session')({
-      secret: app.service('env/index.js').required('EXPRESS_SESSION_SECRET'),
+      secret: app.service('env').required('EXPRESS_SESSION_SECRET'),
       resave: false,
       saveUninitialized: false
     });
 
     expressApp.use(expressSession);
-    expressApp.use(app.service('authentication/index.js').passport().initialize());
-    expressApp.use(app.service('authentication/index.js').passport().session());
+    expressApp.use(app.service('authentication').passport().initialize());
+    expressApp.use(app.service('authentication').passport().session());
 
-    app.config().modules['./webAuth/index.js'].authenticated.forEach((e) => {
+    this.config('authenticated').forEach((e) => {
       app.service('express').addMiddleware(e.route, e.verb, [
-        app.service('authentication/index.js').loggedIn]);
+        app.service('authentication').loggedIn]);
     });
 
     return this;

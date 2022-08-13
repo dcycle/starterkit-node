@@ -27,7 +27,7 @@ class Smtp extends require('../service/index.js') {
   server(serverName) {
     if (typeof this._servers[serverName] === 'undefined') {
       const app = this._app;
-      const servers = app.config().modules['./smtp/index.js'].servers;
+      const servers = this.config('servers');
       const server = servers[serverName];
       if (typeof server === undefined) {
         throw 'Server ' + serverName + ' does not exist.';

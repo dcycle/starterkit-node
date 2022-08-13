@@ -23,7 +23,7 @@ class Express extends require('../service/index.js') {
   async run(
     app /*:: : Object */
   ) /*:: : Object */ {
-    const port = app.config().modules['./express'].port;
+    const port = app.config().modules['express'].port;
     this.httpServer().listen(port, function() {
       console.log('listening on *:' + port);
     });

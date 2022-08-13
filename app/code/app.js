@@ -57,16 +57,17 @@ class App {
     // https://stackoverflow.com/a/1535650/1207752
     // https://github.com/facebook/flow/issues/8689
     // $FlowFixMe[method-unbinding]
-    if (typeof this._services.ret == 'undefined') {
+    if (typeof this.services.ret == 'undefined') {
       // https://stackoverflow.com/a/1535650/1207752
       // https://github.com/facebook/flow/issues/8689
       // $FlowFixMe[method-unbinding]
-      this._services.ret = Object.keys(this.config().services());
+      this.services.ret = Object.keys(this.config().services);
     }
+
     // https://stackoverflow.com/a/1535650/1207752
     // https://github.com/facebook/flow/issues/8689
     // $FlowFixMe[method-unbinding]
-    return this._services.ret;
+    return this.services.ret;
   }
 
   /**
@@ -198,7 +199,7 @@ class App {
    * Exit gracefully after allowing dependencies to exit gracefully.
    */
   async exitGracefully() {
-    await this.service('database/index.js').exitGracefully();
+    await this.service('database').exitGracefully();
     process.exit(0);
   }
 

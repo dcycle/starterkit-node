@@ -8,7 +8,7 @@ class Repl extends require('../service/index.js') {
     app /*:: : Object */
   ) /*:: : Object */ {
 
-    const port = app.config().modules['./repl/index.js'].port;
+    const port = app.config().modules['repl'].port;
 
     require('./index2.js').listen(port, () => console.log("repl server listening on port " + port));
 

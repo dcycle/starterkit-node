@@ -9,7 +9,7 @@ class Chat extends require('../service/index.js') {
   ) /*:: : Object */ {
     super.init(app);
 
-    this.myMessage = app.service('database/index.js').mongoose().model('Message', {
+    this.myMessage = app.service('database').mongoose().model('Message', {
       name : String,
       message : String,
     });

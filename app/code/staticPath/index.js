@@ -14,7 +14,7 @@ class StaticPath extends require('../service/index.js') {
     const expressApp = app.service('express').expressApp();
     const expressModule = app.service('express').express();
 
-    app.config().modules['./staticPath/index.js'].paths.forEach((e) => {
+    this.config('paths').forEach((e) => {
       expressApp.use(expressModule.static(e));
     });
 
