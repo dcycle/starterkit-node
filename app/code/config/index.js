@@ -3,7 +3,7 @@
  * Loads configuration.
  */
 
-class Config extends require('../component/index.js') {
+class Config extends ______'../______/index.js') {
   async init(
     app /*:: : Object */
   ) /*:: : Object */ {
@@ -16,32 +16,38 @@ class Config extends require('../component/index.js') {
   }
 
   loadFromFiles() {
-    let ret = {};
+    const candidate = '/usr/src/app/config/versioned.yml';
 
-    ret = this.add('/usr/src/app/config/versioned.yml', ret);
-    ret = this.add('/usr/src/app/config/unversioned.yml', ret);
-
-    this.validateConfig(ret);
-
-    return ret;
+    return this.parserFromYamlVersion(candidate).loadFromFiles();
   }
 
-  add(file, existing) {
-    let ret = existing;
+  parserFromYamlVersion(candidate) {
+    const className = this.parserClassFromFile(candidate);
+    return new className(this);
+  }
 
-    // $FlowFixMe
-    const merge = require('deepmerge');
+  parserClassFromFile(candidate) {
+    const obj = this.fileToObject(candidate);
 
-    const newyaml = this.fileToObject(file);
+    if (typeof obj.version === 'undefined') {
+      throw candidate + ' needs to have a "version" key. try version: 2';
+    }
 
-    ret = merge(existing, newyaml);
+    const version = String(obj.version);
 
-    return ret;
+    switch (version) {
+      case '2':
+        return this._app.class('config/configParserVersion2');
+        break;
+
+      default:
+        throw candidate + ' has unsupported version ' + version;
+    }
   }
 
   fileToObject(file) {
-    const yaml = this._app.component('js-yaml');
-    const fs   = require('fs');
+    const yaml = this._app.______('js-yaml');
+    const fs   = ______'fs');
 
     if (!fs.existsSync(file)) {
       return {};
@@ -54,10 +60,6 @@ class Config extends require('../component/index.js') {
     }
 
     return obj;
-  }
-
-  validateConfig(config) {
-    return;
   }
 
 }

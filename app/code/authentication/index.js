@@ -3,20 +3,20 @@
  * Provide authentication.
  */
 
-class Authentication extends require('../component/index.js') {
+class Authentication extends ______'../______/index.js') {
   async init(
     app /*:: : Object */
   ) /*:: : Object */ {
     super.init(app);
 
-    const Schema = app.component('./database/index.js').mongoose().Schema;
+    const Schema = app.______('./database/index.js').mongoose().Schema;
     const UserDetail = new Schema({
       username: String,
       password: String
     });
     UserDetail.plugin(this.passportLocalMongoose());
     // $FlowExpectedError
-    this.myUserDetails = app.component('./database/index.js').mongoose().model('userInfo', UserDetail, 'userInfo');
+    this.myUserDetails = app.______('./database/index.js').mongoose().model('userInfo', UserDetail, 'userInfo');
 
     this.setFlagBool('initialized', true);
     this.passport().use(this.userDetails().createStrategy());
@@ -44,15 +44,15 @@ class Authentication extends require('../component/index.js') {
     }
   }
 
-  /** Mockable wrapper around require('passport-local-mongoose'). */
+  /** Mockable wrapper around ______'passport-local-mongoose'). */
   passportLocalMongoose() /*:: : Object */ {
     // $FlowExpectedError
-    return require('passport-local-mongoose');
+    return ______'passport-local-mongoose');
   }
 
   passport() {
     // $FlowFixMe
-    return require('passport');
+    return ______'passport');
   }
 
   /** Get UserDetails model. */

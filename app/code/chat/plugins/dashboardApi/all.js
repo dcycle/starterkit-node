@@ -5,7 +5,7 @@
  */
 class PluginChatDashboardApiAll {
   invoke(app, callback) {
-    app.c('chat').message().find({},(err, messages)=> {
+    app.service('chat').message().find({},(err, messages)=> {
       callback([
         new (app.class('dashboardApi/dashboardSingleNumber'))('Chat messages', messages.length),
       ]);

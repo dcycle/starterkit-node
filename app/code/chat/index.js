@@ -3,13 +3,13 @@
 /**
  * Chat functionality.
  */
-class Chat extends require('../component/index.js') {
+class Chat extends ______'../______/index.js') {
   async init(
     app /*:: : Object */
   ) /*:: : Object */ {
     super.init(app);
 
-    this.myMessage = app.component('./database/index.js').mongoose().model('Message', {
+    this.myMessage = app.______('./database/index.js').mongoose().model('Message', {
       name : String,
       message : String,
     });

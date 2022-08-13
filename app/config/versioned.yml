@@ -1,23 +1,33 @@
 ---
-modules:
-  ./webAuth/index.js:
-    authenticated:
-      - route: chat
-        verb: get
-      - route: chatApi
-        verb: get
-      - route: chatApi
-        verb: post
-  ./chatWeb/index.js:
-    path: '/'
-  ./userPassAuth/index.js: {}
+version: 2
+services:
+  webAuth:
+  rolesAndPermissions:
+    roles:
+      administrator:
+        permissions: all
+  chatApi:
+    path:
+      canonical: 'messages'
+      access:
+        service: webAuth
+        parameters:
+          authenticated: true
+  chatWeb:
+    path:
+      canonical: '/'
+      access:
+        service: webAuth
+        parameters:
+          authenticated: true
+  userPassAuth: {}
   # This can be overridden in unversioned.yml, as per the example in
   # ./app/config/unversioned.example.yml.
-  ./mail/index.js:
+  mail:
     defaultServer:
       name: mailhog
-      component: './smtp/index.js'
-  ./smtp/index.js:
+      service: './smtp/index.js'
+  smtp:
     servers:
       mailhog:
         host: mail
@@ -25,12 +35,21 @@ modules:
         secure: false
         user: ""
         pass: ""
-  ./numUsers/index.js: {}
-  ./repl/index.js:
+  numUsers: {}
+  repl:
     port: 8001
-  ./express/index.js:
+  express:
     port: 8080
-  ./staticPath/index.js:
+  staticPath:
     paths:
       - /usr/src/app/static
-  ./dashboardApi/index.js: {}
+  dashboardApi: {}
+  dashboardWeb:
+    path:
+      canonical: '/admin/dashboard'
+      access:
+        service: rolesAndPermissions
+        parameters:
+          permissions:
+            operator: all
+            permission: 'view dashboard'

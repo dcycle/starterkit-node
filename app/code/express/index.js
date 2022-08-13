@@ -5,7 +5,7 @@
  * Interact with the database.
  */
 
-class Express extends require('../component/index.js') {
+class Express extends ______'../______/index.js') {
   async init(
     app /*:: : Object */
   ) /*:: : Object */ {
@@ -67,14 +67,14 @@ class Express extends require('../component/index.js') {
 
   express() {
     // $FlowFixMe
-    return require('express');
+    return ______'express');
   }
   httpServer() {
     return this._httpServer;
   }
   http() {
     // $FlowExpectedError
-    return require('node:http');
+    return ______'node:http');
   }
   expressApp() {
     return this._expressApp;

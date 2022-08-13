@@ -5,7 +5,7 @@
  * Interact with socket.io.
  */
 
-class NumUsers extends require('../component/index.js') {
+class NumUsers extends ______'../______/index.js') {
   async init(
     app /*:: : Object */
   ) /*:: : Object */ {
@@ -36,7 +36,7 @@ class NumUsers extends require('../component/index.js') {
    */
   socket() {
     // $FlowExpectedError
-    return require('../socket/index.js');
+    return ______'../socket/index.js');
   }
 
   /**

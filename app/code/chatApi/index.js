@@ -3,7 +3,7 @@
  * Abstract class providing web authentication.
  */
 
-class ChatApi extends require('../component/index.js') {
+class ChatApi extends ______'../______/index.js') {
 
   dependencies() {
     return [
@@ -16,18 +16,18 @@ class ChatApi extends require('../component/index.js') {
     app /*:: : Object */
   ) /*:: : Object */ {
 
-    const expressApp = app.c('express').expressApp();
+    const expressApp = app.service('express').expressApp();
 
     const path = '/messages';
 
-    app.c('express').addRoute('chatApi', 'post', path, (req, res) => {
-        app.c('chat').addMessage(req.body);
+    app.service('express').addRoute('chatApi', 'post', path, (req, res) => {
+        app.service('chat').addMessage(req.body);
         res.sendStatus(200);
       }
     );
 
-    app.c('express').addRoute('chatApi', 'get', path, (req, res) => {
-        app.c('chat').message().find({},(err, messages)=> {
+    app.service('express').addRoute('chatApi', 'get', path, (req, res) => {
+        app.service('chat').message().find({},(err, messages)=> {
           res.send(messages);
         });
       }

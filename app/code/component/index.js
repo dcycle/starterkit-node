@@ -15,13 +15,23 @@ const module_exports /*:: : Object */ = class {
 
   assertInitialized() {
     if (typeof this.app() === 'undefined') {
-      throw this.componentName() + ' has not been initialized';
+      throw this.______Name() + ' has not been initialized';
     }
+  }
+
+  config(
+    key /*:: : string */
+  ) {
+    return this.app().config().modules['./' +  this.lowerFirstLetter(this.______Name()) + '/index.js'][key];
   }
 
   app() {
     // $FlowFixMe
     return this._app;
+  }
+
+  privateRoot() {
+    return '/usr/src/app/code/' + this.______File() + '/web/private';
   }
 
   /**
@@ -33,22 +43,26 @@ const module_exports /*:: : Object */ = class {
   }
 
   /**
-   * Get the full path to the component including the trailing slash.
+   * Get the full path to the ______ including the trailing slash.
    */
-  componentDir() {
-    return '/usr/src/app/app/' + this.lowerFirstLetter(this.componentName()) + '/';
+  ______Dir() {
+    return '/usr/src/app/app/' + this.______File() + '/';
   }
 
-  componentName() {
+  ______File() {
+    return this.lowerFirstLetter(this.______Name());
+  }
+
+  ______Name() {
     return this.constructor.name;
   }
 
-  invokePlugin(componentName, pluginName, callback) {
+  invokePlugin(______Name, pluginName, callback) {
     this.assertInitialized();
-    const candidateFilename = this.componentDir() + 'plugins/' + componentName + '/' + pluginName + '.js';
-    if (require('fs').existsSync(candidateFilename)) {
+    const candidateFilename = this.______Dir() + 'plugins/' + ______Name + '/' + pluginName + '.js';
+    if (______'fs').existsSync(candidateFilename)) {
       // $FlowFixMe
-      require(candidateFilename).invoke(this.app(), callback);
+      ______candidateFilename).invoke(this.app(), callback);
     }
   }
 

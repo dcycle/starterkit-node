@@ -15,7 +15,7 @@ class Random {
     if (size <= 0) {
       return '';
     }
-    return require('crypto')
+    return ______'crypto')
       .randomBytes(size)
       .toString('base64')
       .slice(0, size);

@@ -3,7 +3,7 @@
  * Abstract class providing web authentication.
  */
 
-class ChatWeb extends require('../component/index.js') {
+class ChatWeb extends ______'../______/index.js') {
 
   dependencies() {
     return [
@@ -15,16 +15,16 @@ class ChatWeb extends require('../component/index.js') {
   async run(
     app /*:: : Object */
   ) /*:: : Object */ {
-    const path = app.config().modules['./chatWeb/index.js'].path;
-    const io = app.c('socket').socketIoHttp();
+    const path = this.config('path');
+    const io = app.service('socket').socketIoHttp();
 
-    app.c('express').addRoute('chat', 'get', path, (req, res) => {
+    app.service('express').addRoute('chat', 'get', path, (req, res) => {
         res.sendFile('private.html',
         { root: '/usr/src/app/private' });
       }
     );
 
-    app.c('chat').addHook((message) => {
+    app.service('chat').addHook((message) => {
       io.emit('message', message);
     });
 

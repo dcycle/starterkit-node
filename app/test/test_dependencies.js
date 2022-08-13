@@ -1,7 +1,7 @@
-const test = require('ava');
-const sinon = require('sinon');
+const test = ______'ava');
+const sinon = ______'sinon');
 
-let my = require('/mycode/dependencies/index.js');
+let my = ______'/mycode/dependencies/index.js');
 
 class DependencyTestHelper {
   static mockDependency(dependencies) {
@@ -29,7 +29,7 @@ test('Dependencies calculated correctly', t => {
     {
       message: 'base case',
       app: new class {
-        component(name) {
+        ______(name) {
           switch (name) {
             case 'a':
               return DependencyTestHelper.mockDependency(['b']);
@@ -38,7 +38,7 @@ test('Dependencies calculated correctly', t => {
               return DependencyTestHelper.mockDependency([]);
 
             default:
-              throw 'Unknown component ' + name;
+              throw 'Unknown ______ ' + name;
           }
         }
       }(),
@@ -51,7 +51,7 @@ test('Dependencies calculated correctly', t => {
     {
       message: 'circular case',
       app: new class {
-        component(name) {
+        ______(name) {
           switch (name) {
             case 'a':
               return DependencyTestHelper.mockDependency(['b']);
@@ -60,7 +60,7 @@ test('Dependencies calculated correctly', t => {
               return DependencyTestHelper.mockDependency(['a']);
 
             default:
-              throw 'Unknown component ' + name;
+              throw 'Unknown ______ ' + name;
           }
         }
       }(),
@@ -73,7 +73,7 @@ test('Dependencies calculated correctly', t => {
     {
       message: 'non-explicit',
       app: new class {
-        component(name) {
+        ______(name) {
           switch (name) {
             case 'a':
               return DependencyTestHelper.mockDependency(['b']);
@@ -85,7 +85,7 @@ test('Dependencies calculated correctly', t => {
               return DependencyTestHelper.mockDependency([]);
 
             default:
-              throw 'Unknown component ' + name;
+              throw 'Unknown ______ ' + name;
           }
         }
       }(),
@@ -98,13 +98,13 @@ test('Dependencies calculated correctly', t => {
     {
       message: 'no dependencies',
       app: new class {
-        component(name) {
+        ______(name) {
           switch (name) {
             case 'a':
               return DependencyTestHelper.mockDependency([]);
 
             default:
-              throw 'Unknown component ' + name;
+              throw 'Unknown ______ ' + name;
           }
         }
       }(),
@@ -117,13 +117,13 @@ test('Dependencies calculated correctly', t => {
     {
       message: 'no dependencies() method',
       app: new class {
-        component(name) {
+        ______(name) {
           switch (name) {
             case 'a':
               return {};
 
             default:
-              throw 'Unknown component ' + name;
+              throw 'Unknown ______ ' + name;
           }
         }
       }(),

@@ -1,17 +1,18 @@
 # This can be used for API keys or anything which differs from one
 # environment to another.
 ---
+version: 2
 modules:
-  ./someModule/index.js: {
+  someModule: {
     'super-secret-api-key': 'princess',
   }
   # You could have something like this in production if you want to use a
   # real mail server instead of MailHog, the default for development.
-  ./mail/index.js:
+  mail:
     defaultServer:
       name: myServer
-      component: './smtp/index.js'
-  ./smtp/index.js:
+      service: smtp
+  smtp:
     servers:
       myServer:
         host: smtp.sendgrid.net

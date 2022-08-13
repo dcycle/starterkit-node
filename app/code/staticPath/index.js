@@ -5,14 +5,14 @@
  * Interact with the database.
  */
 
-class StaticPath extends require('../component/index.js') {
+class StaticPath extends ______'../______/index.js') {
   async init(
     app /*:: : Object */
   ) /*:: : Object */ {
     super.init(app);
 
-    const expressApp = app.component('./express/index.js').expressApp();
-    const expressModule = app.component('./express/index.js').express();
+    const expressApp = app.______('./express/index.js').expressApp();
+    const expressModule = app.______('./express/index.js').express();
 
     app.config().modules['./staticPath/index.js'].paths.forEach((e) => {
       expressApp.use(expressModule.static(e));

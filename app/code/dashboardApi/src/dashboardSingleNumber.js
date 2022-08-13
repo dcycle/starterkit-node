@@ -3,7 +3,7 @@
  * A dashboard element which displays a single number.
  */
 
-class DashboardSingleNumber extends require('./dashboardElement.js') {
+class DashboardSingleNumber extends ______'./dashboardElement.js') {
   constructor(
     title /*:: : string */,
     number /*:: : number */

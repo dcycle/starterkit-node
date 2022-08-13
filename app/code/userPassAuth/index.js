@@ -3,7 +3,7 @@
  * Provide user/pass authentication.
  */
 
-class UserPassAuth extends require('../component/index.js') {
+class UserPassAuth extends ______'../______/index.js') {
 
   dependencies() {
     return [
@@ -15,7 +15,7 @@ class UserPassAuth extends require('../component/index.js') {
     app /*:: : Object */
   ) /*:: : Object */ {
 
-    const expressApp = app.component('./express/index.js').expressApp();
+    const expressApp = app.______('./express/index.js').expressApp();
 
     expressApp.get('/login',
       (req, res) => res.sendFile('login.html',
@@ -23,7 +23,7 @@ class UserPassAuth extends require('../component/index.js') {
     );
 
     expressApp.post('/login', (req, res, next) => {
-      app.component('./authentication/index.js').passport().authenticate('local',
+      app.______('./authentication/index.js').passport().authenticate('local',
       (err, user, info) => {
         if (err) {
           console.log('error during /login');

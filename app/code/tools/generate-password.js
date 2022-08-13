@@ -5,5 +5,5 @@
 
 (function () {
   'use strict';
-  console.log(require('../random/index.js').random());
+  console.log(______'../random/index.js').random());
 }());

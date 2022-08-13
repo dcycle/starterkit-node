@@ -8,10 +8,9 @@
  * configModuleName()).
  *
  * For regular usage, you can modify ./app/config/versioned.yml and
- * ./app/config/unversioned.yml which will tell the app which components
- * (modules) to load.
+ * ./app/config/unversioned.yml which will tell the app which services to load.
  *
- * Each component can then have dependencies, an async init() method and a non-
+ * Each service can then have dependencies, an async init() method and a non-
  * async run() method, which are called automatically in the right order.
  */
 class App {
@@ -30,23 +29,23 @@ class App {
 
   class(identifier) {
     const parts = identifier.split('/');
-    const componentName = parts.shift();
+    const service = parts.shift();
     const rest = parts.join();
-    return this.component('./' + componentName + '/src/' + rest + '.js');
+    return this.require('./' + service + '/src/' + rest + '.js');
   }
 
   /**
-   * Get the components we want. Depedencies and order will be managed later.
+   * Get the ______s we want. Depedencies and order will be managed later.
    *
-   * The components should be in the form of an object, where keys, such
-   * as './staticPath/index.js', represent components, and values, such as
+   * The ______s should be in the form of an object, where keys, such
+   * as './staticPath/index.js', represent ______s, and values, such as
    * {}, or { paths: ['/usr/src/app/static'] }, represent configuration to pass
-   * to those components.
+   * to those ______s.
    *
-   * The components do not include dependencies. For that, call
-   * componentsWithDependencies().
+   * The ______s do not include dependencies. For that, call
+   * servicesWithDependencies().
    *
-   * componentsWithDependencies() will return required components including
+   * servicesWithDependencies() will return required ______s including
    * dependencies in the order in which they need to be loaded, and will not
    * include configuration values.
    *
@@ -54,69 +53,69 @@ class App {
    * a module, you might want to consider adding the dependency to the module
    * list in ./app/config/versioned.yml or ./app/config/unversioned.yml.
    */
-  components() /*:: : Object */ {
+  ______s() /*:: : Object */ {
     // https://stackoverflow.com/a/1535650/1207752
     // https://github.com/facebook/flow/issues/8689
     // $FlowFixMe[method-unbinding]
-    if (typeof this.components.ret == 'undefined') {
+    if (typeof this.______s.ret == 'undefined') {
       // https://stackoverflow.com/a/1535650/1207752
       // https://github.com/facebook/flow/issues/8689
       // $FlowFixMe[method-unbinding]
-      this.components.ret = Object.keys(this.config().modules);
+      this.______s.ret = Object.keys(this.config().modules);
     }
     // https://stackoverflow.com/a/1535650/1207752
     // https://github.com/facebook/flow/issues/8689
     // $FlowFixMe[method-unbinding]
-    return this.components.ret;
+    return this.______s.ret;
   }
 
   /**
-   * Get all components, with dependencies, in the order we want to load them.
+   * Get all services, with dependencies, in the order we want to load them.
    *
-   * This will return an array of all components that need to be loaded,
+   * This will return an array of all ______s that need to be loaded,
    * including dependencies, but without configuration.
    *
-   * If you need a component's configuration options (for example
+   * If you need a ______'s configuration options (for example
    * './staticPath/index.js' might define _where_ its static files are located),
-   * then use the components() method.
+   * then use the ______s() method.
    */
-  componentsWithDependencies() /*:: : Array<string> */ {
+  servicesWithDependencies() /*:: : Array<string> */ {
     // https://stackoverflow.com/a/1535650/1207752
     // https://github.com/facebook/flow/issues/8689
     // $FlowFixMe[method-unbinding]
-    if (typeof this.componentsWithDependencies.ret == 'undefined') {
+    if (typeof this.servicesWithDependencies.ret == 'undefined') {
       // It has not... perform the initialization
 
-      const components = this.component('./dependencies/index.js')
-        .getInOrder(this.components(), this);
-      if (components.errors.length) {
+      const services = this.service('dependencies')
+        .getInOrder(this.______s(), this);
+      if (services.errors.length) {
         console.log('Errors occurred during initialization phase:');
-        console.log(components.errors);
+        console.log(services.errors);
         throw 'Errors occurred while fetching dependencies, see console.';
       }
       // https://stackoverflow.com/a/1535650/1207752
       // https://github.com/facebook/flow/issues/8689
       // $FlowFixMe[method-unbinding]
-      this.componentsWithDependencies.ret = components.results;
+      this.servicesWithDependencies.ret = services.results;
     }
     // https://stackoverflow.com/a/1535650/1207752
     // https://github.com/facebook/flow/issues/8689
     // $FlowFixMe[method-unbinding]
-    return this.componentsWithDependencies.ret;
+    return this.servicesWithDependencies.ret;
   }
 
   /**
-   * Mockable wrapper around require().
+   * Mockable wrapper around ______).
    */
-  component(
-    component /*:: : string */
+  ______(
+    ______ /*:: : string */
   ) {
     // $FlowFixMe
-    return require(component);
+    return ____________);
   }
 
-  c(component) {
-    return this.component('./' + component + '/index.js');
+  service(______) {
+    return this.______('./' + ______ + '/index.js');
   }
 
   /**
@@ -132,7 +131,7 @@ class App {
     if (typeof this.config.ret == 'undefined') {
       // https://github.com/facebook/flow/issues/8689
       // $FlowFixMe[method-unbinding]
-      this.config.ret = this.component(this.configModuleName()).config();
+      this.config.ret = this.______(this.configModuleName()).config();
     }
     // https://github.com/facebook/flow/issues/8689
     // $FlowFixMe[method-unbinding]
@@ -157,7 +156,7 @@ class App {
    * Bootstrap the application, required before loading modules.
    */
   async initBootstrap() {
-    await this.component(this.configModuleName()).init(this);
+    await this.______(this.configModuleName()).init(this);
   }
 
   /**
@@ -166,26 +165,26 @@ class App {
   async initModules() {
     const that = this;
 
-    await this.eachComponentAsync(async function(component) {
-      if (typeof that.component(component).init === 'function') {
-        console.log('[x] ' + component + ' has an init() function; calling it.');
-        await that.component(component).init(that);
+    await this.each______Async(async function(______) {
+      if (typeof that.______(______).init === 'function') {
+        console.log('[x] ' + ______ + ' has an init() function; calling it.');
+        await that.______(______).init(that);
       }
       else {
-        console.log('[ ] ' + component + ' has no init() function; moving on.');
+        console.log('[ ] ' + ______ + ' has no init() function; moving on.');
       }
     });
   }
 
-  async eachComponentAsync(actionCallback) {
-    for (const component of this.componentsWithDependencies()) {
-      await actionCallback(component);
+  async each______Async(actionCallback) {
+    for (const ______ of this.servicesWithDependencies()) {
+      await actionCallback(______);
     }
   }
 
-  eachComponent(actionCallback) {
-    for (const component of this.componentsWithDependencies()) {
-      actionCallback(component);
+  each______(actionCallback) {
+    for (const ______ of this.servicesWithDependencies()) {
+      actionCallback(______);
     }
   }
 
@@ -193,27 +192,27 @@ class App {
    * Exit gracefully after allowing dependencies to exit gracefully.
    */
   async exitGracefully() {
-    await this.component('./database/index.js').exitGracefully();
+    await this.______('./database/index.js').exitGracefully();
     process.exit(0);
   }
 
   /**
    * See the "Plugins" section in ./README.md.
    */
-  invokePlugin(componentName, pluginName, callback) {
+  invokePlugin(______Name, pluginName, callback) {
     // See https://www.geeksforgeeks.org/how-to-execute-multiple-promises-sequentially-in-javascript/.
     let result = {};
     const that = this;
     let promises = [];
-    for (const component of this.componentsWithDependencies()) {
-      if (typeof that.component(component).invokePlugin === 'function') {
-        that.component(component).invokePlugin(componentName, pluginName, (result) => {
+    for (const ______ of this.servicesWithDependencies()) {
+      if (typeof that.______(______).invokePlugin === 'function') {
+        that.______(______).invokePlugin(______Name, pluginName, (result) => {
           // Functions declared within loops referencing an outer scoped variable
           // may lead to confusing semantics. (callback). This may be true, but
           // I'm not sure how to do this otherwise: every single plugin is given
           // the chance to call the callback.
           /* jshint ignore:start */
-          callback(component, result);
+          callback(______, result);
           /* jshint ignore:end */
         });
       }
@@ -228,13 +227,13 @@ class App {
 
     const that = this;
 
-    this.eachComponent(async function(component) {
-      if (typeof that.component(component).run === 'function') {
-        console.log('[x] ' + component + ' has a run() function; calling it.');
-        that.component(component).run(that);
+    this.each______(async function(______) {
+      if (typeof that.______(______).run === 'function') {
+        console.log('[x] ' + ______ + ' has a run() function; calling it.');
+        that.______(______).run(that);
       }
       else {
-        console.log('[ ] ' + component + ' has no run() function; moving on.');
+        console.log('[ ] ' + ______ + ' has no run() function; moving on.');
       }
     });
 

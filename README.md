@@ -9,14 +9,15 @@ Dcycle Node.js starterkit
 * Creating new users
 * Sending emails
 * Dcycle Node Starterkit design patterns
-  * Component-based modular system
-  * Some components require initialization
-  * Components can require dependencies at runtime
+  * Service-based modular system
+  * Services are always singletons
+  * Some services require initialization
+  * Services can require dependencies at runtime
   * Defining which modules, and their configuration, to load via a yaml file
   * Defining unversioned configuration for environment-specific configuration and sensitive data
-  * Components's class names are the same as their directory names but start with an uppercase letter
+  * Services' class names are the same as their directory names but start with an uppercase letter
   * Plugins: how modules can share information with each other
-  * Components can define classes
+  * Services can define classes
 * The Node.js command line interface (CLI)
 * Resources
 
@@ -69,7 +70,7 @@ You can send an email by running:
 
 Then, on the prompt:
 
-    app.component('./mail/index.js').sendMailInDefaultServer({from: 'test@example.com', to: 'test@example.com', subject: 'Hello World', html: '<p>Hello</p>', text: 'Hello'}, (error, info) => { console.log(error); console.log(info); });
+    app.service('mail').sendMailInDefaultServer({from: 'test@example.com', to: 'test@example.com', subject: 'Hello World', html: '<p>Hello</p>', text: 'Hello'}, (error, info) => { console.log(error); console.log(info); });
 
 Then, you can run:
 
@@ -86,15 +87,21 @@ In your own project, you are welcome to delete everything in ./app/code except .
 
 If you are interested in keeping the structure of the current project, here are some design patterns we have used to make things easier.
 
-### Component-based modular system
+### Service-based modular system
 
-We have split our code in a series of components which are our custom node modules; they are all singleton class objects. The simplest one is ./app/code/random/index.js. It is self-contained and self explanatory; it serves to make random numbers.
+We have split our code in a series of services which are our custom node modules; they are all singleton class objects. The simplest one is ./app/code/random/index.js. It is self-contained and self explanatory; it serves to make random numbers.
 
 You can try it by running:
 
-    echo 'app.c("random").random()' | ./scripts/node-cli.sh
+    echo 'app.service("random").random()' | ./scripts/node-cli.sh
 
-### Some components require initialization
+### Services are always singletons
+
+Any service you load is an object instantiated within a local node module. For example, calling app.service('numUsers') will return a single object of class NumUsers.
+
+Services need to be initialized using the init() method, but this is done automatically by ./app/code/server.js calling app().init(), which initializes all services which have an init() method.
+
+### Some services require initialization
 
 Components like ./app/code/database/index.js require initialization before use. That is why ./app/code/server.js calls app.init() before app.run(). app.init() initializes all components that need to be initialized before the application can be run.
 
@@ -113,7 +120,7 @@ In the case of ChatWeb, its dependency chain is as follows:
 
 We use a simple dependency manager, ./app/code/dependencies/index.js, to calculate the dependency chain. You can try it at:
 
-    echo "app.c('dependencies').getInOrder(['./chatWeb/index.js'], app);" | ./scripts/node-cli.sh
+    echo "app.service('dependencies').getInOrder(['./chatWeb/index.js'], app);" | ./scripts/node-cli.sh
 
 This should give you a result or ordered dependencies:
 
@@ -234,7 +241,7 @@ This should give you the same number of users online as you see in the web inter
 
 You can **pipe** commands to the cli, like this:
 
-    echo 'app.c("random").random()' | ./scripts/node-cli.sh
+    echo 'app.service("random").random()' | ./scripts/node-cli.sh
 
 Resources
 -----

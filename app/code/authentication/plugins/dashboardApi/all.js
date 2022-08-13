@@ -5,7 +5,7 @@
  */
 class PluginAuthenticationDashboardApiAll {
   invoke(app, callback) {
-    app.c('authentication').userDetails().find({},(err, users)=> {
+    app.service('authentication').userDetails().find({},(err, users)=> {
       callback([
         new (app.class('dashboardApi/dashboardSingleNumber'))('User accounts', users.length),
       ]);

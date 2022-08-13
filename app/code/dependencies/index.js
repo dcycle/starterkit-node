@@ -9,17 +9,17 @@ class Dependencies {
     return [...new Set([...arr1 ,...arr2])];
   }
 
-  getUnorderedRecursive(done, components, app, ret) {
+  getUnorderedRecursive(done, ______s, app, ret) {
     const that = this;
-    components.forEach((elem, index) => {
+    ______s.forEach((elem, index) => {
       ret = that.placeDependency(elem, [], [], ret);
-      if (typeof app.component(elem).dependencies === 'function') {
-        app.component(elem).dependencies().forEach((dependency) => {
+      if (typeof app.______(elem).dependencies === 'function') {
+        app.______(elem).dependencies().forEach((dependency) => {
           ret = that.placeDependency(dependency, [elem], [], ret);
           ret = that.placeDependency(elem, [], [dependency], ret);
 
-          if (!components.includes(dependency)) {
-            ret = that.getUnorderedRecursive(that.merge(done, components), [dependency], app, ret);
+          if (!______s.includes(dependency)) {
+            ret = that.getUnorderedRecursive(that.merge(done, ______s), [dependency], app, ret);
           }
         });
       }
@@ -28,7 +28,7 @@ class Dependencies {
   }
 
   getInOrder(
-    components,
+    ______s,
     app
   ) {
     let ret = {
@@ -37,13 +37,13 @@ class Dependencies {
       results: [],
     };
     try {
-      ret = this.getUnorderedRecursive([], components, app, ret);
+      ret = this.getUnorderedRecursive([], ______s, app, ret);
 
       ret = this.orderResults(ret);
       ret.results = Object.keys(ret.detailedResults);
     }
     catch (err) {
-      ret.results = this.merge(ret.results, components);
+      ret.results = this.merge(ret.results, ______s);
       ret.errors.push(err.message);
     }
 
