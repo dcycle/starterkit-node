@@ -92,7 +92,7 @@ class App {
       if (components.errors.length) {
         console.log('Errors occurred during initialization phase:');
         console.log(components.errors);
-        throw 'Errors occurred while fetching dependencies, see console.';
+        throw 'Errors occurred while fetching dependencies. One possibility is that your ./app/config/unversioned.yml uses an outdated format. See console.';
       }
       // https://stackoverflow.com/a/1535650/1207752
       // https://github.com/facebook/flow/issues/8689

@@ -1,4 +1,5 @@
 echo 'Looking for a domain such as example.local'
+BASE="$(pwd)"
 ENVFILELOCATION="$BASE/.env"
 echo "Looking in $ENVFILELOCATION"
 if [ -f "$ENVFILELOCATION" ]; then
