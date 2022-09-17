@@ -102,11 +102,11 @@ Figure out the network name
 
     docker network ls
 
-It is something like "starterkit_drupalsite_default".
+It is something like "starterkit_node_default".
 
 Connect your network and restart the Let's Encrypt container:
 
-    docker network connect starterkit_drupalsite_default nginx-proxy
+    docker network connect starterkit_node_default nginx-proxy
     docker restart nginx-letsencrypt
 
 After 120 seconds the security certificate should work, but you will get "The provided host name is not valid for this server". This means you need to add your host to the allowed hosts. See the "Troubleshooting" section for details.
