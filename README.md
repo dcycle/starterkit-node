@@ -6,6 +6,7 @@ Dcycle Node.js starterkit
 * About
 * Strategies, credentials, and accounts
 * Quickstart
+* Let's Encrypt on a server
 * Creating new users
 * Sending emails
 * Dcycle Node Starterkit design patterns
@@ -46,6 +47,71 @@ This will give you a URL, username and password.
 Now log on using the the credentials provided.
 
 You will be able to use a simple chat application, and log out.
+
+Let's Encrypt on a server
+-----
+
+(This does not apply to local development, only to publicly-accessible servers.)
+
+We will follow the instructions in the following blog posts:
+
+* [Letsencrypt HTTPS for Drupal on Docker, October 03, 2017, Dcycle Blog](https://blog.dcycle.com/blog/170a6078/letsencrypt-drupal-docker/)
+* [Deploying Letsencrypt with Docker-Compose, October 06, 2017, Dcycle Blog](https://blog.dcycle.com/blog/7f3ea9e1/letsencrypt-docker-compose/)
+
+Here are the exact steps:
+
+* Figure out the IP address of your server, for example 1.2.3.4.
+* Make sure your domain name, for example example.com, resolves to 1.2.3.4. You can test this by running:
+
+    ping example.com
+
+You should see something like:
+
+    PING example.com (1.2.3.4): 56 data bytes
+    64 bytes from 1.2.3.4: icmp_seq=0 ttl=46 time=28.269 ms
+    64 bytes from 1.2.3.4: icmp_seq=1 ttl=46 time=25.238 ms
+
+Press control-C to get out of the loop.
+
+* Run your instance (./scripts/deploy.sh)
+* edit the file .env
+* replace the line VIRTUAL_HOST=localhost with VIRTUAL_HOST=example.com
+* Run ./scripts/deploy.sh again
+
+Now set up Let's Encrypt as per the above blog posts:
+
+    mkdir "$HOME"/certs
+    docker run -d -p 80:80 -p 443:443 \
+      --name nginx-proxy \
+      -v "$HOME"/certs:/etc/nginx/certs:ro \
+      -v /etc/nginx/vhost.d \
+      -v /usr/share/nginx/html \
+      -v /var/run/docker.sock:/tmp/docker.sock:ro \
+      --label com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy \
+      --restart=always \
+      jwilder/nginx-proxy
+    docker run -d \
+      --name nginx-letsencrypt \
+      -v "$HOME"/certs:/etc/nginx/certs:rw \
+      -v /var/run/docker.sock:/var/run/docker.sock:ro \
+      --volumes-from nginx-proxy \
+      --restart=always \
+      jrcs/letsencrypt-nginx-proxy-companion
+
+Figure out the network name
+
+    docker network ls
+
+It is something like "starterkit_drupalsite_default".
+
+Connect your network and restart the Let's Encrypt container:
+
+    docker network connect starterkit_drupalsite_default nginx-proxy
+    docker restart nginx-letsencrypt
+
+After 120 seconds the security certificate should work, but you will get "The provided host name is not valid for this server". This means you need to add your host to the allowed hosts. See the "Troubleshooting" section for details.
+
+Now your site should work with LetsEncrypt.
 
 Creating new users
 -----

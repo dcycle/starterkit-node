@@ -24,6 +24,13 @@ echo 'The network is then referenced in docker-compose.yml.'
 echo 'See https://github.com/docker/compose/issues/3736.'
 docker network ls | grep "$DOCKERNETWORK" || docker network create "$DOCKERNETWORK"
 
+echo ''
+echo '---DETERMINE LOCAL DOMAIN---'
+echo 'The local domain variable, used by https-deploy.sh does not need to be'
+echo 'set during non-https deployment, however we will set it anyway because'
+echo 'otherwise docker-compose up will complain that the variable is not set.'
+source ./scripts/lib/set-local-domain.sh
+
 source ./scripts/lib/hook.source.sh set-docker-compose-files
 
 # Cannot quote $DOCKER_COMPOSE_FILES here
