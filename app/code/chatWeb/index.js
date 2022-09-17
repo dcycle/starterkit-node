@@ -15,10 +15,9 @@ class ChatWeb extends require('../service/index.js') {
   async run(
     app /*:: : Object */
   ) /*:: : Object */ {
-    const path = this.config('path');
     const io = app.service('socket').socketIoHttp();
 
-    app.service('express').addRoute('chat', 'get', path, (req, res) => {
+    app.service('express').addRoute('chat', 'get', this.config('path'), (req, res) => {
         res.sendFile('private.html',
         { root: '/usr/src/app/private' });
       }

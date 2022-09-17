@@ -30,10 +30,10 @@ class WebAuth extends require('../service/index.js') {
     expressApp.use(app.service('authentication').passport().initialize());
     expressApp.use(app.service('authentication').passport().session());
 
-    this.config('authenticated').forEach((e) => {
-      app.service('express').addMiddleware(e.route, e.verb, [
-        app.service('authentication').loggedIn]);
-    });
+    // this.config('authenticated').forEach((e) => {
+    //   app.service('express').addMiddleware(e.route, e.verb, [
+    //     app.service('authentication').loggedIn]);
+    // });
 
     return this;
   }

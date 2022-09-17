@@ -1,7 +1,8 @@
 // @flow
 /**
+ * Abstract service.
  *
- * You can test this by running:
+ * Real services (for example chatApi) can be subclasses of this.
  */
 
 const module_exports /*:: : Object */ = class {
@@ -22,7 +23,13 @@ const module_exports /*:: : Object */ = class {
   config(
     key /*:: : string */
   ) {
-    return this.app().config().modules[this.lowerFirstLetter(this.serviceName())][key];
+    const config = this.app().config().modules[this.lowerFirstLetter(this.serviceName())];
+
+    if (typeof config == 'undefined') {
+      throw this.serviceName() + ' has no configuration data';
+    }
+
+    return config[key];
   }
 
   app() {

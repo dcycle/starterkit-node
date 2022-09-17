@@ -20,6 +20,15 @@ class Express extends require('../service/index.js') {
   async exitGracefully() {
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  dependencies() {
+    return [
+      'assert',
+    ];
+  }
+
   async run(
     app /*:: : Object */
   ) /*:: : Object */ {
@@ -31,7 +40,21 @@ class Express extends require('../service/index.js') {
     return this;
   }
 
-  addRoute(id, verb, path, callback) {
+  addRoute(id, verb, pathStruct, callback) {
+    app.class('express/typePathStruct').assert(pathStruct);
+    const path = app.class('express/pathClass');
+    const pathObj = new path(id, verb, pathStruct, callback, this);
+
+    addRoute(route) {
+
+          app.service('express').addRoute('chat', 'get', path, (req, res) => {
+              res.sendFile('private.html',
+              { root: '/usr/src/app/private' });
+            }
+          );
+    }
+
+
     this.expressApp()[verb]([path], this.middlewares(id, verb), callback);
   }
 

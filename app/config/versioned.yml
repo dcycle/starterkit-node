@@ -52,4 +52,5 @@ services:
         parameters:
           permissions:
             operator: all
-            permission: 'view dashboard'
+            permissions:
+              - 'view dashboard'

@@ -103,11 +103,11 @@ Services need to be initialized using the init() method, but this is done automa
 
 ### Some services require initialization
 
-Components like ./app/code/database/index.js require initialization before use. That is why ./app/code/server.js calls app.init() before app.run(). app.init() initializes all components that need to be initialized before the application can be run.
+Services like ./app/code/database/index.js require initialization before use. That is why ./app/code/server.js calls app.init() before app.run(). app.init() initializes all services that need to be initialized before the application can be run.
 
-### Components can require dependencies at runtime
+### Services can require dependencies at runtime
 
-Some components, like ./app/code/chatWeb/index.js, require that other components be initiliazed before they themselves can bre initialized and eventually run.
+Some services, like ./app/code/chatWeb/index.js, require that other services be initiliazed before they themselves can bre initialized and eventually run.
 
 In the case of ChatWeb, its dependency chain is as follows:
 
@@ -141,7 +141,7 @@ This is used internally to initialize dependencies in the correct order. For exa
 
 ### Defining which modules, and their configuration, to load via a yaml file
 
-You can change which components are used by changing the yaml file ./app/config/versioned.yml, and, optionally, ./app/config/unversioned.yml, the latter being ignored in version control.
+You can change which services are used by changing the yaml file ./app/config/versioned.yml, and, optionally, ./app/config/unversioned.yml, the latter being ignored in version control.
 
 Different modules can have configuration. For example, ChatWeb needs to know on which path it should be active. That is why you will see, in ./app/config/versioned.yml, the following:
 
@@ -157,19 +157,19 @@ This tells our system that we want chatWeb to load; and, furthermore, we want to
 Configuration can differ between environments. Here are some examples:
 
 * The default mail server might be the included MailHog test server by default, but, on production, you'd use your own server.
-* Certain components might require API keys. This can be achieved using environment variables, but you can also define unversioned configuration in ./app/config/unversioned.yml
+* Certain services might require API keys. This can be achieved using environment variables, but you can also define unversioned configuration in ./app/config/unversioned.yml
 
 Take a look at ./app/config/unversioned.example.yml which is an example for a file you can create called ./app/config/unversioned.example.yml.
 
 It shows you how to change the default mail server, and include API keys if you so desire.
 
-### Components's class names are the same as their directory names but start with an uppercase letter
+### services' class names are the same as their directory names but start with an uppercase letter
 
 For example, the class defined in ./app/code/staticPath/index.js is called StaticPath. This is more than a convention: all classes must have the same name as their directory except that they start with an uppercase letter. All our code, particularly loading plugins, depends on this.
 
 ###  Plugins: how modules can share information with each other
 
-Some components, such ./dashboardApi/index.js, can request information from other components. In the case of dashboardApi, it can attempt to get all information that other components wish to expose on a dashboard. For example, Chat may want to expose the current total number of messages, and Authentication may wish to expose the total number of user account.
+Some services, such ./dashboardApi/index.js, can request information from other services. In the case of dashboardApi, it can attempt to get all information that other services wish to expose on a dashboard. For example, Chat may want to expose the current total number of messages, and Authentication may wish to expose the total number of user account.
 
 You can _invoke_ plugins like this:
 
@@ -180,15 +180,15 @@ You can _invoke_ plugins like this:
 
 Indeed this is what DashboardApi does.
 
-In this case, the system will look in each of its components, including its dependencies, for files that look like:
+In this case, the system will look in each of its services, including its dependencies, for files that look like:
 
     ./app/code/*/plugins/dashboardApi/all.js
 
 For example ./app/code/chat/plugins/dashboardApi/all.js fits the bill, as does ./app/code/authentication/plugins/dashboardApi/all.js, but there could eventually be others.
 
-### Components can define classes
+### Services can define classes
 
-Some components, such as dashboardApi, can define classes:
+Some services, such as dashboardApi, can define classes:
 
 * ./app/code/dashboardApi/src/dashboardSingleNumber.js
 * ./app/code/dashboardApi/src/dashboardElement.js
