@@ -29,6 +29,7 @@ class LoginWithGitHub extends require('../component/index.js') {
     const secret = app.config().modules['./loginWithGitHub/index.js'].secret;
 
     const passport = app.c('authentication').passport();
+    // $FlowFixMe
     const gitHubStrategy = require('passport-github2').Strategy;
 
     const that = this;
@@ -46,6 +47,7 @@ class LoginWithGitHub extends require('../component/index.js') {
         });
     }));
 
+    // $FlowFixMe
     const expressSession = require('express-session');
 
     const expressApp = app.c('express').expressApp();
