@@ -38,7 +38,6 @@ class Authentication extends require('../component/index.js') {
   loggedIn(req, res, next) {
     // req.user and req.isAuthenticated contain authentication info.
     if (req.user) {
-      console.log(req.user);
       next();
     } else {
       res.redirect('/login');
