@@ -8,6 +8,7 @@ modules:
         verb: get
       - route: chatApi
         verb: post
+    anonymous:
   ./chatWeb/index.js:
     path: '/'
   ./userPassAuth/index.js: {}
@@ -26,6 +27,11 @@ modules:
         user: ""
         pass: ""
   ./numUsers/index.js: {}
+  ./loginWithGitHub/index.js:
+    client: 'override this in ./app/config/unversioned.yml; see README.md'
+    secret: 'override this in ./app/config/unversioned.yml; see README.md'
+    baseUrl: 'override this in ./app/config/unversioned.yml; see README.md'
+    callback: '/auth/github/callback'
   ./repl/index.js:
     port: 8001
   ./express/index.js:

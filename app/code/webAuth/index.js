@@ -31,12 +31,29 @@ class WebAuth extends require('../component/index.js') {
     expressApp.use(app.component('./authentication/index.js').passport().initialize());
     expressApp.use(app.component('./authentication/index.js').passport().session());
 
-    app.config().modules['./webAuth/index.js'].authenticated.forEach((e) => {
-      app.component('./express/index.js').addMiddleware(e.route, e.verb, [
-        app.component('./authentication/index.js').loggedIn]);
+    this.addPathMiddlewaresFromConfig('authenticated', app.c('authentication').loggedIn);
+    this.addPathMiddlewaresFromConfig('anonymous', function(req, res, next) {
+      next();
     });
 
     return this;
+  }
+
+  addPathMiddlewaresFromConfig(key, callback) {
+    let paths = this._app.config().modules['./webAuth/index.js'][key];
+
+    if (paths === null) {
+      return;
+    }
+    if (typeof paths !== 'object') {
+      return;
+    }
+
+    paths.forEach((e) => {
+      this._app.component('./express/index.js').addMiddleware(e.route, e.verb, [
+        callback,
+      ]);
+    });
   }
 
   async run(

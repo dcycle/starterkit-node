@@ -14,4 +14,5 @@ npm install \
   express-session \
   js-yaml \
   nodemailer \
+  passport-github2 \
   deepmerge

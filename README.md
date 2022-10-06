@@ -19,6 +19,7 @@ Dcycle Node.js starterkit
   * Plugins: how modules can share information with each other
   * Components can define classes
 * The Node.js command line interface (CLI)
+* Logging in with GitHub
 * Resources
 
 About
@@ -78,9 +79,9 @@ Press control-C to get out of the loop.
 * replace the line VIRTUAL_HOST=localhost with VIRTUAL_HOST=example.com
 * Run ./scripts/deploy.sh again
 
-Now set up Let's Encrypt as per the above blog posts:
+If you have Let's Encrypt already set up for another project on the same server, move on to "Figure out the network name", below. Otherwise, set up Let's Encrypt as per the above blog posts:
 
-    mkdir "$HOME"/certs
+    mkdir -p "$HOME"/certs
     docker run -d -p 80:80 -p 443:443 \
       --name nginx-proxy \
       -v "$HOME"/certs:/etc/nginx/certs:ro \
@@ -102,16 +103,14 @@ Figure out the network name
 
     docker network ls
 
-It is something like "starterkit_node_default".
+It is something like "staticauth".
 
 Connect your network and restart the Let's Encrypt container:
 
-    docker network connect starterkit_node_default nginx-proxy
+    docker network connect staticauth nginx-proxy
     docker restart nginx-letsencrypt
 
-After 120 seconds the security certificate should work, but you will get "The provided host name is not valid for this server". This means you need to add your host to the allowed hosts. See the "Troubleshooting" section for details.
-
-Now your site should work with LetsEncrypt.
+After 120 seconds the security certificate should work. Now your site should work with LetsEncrypt.
 
 Creating new users
 -----
@@ -302,6 +301,35 @@ You can **pipe** commands to the cli, like this:
 
     echo 'app.c("random").random()' | ./scripts/node-cli.sh
 
+Logging in with GitHub
+-----
+
+It is possible to log in with GitHub.
+
+Here is how it works:
+
+* Make sure you have a publicly-accessible, https domain, for example https://www.example.com.
+* Make sure you have a GitHub account
+* Fill in the form at https://github.com/settings/applications/new
+  * Application name: 'MY APPLICATION NAME'
+  * Application URL: https://www.example.com
+  * Application description: 'MY APPLICATION DESCRIPTION'.
+  * Authorization callback URL: https://www.example.com/auth/github/callback
+  * Enable device flow: not enabled.
+* Generate a new client secret and take note of the client ID and client secret.
+* Make sure you have a file called ./app/config/unversioned.yml; in the file, have a section with your client id and secret:
+
+    # This can be used for API keys or anything which differs from one
+    # environment to another.
+    ---
+    modules:
+      ./loginWithGitHub/index.js:
+        client: 'client_id'
+        secret: 'secret'
+        baseUrl: 'https://www.example.com'
+
+Now go to https://www.example.com/auth/github and you will be able to log in with GitHub.
+
 Resources
 -----
 
@@ -309,3 +337,5 @@ Resources
 * [Local Authentication Using Passport in Node.js, Beardscript, April 8, 2020, Sitepoint](https://www.sitepoint.com/local-authentication-using-passport-node-js/).
 * [Everything you need to know about the `passport-local` Passport JS Strategy, Zach Gollwitzer, Jan 11, 2020, Level Up Coding (Medium)](https://levelup.gitconnected.com/everything-you-need-to-know-about-the-passport-local-passport-js-strategy-633bbab6195).
 * [Mastering the Node.js REPL (part 3), Roman Coedo, Aug 27, 2018, Medium](https://medium.com/trabe/mastering-the-node-js-repl-part-3-c0374be0d1bf)
+* https://github.com/cfsghost/passport-github/blob/master/examples/login/app.js
+We based our solution on [Setup Github OAuth With Node and Passport JS, by Sjlouji, Sept. 22, 2020](https://medium.com/swlh/node-and-passport-js-github-authentication-e33dbd0558c).
