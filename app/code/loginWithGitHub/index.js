@@ -53,7 +53,7 @@ class LoginWithGitHub extends require('../component/index.js') {
     expressApp.use(expressSession({
       name: 'github-auth-session',
       keys: ['key1', 'key2']
-    }))
+    }));
     expressApp.use(passport.initialize());
     expressApp.use(passport.session());
 
