@@ -103,11 +103,11 @@ Figure out the network name
 
     docker network ls
 
-It is something like "staticauth".
+It is something like "starterkit_node_default".
 
 Connect your network and restart the Let's Encrypt container:
 
-    docker network connect staticauth nginx-proxy
+    docker network connect starterkit_node_default nginx-proxy
     docker restart nginx-letsencrypt
 
 After 120 seconds the security certificate should work. Now your site should work with LetsEncrypt.
