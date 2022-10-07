@@ -20,6 +20,7 @@ Dcycle Node.js starterkit
   * Components can define classes
 * The Node.js command line interface (CLI)
 * Logging in with GitHub
+* GitHub Apps
 * Resources
 
 About
@@ -329,6 +330,21 @@ Here is how it works:
         baseUrl: 'https://www.example.com'
 
 Now go to https://www.example.com/auth/github and you will be able to log in with GitHub.
+
+GitHub Apps
+-----
+
+Logging in with GitHub will provide access to the GitHub username, email and some other data. GitHub Apps provide acecss to a lot more data, for example private repos.
+
+Here is how to set up a GitHub App:
+
+* Go to https://github.com/settings/apps/new
+* Enter, as a name, "Example App"
+* Check Request user authorization (OAuth) during installation
+* Enter the homepage URL https://starterkit-node.dcycleproject.org
+* Enter the callback URL https://starterkit-node.dcycleproject.org
+* Generate a client secret
+* Copy your client ID and client secret
 
 Resources
 -----
