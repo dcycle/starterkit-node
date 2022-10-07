@@ -42,6 +42,10 @@ class LoginWithGitHub extends require('../component/index.js') {
 
       console.log('aa');
       console.log(profile);
+      console.log('bb');
+      console.log(accessToken);
+      console.log('cc');
+      console.log(refreshToken);
 
       app.c('authentication')
         .user('admin')
