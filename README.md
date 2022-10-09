@@ -348,12 +348,9 @@ Here is how to set up a GitHub App:
 
 At this point an authorization token will be provided to your app, allowing you to use the GitHub API endpoints.
 
-For example, if you want your app to be able to access your visitors' private repositories, you can call:
+For example, if you want your app to be able to access your visitors' public repositories, you can call:
 
-    curl -u GITHUB_USERNAME:ACCESS_TOKEN "https://api.github.com/user/repos?visibility=private"
-
-https://fusebit.io/blog/github-api-list-repositories/?utm_source=www.google.com&utm_medium=referral&utm_campaign=none
-https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/authorizing-github-apps 
+    curl -u GITHUB_USERNAME:ACCESS_TOKEN "https://api.github.com/user/repos?visibility=public"
 
 Resources
 -----
@@ -363,3 +360,5 @@ Resources
 * [Everything you need to know about the `passport-local` Passport JS Strategy, Zach Gollwitzer, Jan 11, 2020, Level Up Coding (Medium)](https://levelup.gitconnected.com/everything-you-need-to-know-about-the-passport-local-passport-js-strategy-633bbab6195).
 * [Mastering the Node.js REPL (part 3), Roman Coedo, Aug 27, 2018, Medium](https://medium.com/trabe/mastering-the-node-js-repl-part-3-c0374be0d1bf)
 * [Setup Github OAuth With Node and Passport JS, by Sjlouji, Sept. 22, 2020](https://medium.com/swlh/node-and-passport-js-github-authentication-e33dbd0558c).
+* [How to Use the GitHub API to List Repositories, Carlos Schults, 7 May 2022, Fisebit](https://fusebit.io/blog/github-api-list-repositories/)
+* [Authorizing GitHub Apps, GitHub docs](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/authorizing-github-apps)
