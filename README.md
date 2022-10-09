@@ -346,6 +346,15 @@ Here is how to set up a GitHub App:
 * Generate a client secret
 * Copy your client ID and client secret
 
+At this point an authorization token will be provided to your app, allowing you to use the GitHub API endpoints.
+
+For example, if you want your app to be able to access your visitors' private repositories, you can call:
+
+    curl -u GITHUB_USERNAME:ACCESS_TOKEN "https://api.github.com/user/repos?visibility=private"
+
+https://fusebit.io/blog/github-api-list-repositories/?utm_source=www.google.com&utm_medium=referral&utm_campaign=none
+https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/authorizing-github-apps 
+
 Resources
 -----
 
