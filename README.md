@@ -396,7 +396,7 @@ Mongoose vs MongoDB
 
 We use both npm [mongoose](https://www.npmjs.com/package/mongoose) and npm [mongodb](https://www.npmjs.com/package/mongodb).
 
-Mongodb is very unstructured and lets you do almost anything; we use it in the above example. Mongoose allows you to define schemas and is used for user storage. I find its learning curve a lot steeper (I still don't fully understand it), but the code works and was taken from the resources in the "Resrouces" section, below.
+Mongodb is very unstructured and lets you do almost anything; we use it in the above example. Mongoose allows you to define schemas and is used for user storage. I find its learning curve a lot steeper (I still don't fully understand it), but the code works for storing users; and it was taken from the resources in the "Resrouces" section, below.
 
 Logging in with GitHub
 -----
@@ -461,7 +461,7 @@ If you are logged in to the system, you can visit this URL:
 
     /token/request
 
-
+It will give you a token that lasts 5 minutes.
 
 REST API
 -----
