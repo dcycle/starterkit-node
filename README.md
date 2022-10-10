@@ -23,6 +23,7 @@ Dcycle Node.js starterkit
 * Mongoose vs MongoDB
 * Logging in with GitHub
 * GitHub Apps
+* Security tokens
 * REST API
 * Resources
 
