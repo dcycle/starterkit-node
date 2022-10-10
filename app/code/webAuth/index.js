@@ -35,6 +35,16 @@ class WebAuth extends require('../component/index.js') {
     this.addPathMiddlewaresFromConfig('anonymous', function(req, res, next) {
       next();
     });
+    this.addPathMiddlewaresFromConfig('authenticatedJson', function(req, res, next) {
+      if (req.user) {
+        next();
+      } else {
+        res.send(JSON.stringify({
+          authentified: false,
+          error: 'authentication failed; you need to be logged in to call this endpoint.',
+        }));
+      }
+    });
 
     return this;
   }

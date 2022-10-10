@@ -8,7 +8,14 @@ modules:
         verb: get
       - route: chatApi
         verb: post
+    authenticatedJson:
+      - route: tokenRequest
+        verb: get
     anonymous:
+      - route: rest
+        verb: get
+  ./rest/index.js:
+    path: '/api/v1'
   ./chatWeb/index.js:
     path: '/'
   ./userPassAuth/index.js: {}

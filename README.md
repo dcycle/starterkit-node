@@ -19,8 +19,11 @@ Dcycle Node.js starterkit
   * Plugins: how modules can share information with each other
   * Components can define classes
 * The Node.js command line interface (CLI)
+* MongoDB crud (create - read - update - delete)
+* Mongoose vs MongoDB
 * Logging in with GitHub
 * GitHub Apps
+* REST API
 * Resources
 
 About
@@ -302,6 +305,98 @@ You can **pipe** commands to the cli, like this:
 
     echo 'app.c("random").random()' | ./scripts/node-cli.sh
 
+MongoDB crud (create - read - update - delete)
+-----
+
+To create a record with {hello: "world"} in a collection "arbitraryCollection" in a database called "arbitraryDatabase", you can log into the node CLI (see above) and type:
+
+    await app.c('database').client().db('arbitraryDatabase').collection('arbitraryCollection').insert({hello: "world"});
+    {
+      acknowledged: true,
+      insertedCount: 1,
+      insertedIds: { '0': new ObjectId("634447e509ac94b6c97ecac3") }
+    }
+
+Now you can, in a separate terminal window, log into the Mongo CLI and see what happened:
+
+    ./scripts/mongo-cli.sh
+
+Show databases by running:
+
+    show dbs;
+    ...
+    arbitraryDatabase  0.000GB
+    ...
+
+    use arbitraryDatabase
+    switched to db arbitraryDatabase
+
+    show collections;
+    arbitraryCollection
+
+    db.arbitraryCollection.find();
+    { "_id" : ObjectId("634447e509ac94b6c97ecac3"), "hello" : "world" }
+
+The ID will be different in your case but let's assume that it is 634447e509ac94b6c97ecac3.
+
+In your Node.js code, if you know the ID, you can find your record by running:
+
+    const ObjectId  = require('mongodb').ObjectID;
+    await app.c('database').client().db('arbitraryDatabase').collection('arbitraryCollection').find({_id: ObjectId("634447e509ac94b6c97ecac3")}).toArray();
+    [ { _id: new ObjectId("634447e509ac94b6c97ecac3"), hello: 'world' } ]
+
+If you want to find all records where 'hello' == 'world', you can run:
+
+    await app.c('database').client().db('arbitraryDatabase').collection('arbitraryCollection').find({hello: "world"}).toArray();
+    [ { _id: new ObjectId("634447e509ac94b6c97ecac3"), hello: 'world' } ]
+
+If you want to attach some arbitrary information to record 634447e509ac94b6c97ecac3, you can run:
+
+    /** if ObjectId is already defined do not redefine it here **/
+    const ObjectId  = require('mongodb').ObjectID;
+    await app.c('database').client().db('arbitraryDatabase').collection('arbitraryCollection').updateOne({_id: ObjectId("634447e509ac94b6c97ecac3")}, {$set:{some_extra_information: {arbitrary: "extra information"}}});
+
+The "$set" property tells mongoDB that we want to add information to the record.
+
+Now, if you go back to the terminal window where you are connected to the MongoDB CLI, you can run:
+
+    db.arbitraryCollection.find();
+    { "_id" : ObjectId("634447e509ac94b6c97ecac3"), "hello" : "world", "some_extra_information" : { "arbitrary" : "extra information" } }
+
+You can also update collections not by ID but by property, for example:
+
+    await app.c('database').client().db('arbitraryDatabase').collection('arbitraryCollection').updateMany({hello: "world"}, {$set:{yet_more_extra_information: {arbitrary: "extra information"}}});
+
+Now, in the command line for MongoDB, you will find:
+
+    db.arbitraryCollection.find();
+    { "_id" : ObjectId("634447e509ac94b6c97ecac3"), "hello" : "world", "some_extra_information" : { "arbitrary" : "extra information" }, "yet_more_extra_information" : { "arbitrary" : "extra information" } }
+
+We can now remove all this information in the Node CLI:
+
+    await app.c('database').client().db('arbitraryDatabase').collection('arbitraryCollection').updateMany({hello: "world"}, {$unset:{yet_more_extra_information: "", some_extra_information: ""}});
+
+Now the extra fields are gone in the MongoDB CLI:
+
+    db.arbitraryCollection.find();
+    { "_id" : ObjectId("634447e509ac94b6c97ecac3"), "hello" : "world" }
+
+To completely delete the object you can run, in the Node CLI:
+
+    await app.c('database').client().db('arbitraryDatabase').collection('arbitraryCollection').deleteMany({hello: "world"});
+
+Now confirm these are deleted in the MongoDB CLI:
+
+    db.arbitraryCollection.find();
+    # Nothing found
+
+Mongoose vs MongoDB
+-----
+
+We use both npm [mongoose](https://www.npmjs.com/package/mongoose) and npm [mongodb](https://www.npmjs.com/package/mongodb).
+
+Mongodb is very unstructured and lets you do almost anything; we use it in the above example. Mongoose allows you to define schemas and is used for user storage. I find its learning curve a lot steeper (I still don't fully understand it), but the code works and was taken from the resources in the "Resrouces" section, below.
+
 Logging in with GitHub
 -----
 
@@ -352,6 +447,39 @@ For example, if you want your app to be able to access your visitors' public rep
 
     curl -u GITHUB_USERNAME:ACCESS_TOKEN "https://api.github.com/user/repos?visibility=public"
 
+Security tokens
+-----
+
+Security tokens are used to access data, notably via the REST API.
+
+Tokens are generated in one of two ways.
+
+### By logging in to a web page and requesting a token using the token request endpoint
+
+If you are logged in to the system, you can visit this URL:
+
+    /token/request
+
+
+
+REST API
+-----
+
+A REST API is defined at the following endpoing:
+
+    /api/v1
+
+If you simply visit /api/v1, you will see documentation about the API.
+
+Certain API endpoints are accessible to all, for example:
+
+    /api/v1/endpoints
+
+Others require a username and token. For example:
+
+    GET /api/v1/chat
+    POST /api/v1/chat
+
 Resources
 -----
 
@@ -362,3 +490,6 @@ Resources
 * [Setup Github OAuth With Node and Passport JS, by Sjlouji, Sept. 22, 2020](https://medium.com/swlh/node-and-passport-js-github-authentication-e33dbd0558c).
 * [How to Use the GitHub API to List Repositories, Carlos Schults, 7 May 2022, Fisebit](https://fusebit.io/blog/github-api-list-repositories/)
 * [Authorizing GitHub Apps, GitHub docs](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/authorizing-github-apps)
+* [How to Build a Secure Node js REST API: 4 Easy Steps, November 3rd, 2021, Hevo](https://hevodata.com/learn/building-a-secure-node-js-rest-api/)
+* [Connect to a MongoDB Database Using Node.js, Lauren Schaefer, Feb 04, 2022, Updated Sep 23, 2022](https://www.mongodb.com/developer/code-examples/javascript/node-connect-mongodb-3-3-2/)
+* [MongoDB and Node.js Tutorial - CRUD Operations, Lauren Schaefer, Feb 04, 2022, Updated Sep 23, 2022, MongoDB](https://www.mongodb.com/developer/languages/javascript/node-crud-tutorial/)

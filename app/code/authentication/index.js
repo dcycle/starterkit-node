@@ -16,7 +16,7 @@ class Authentication extends require('../component/index.js') {
     });
     UserDetail.plugin(this.passportLocalMongoose());
     // $FlowExpectedError
-    this.myUserDetails = app.component('./database/index.js').mongoose().model('userInfo', UserDetail, 'userInfo');
+    this.myUserDetails = app.c('database').mongoose().model('userInfo', UserDetail, 'userInfo');
 
     this.setFlagBool('initialized', true);
     this.passport().use(this.userDetails().createStrategy());

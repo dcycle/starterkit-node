@@ -13,6 +13,10 @@ class Database extends require('../component/index.js') {
 
     await this.mongoose().connect(this.uri());
 
+    const MongoClient = this.mongodb().MongoClient;
+
+    this._client = new MongoClient(this.uri());
+
     return this;
   }
   async exitGracefully() {
@@ -23,9 +27,16 @@ class Database extends require('../component/index.js') {
       './env/index.js',
     ];
   }
+  client() {
+    return this._client;
+  }
   mongoose() {
     // $FlowExpectedError
     return require('mongoose');
+  }
+  mongodb() {
+    // $FlowExpectedError
+    return require('mongodb');
   }
   uri() {
     const user = String(require('../env/index.js').required('MONGO_USER'));

@@ -12,7 +12,7 @@
     const env = app.component('./env/index.js');
 
     const username = String(env.required('MY_USERNAME'));
-    const password = env.getOrFallback('MY_PASSWORD', app.component('./random/index.js').random());
+    const password = env.getOrFallback('MY_PASSWORD', app.component('./crypto/index.js').random());
 
     await app.component('./authentication/index.js').createOrAlterUser(username, password);
 

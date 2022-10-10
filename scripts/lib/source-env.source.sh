@@ -36,6 +36,7 @@ grep ENVIRONMENT_USAGE "$ENVLOC" > /dev/null || echo "export ENVIRONMENT_USAGE=d
 grep DOCKERPORT "$ENVLOC" > /dev/null || echo "export DOCKERPORT=$DOCKERPORT" >> "$ENVLOC"
 grep DOCKERNETWORK "$ENVLOC" > /dev/null || echo "export DOCKERNETWORK=$DOCKERNETWORK" >> "$ENVLOC"
 grep EXPRESS_SESSION_SECRET "$ENVLOC" > /dev/null || echo "export EXPRESS_SESSION_SECRET=$(./scripts/lib/generate-uuid.sh)" >> "$ENVLOC"
+grep SALT "$ENVLOC" > /dev/null || echo "export SALT=$(./scripts/lib/generate-uuid.sh)" >> "$ENVLOC"
 grep ENVIRONMENT_USAGE "$ENVLOC" > /dev/null || echo "export ENVIRONMENT_USAGE=$TARGET_ENV" >> "$ENVLOC"
 
 source "$ENVLOC"
