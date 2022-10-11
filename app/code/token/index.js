@@ -25,13 +25,15 @@ class Token extends require('../component/index.js') {
     const that = this;
 
     app.c('express').addRoute('tokenRequest', 'get', '/token/request', (req, res) => {
-      res.send(JSON.stringify({
-        token: that.token(req.user, that.tokenValidityInMilliseconds(), {
-          session: req.sessionID,
-          sameOrigin: true,
-          loggedIn: true,
-        }),
-      }));
+      that.token(req.user, that.tokenValidityInMilliseconds(), {
+        session: req.sessionID,
+        sameOrigin: true,
+        loggedIn: true,
+      }).then((token) => {
+        res.send(JSON.stringify({
+          token: token,
+        }));
+      });
     });
   }
 
@@ -57,11 +59,7 @@ class Token extends require('../component/index.js') {
       .c('time')
       .nowPlusMilliseconds(validityInMilliseconds));
 
-    // now we can hash the expiry + the user id + the user's salt.
-
-    const salt = await this.userIdToSalt(userId);
-
-
+    const user = await this.userIdToUser(userId);
 
     // user has an ID and, potentially tokens.
     const crypto = this.app().c('crypto');
@@ -71,12 +69,12 @@ class Token extends require('../component/index.js') {
 
     tokens.push({
       token: random,
-      validityInMilliseconds: this.app().c('time').nowPlusMilliseconds(validityInMilliseconds),
+      expiry: this.app().c('time').nowPlusMilliseconds(validityInMilliseconds),
       options: options,
     });
 
     setTimeout(() => {
-      that.removeToken(userId, random);
+      that.cleanUpTokens(userId);
     }, validityInMilliseconds);
 
     const ObjectId  = require('mongodb').ObjectID;
@@ -89,12 +87,6 @@ class Token extends require('../component/index.js') {
     return crypto.hash(random);
   }
 
-  async userIdToSalt(userId) {
-    const user = await this.userIdToUser(userId);
-    console.log('aaa');
-    console.log(user);
-  }
-
   async userIdToUser(userId) {
     const ObjectId  = require('mongodb').ObjectID;
     const user = await this.app().c('database').client().db('login').collection('userInfo').findOne({_id: ObjectId(userId)});
@@ -104,8 +96,33 @@ class Token extends require('../component/index.js') {
     return user;
   }
 
-  removeToken(userId, unhashedToken) {
-    console.log()
+  async cleanUpTokens(userId) {
+    const user = await this.userIdToUser(userId);
+
+    const ObjectId  = require('mongodb').ObjectID;
+
+    let newTokenList = [];
+
+    const that = this;
+
+    user.tokens.forEach((t) => {
+      if (that.tokenValid(t)) {
+        newTokenList.push(t);
+      }
+    });
+
+    await this.app()
+      .c('database')
+      .client()
+      .db('login')
+      .collection('userInfo').updateOne({_id: ObjectId(userId)}, {$set:{tokens: newTokenList}});
+  }
+
+  tokenValid(token) {
+    if (typeof token.expiry === 'undefined') {
+      return false;
+    }
+    return token.expiry >= Date.now();
   }
 
 }
