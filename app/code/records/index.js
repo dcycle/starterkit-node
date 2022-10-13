@@ -16,11 +16,11 @@ class Records extends require('../component/index.js') {
   }
 
   structure() {
-    throw new Exception('Please override.')
+    throw new Exception('Please override.');
   }
 
   tableName() {
-    throw new Exception('Please override.')
+    throw new Exception('Please override.');
   }
 
   /** Get details model. */
@@ -46,7 +46,6 @@ class Records extends require('../component/index.js') {
 
     return this;
   }
-
 
 }
 

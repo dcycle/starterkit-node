@@ -25,9 +25,9 @@ class JwtValid extends require('./token.js') {
     let valid = true;
 
     if (await (this._app.c('authentication')).userIdExists(tokenUserId)) {
-      info.push('The user ID associated with this token exists in the database.')
+      info.push('The user ID associated with this token exists in the database.');
       if (typeof this._token.options.session !== 'undefined') {
-        info.push('The token is limited to a given session.')
+        info.push('The token is limited to a given session.');
         if (this._token.options.session !== this._session) {
           valid = false;
           info.push('The token is locked down to a given session which is not the current session.');

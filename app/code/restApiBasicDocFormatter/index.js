@@ -10,7 +10,7 @@ class RestApiBasicDocFormatter extends require('../component/index.js') {
 
     const endpoints = restModule.endpoints();
 
-    ret += '<h1>REST API</h1>'
+    ret += '<h1>REST API</h1>';
 
     const that = this;
 

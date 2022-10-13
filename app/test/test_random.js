@@ -1,7 +1,7 @@
 const test = require('ava');
 const sinon = require('sinon');
 
-let my = require('/mycode/random/index.js');
+let my = require('/mycode/crypto/index.js');
 
 test('Random is truly random', t => {
   [

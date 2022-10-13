@@ -54,13 +54,6 @@ class Crypto {
     return await this.argon2().verify(hash, string);
   }
 
-  /**
-   * Two-way encrypt.
-   */
-  async checkHash(hash, string) {
-    return await this.argon2().verify(hash, string);
-  }
-
 }
 
 // $FlowExpectedError
