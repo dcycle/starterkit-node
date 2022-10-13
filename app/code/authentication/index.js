@@ -118,6 +118,7 @@ class Authentication extends require('../component/index.js') {
   }
 
   async userIdExists(id) {
+    // $FlowFixMe
     const ObjectId  = require('mongodb').ObjectID;
 
     return (await this.userDetails().find({_id: ObjectId(id)})).length;

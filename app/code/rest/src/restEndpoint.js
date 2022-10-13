@@ -5,15 +5,18 @@
 
 class RestEndpoint {
 
-  constructor(app) {
+  constructor(
+    app /*:: : Object */
+  ) {
+    // $FlowFixMe
     this._app = app;
   }
 
-  name() {
+  name() /*:: : string */ {
     return 'Endpoint name not defined';
   }
 
-  endpoint() {
+  endpoint() /*:: : string */ {
     throw 'endpoint() is not defined.';
   }
 
@@ -21,18 +24,21 @@ class RestEndpoint {
     throw 'you need to add an authentication middleware';
   }
 
-  publicAccessMiddleware() {
+  publicAccessMiddleware() /*:: : function */ {
     return (req, res, next) => {
       next();
     };
   }
 
-  verb() {
+  verb() /*:: : string */ {
     throw 'verb not defined.';
   }
 
-  fullEndpointPath() {
-    return this._app.c('rest').path() + '/' + this.endpoint();
+  fullEndpointPath() /*:: : string */{
+    // $FlowFixMe
+    const app = this._app;
+
+    return app.c('rest').path() + '/' + this.endpoint();
   }
 
   result() {

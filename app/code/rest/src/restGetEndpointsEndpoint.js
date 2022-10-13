@@ -5,27 +5,30 @@
 
 class RestGetEndpointsEndpoint extends require('./restEndpoint.js') {
 
-  name() {
+  name() /*:: : string */ {
     return 'Get all available endpoints';
   }
 
-  endpoint() {
+  endpoint() /*:: : string */ {
     return 'endpoints';
   }
 
-  verb() {
+  verb() /*:: : string */ {
     return 'GET';
   }
 
-  authenticationMiddleware() {
+  authenticationMiddleware() /*:: : Object */ {
     return this.publicAccessMiddleware();
   }
 
-  result() {
+  result() /*:: : Object */ {
+    // $FlowFixMe
+    const app = this._app;
+
     let ret = [];
 
-    this._app.c('rest').endpoints().forEach((e) => {
-      ret = ret.concat({
+    app.c('rest').endpoints().forEach((e) => {
+      ret.push({
         name: e.name(),
         endpoint: e.fullEndpointPath(),
         verb: e.verb(),

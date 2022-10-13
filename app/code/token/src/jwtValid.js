@@ -6,29 +6,45 @@
 class JwtValid extends require('./token.js') {
 
   constructor(
-    token,
-    userId,
-    session,
-    app
+    token /*:: : string */,
+    userId /*:: : string */,
+    session /*:: : string */,
+    app /*:: : Object */
   ) {
     super();
+    // $FlowFixMe
     this._token = token;
+    // $FlowFixMe
     this._userId = userId;
+    // $FlowFixMe
     this._session = session;
+    // $FlowFixMe
     this._app = app;
   }
 
-  async toObjectAboutValidity() {
+  async toObjectAboutValidity() /*:: : Object */ {
+    // $FlowFixMe
+    const token = this._token;
+
+    // $FlowFixMe
+    const userId = this._userId;
+
+    // $FlowFixMe
+    const session = this._session;
+
+    // $FlowFixMe
+    const app = this._app;
+
     let info = [];
     // Tokens are always associated with users.
-    const tokenUserId = this._token.userId;
+    const tokenUserId = token.userId;
     let valid = true;
 
-    if (await (this._app.c('authentication')).userIdExists(tokenUserId)) {
+    if (await (app.c('authentication')).userIdExists(tokenUserId)) {
       info.push('The user ID associated with this token exists in the database.');
-      if (typeof this._token.options.session !== 'undefined') {
+      if (typeof token.options.session !== 'undefined') {
         info.push('The token is limited to a given session.');
-        if (this._token.options.session !== this._session) {
+        if (token.options.session !== session) {
           valid = false;
           info.push('The token is locked down to a given session which is not the current session.');
         }
@@ -46,15 +62,15 @@ class JwtValid extends require('./token.js') {
     }
 
     if (valid) {
-      if (this._token.options.loggedIn === true) {
+      if (token.options.loggedIn === true) {
         info.push('The token can be used only if the user is logged in.');
-        if (this._token.userId == this._userId) {
+        if (token.userId == userId) {
           info.push('The user is logged in.');
         }
         else {
           info.push('The user is not logged in.');
-          info.push(this._token.userId);
-          info.push(this._userId);
+          info.push(token.userId);
+          info.push(userId);
           valid = false;
         }
       }
@@ -66,10 +82,11 @@ class JwtValid extends require('./token.js') {
     let ret = {
       valid: valid,
       info: info,
+      seconds_left: undefined,
     };
 
     if (valid) {
-      ret.seconds_left = Math.max(0, (this._token.exp - (Date.now()/1000)));
+      ret.seconds_left = Math.max(0, (token.exp - (Date.now()/1000)));
     }
 
     return ret;

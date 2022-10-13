@@ -26,7 +26,8 @@ class Crypto {
   }
 
   argon2() {
-    return require('argon2');
+     // $FlowFixMe
+     return require('argon2');
   }
 
   /**

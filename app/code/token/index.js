@@ -10,6 +10,7 @@ class Token extends require('../component/index.js') {
   }
 
   jwt() {
+    // $FlowFixMe
     return require('jsonwebtoken');
   }
 
