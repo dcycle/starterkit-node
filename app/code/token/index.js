@@ -5,8 +5,12 @@
 
 class Token extends require('../component/index.js') {
 
-  tokenValidityInMilliseconds() {
-    return 5 * 60 * 1000;
+  tokenValidityInSeconds() {
+    return 5 * 60;
+  }
+
+  jwt() {
+    return require('jsonwebtoken');
   }
 
   dependencies() {
@@ -21,19 +25,25 @@ class Token extends require('../component/index.js') {
   async run(
     app /*:: : Object */
   ) /*:: : Object */ {
-
     const that = this;
 
     app.c('express').addRoute('tokenRequest', 'get', '/token/request', (req, res) => {
-      that.token(req.user, that.tokenValidityInMilliseconds(), {
-        session: req.sessionID,
-        sameOrigin: true,
-        loggedIn: true,
-      }).then((token) => {
-        res.send(JSON.stringify({
-          token: token,
-        }));
-      });
+      res.header('Content-Type', 'application/json');
+      res.send(JSON.stringify({
+        token: that.token(req.user._id, that.tokenValidityInSeconds(), {
+          session: req.sessionID,
+          loggedIn: true,
+        }),
+      }));
+    });
+
+    app.c('express').addRoute('tokenCheck', 'get', '/token/check-valid', (req, res) => {
+      that.tokenStringToObject(req.query.token, (typeof req.user === 'undefined') ? undefined : req.user._id, req.sessionID)
+        .toObjectAboutValidity()
+        .then((o) => {
+          res.header('Content-Type', 'application/json');
+          res.send(JSON.stringify(o));
+        });
     });
   }
 
@@ -42,87 +52,38 @@ class Token extends require('../component/index.js') {
    *
    * @param userId
    *   A user like {_id: 123, ...}.
-   * @param validityInMilliseconds
+   * @param validityInSeconds
    *   How many milliseconds this token should be valid for.
    * @param options
-   *   Arbitrary options.
+   *   Arbitrary options as an object.
    *
    * @return
    *   A hash.
    */
-  async token(userId, validityInMilliseconds, options) {
-    if (validityInMilliseconds < 0) {
-      throw 'validityInMilliseconds cannot be negative';
+  token(userId, validityInSeconds, options = {}) {
+    if (validityInSeconds < 0) {
+      throw 'validityInSeconds cannot be negative';
     }
 
-    const expiry = Date.parse(this.app()
-      .c('time')
-      .nowPlusMilliseconds(validityInMilliseconds));
+    const salt = this.app().c('env').required('SALT');
 
-    const user = await this.userIdToUser(userId);
-
-    // user has an ID and, potentially tokens.
-    const crypto = this.app().c('crypto');
-    let tokens = (typeof user.tokens === 'object') ? user.tokens : [];
-    const random = crypto.random();
-    const that = this;
-
-    tokens.push({
-      token: random,
-      expiry: this.app().c('time').nowPlusMilliseconds(validityInMilliseconds),
+    return this.app().c('token').jwt().sign({
+      userId: userId,
       options: options,
-    });
-
-    setTimeout(() => {
-      that.cleanUpTokens(userId);
-    }, validityInMilliseconds);
-
-    const ObjectId  = require('mongodb').ObjectID;
-    await this.app()
-      .c('database')
-      .client()
-      .db('login')
-      .collection('userInfo').updateOne({_id: ObjectId(userId)}, {$set:{tokens: tokens}});
-
-    return crypto.hash(random);
+    }, salt, { expiresIn: validityInSeconds + 's' });
   }
 
-  async userIdToUser(userId) {
-    const ObjectId  = require('mongodb').ObjectID;
-    const user = await this.app().c('database').client().db('login').collection('userInfo').findOne({_id: ObjectId(userId)});
-    if (user === null) {
-      throw 'User does not exist';
+  tokenStringToObject(token, user = undefined, session = undefined) {
+    const salt = this.app().c('env').required('SALT');
+
+    try {
+      const result = this.jwt().verify(token, salt);
+
+      return new (this.app().class('token/jwtValid'))(result, user, session, this.app());
     }
-    return user;
-  }
-
-  async cleanUpTokens(userId) {
-    const user = await this.userIdToUser(userId);
-
-    const ObjectId  = require('mongodb').ObjectID;
-
-    let newTokenList = [];
-
-    const that = this;
-
-    user.tokens.forEach((t) => {
-      if (that.tokenValid(t)) {
-        newTokenList.push(t);
-      }
-    });
-
-    await this.app()
-      .c('database')
-      .client()
-      .db('login')
-      .collection('userInfo').updateOne({_id: ObjectId(userId)}, {$set:{tokens: newTokenList}});
-  }
-
-  tokenValid(token) {
-    if (typeof token.expiry === 'undefined') {
-      return false;
+    catch (e) {
+      return new (this.app().class('token/jwtVerifyThrowsError'))(e);
     }
-    return token.expiry >= Date.now();
   }
 
 }

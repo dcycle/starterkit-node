@@ -117,6 +117,12 @@ class Authentication extends require('../component/index.js') {
     return (await this.userDetails().find({username: name})).length;
   }
 
+  async userIdExists(id) {
+    const ObjectId  = require('mongodb').ObjectID;
+
+    return (await this.userDetails().find({_id: ObjectId(id)})).length;
+  }
+
   async user(name) {
     if (await this.userExists(name)) {
       return (await this.userDetails().find({username: name}))[0];

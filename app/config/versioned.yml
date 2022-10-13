@@ -12,6 +12,8 @@ modules:
       - route: tokenRequest
         verb: get
     anonymous:
+      - route: tokenCheck
+        verb: get
       - route: rest
         verb: get
   ./rest/index.js:

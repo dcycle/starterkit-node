@@ -463,6 +463,38 @@ If you are logged in to the system, you can visit this URL:
 
 It will give you a token that lasts 5 minutes.
 
+You can check a token's validity by logging in and running:
+
+    /token/check-valid?token=MY_TOKEN
+
+This will tell you whether the token is valid or not, and why.
+
+### By using the node CLI or in node code
+
+All tokens need to be associated with a user.
+
+To find your user ID, you can log into the Mongo CLI:
+
+    ./scripts/mongo-cli.sh
+
+And run:
+
+    db.userInfo.find();
+
+To create a token for a given user for 60 seconds, log into the node cli:
+
+    ./scripts/node-cli.sh
+
+And run:
+
+    app.c('token').token('some-user-id', 60, {arbitrary: 'options'})
+
+You can verify that the token is valid by typing:
+
+    await app.c('token').tokenStringToObject(t).toObjectAboutValidity();
+
+Tokens are not revocable.
+
 REST API
 -----
 
@@ -472,14 +504,9 @@ A REST API is defined at the following endpoing:
 
 If you simply visit /api/v1, you will see documentation about the API.
 
-Certain API endpoints are accessible to all, for example:
+Only endpoints that publicly accessible are currently supported, for example:
 
     /api/v1/endpoints
-
-Others require a username and token. For example:
-
-    GET /api/v1/chat
-    POST /api/v1/chat
 
 Resources
 -----
@@ -494,3 +521,4 @@ Resources
 * [How to Build a Secure Node js REST API: 4 Easy Steps, November 3rd, 2021, Hevo](https://hevodata.com/learn/building-a-secure-node-js-rest-api/)
 * [Connect to a MongoDB Database Using Node.js, Lauren Schaefer, Feb 04, 2022, Updated Sep 23, 2022](https://www.mongodb.com/developer/code-examples/javascript/node-connect-mongodb-3-3-2/)
 * [MongoDB and Node.js Tutorial - CRUD Operations, Lauren Schaefer, Feb 04, 2022, Updated Sep 23, 2022, MongoDB](https://www.mongodb.com/developer/languages/javascript/node-crud-tutorial/)
+* [How To Use JSON Web Tokens (JWTs) in Express.js, Danny Denenberg, February 18, 2020, Updated on March 22, 2021, DigitalOcean](https://www.digitalocean.com/community/tutorials/nodejs-jwt-expressjs)

@@ -30,6 +30,8 @@ set -e
 #   Deep merge arrays.
 # argon2:
 #   Relatively safe hashing.
+# jsonwebtoken:
+#   JWTs or Json Web Tokens are an industry standard token.
 
 npm install \
   express \
@@ -44,4 +46,5 @@ npm install \
   nodemailer \
   passport-github2 \
   deepmerge \
-  argon2
+  argon2 \
+  jsonwebtoken
