@@ -66,7 +66,7 @@ test('Dependencies calculated correctly', t => {
       }(),
       in: ['a'],
       expected: {
-        errors: ['Maximum call stack size exceeded'],
+        errors: ['RangeError: Maximum call stack size exceeded'],
         results: ['a'],
       },
     },
