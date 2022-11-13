@@ -32,6 +32,8 @@ set -e
 #   Relatively safe hashing.
 # jsonwebtoken:
 #   JWTs or Json Web Tokens are an industry standard token.
+# openssl-nodejs:
+#   Used to tranform GitHub app private keys to JWTs.
 
 npm install \
   express \
@@ -47,4 +49,6 @@ npm install \
   passport-github2 \
   deepmerge \
   argon2 \
-  jsonwebtoken
+  jsonwebtoken \
+  openssl-nodejs
+
