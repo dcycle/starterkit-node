@@ -8,7 +8,7 @@ Dcycle Node.js starterkit
 * Quickstart
 * Let's Encrypt on a server
 * Creating new users
-* Adding arbitrary unique information such as email addresses to users
+* Adding arbitrary unique and non-unique fields, such as email addresses, to users
 * Sending emails
 * Dcycle Node Starterkit design patterns
   * Component-based modular system
@@ -125,14 +125,16 @@ You can run:
 
     ./scripts/reset-password.sh some-new-user
 
-Adding arbitrary unique information such as email addresses to users
+Adding arbitrary unique and non-unique fields, such as email addresses, to users
 -----
 
-By default users only have a username which needs to be unique.
+By default users only have (and must have) a username which needs to be unique.
 
 It is also possible to add other information to user records.
 
-By default an "admin" user exists, and we can see its record by running:
+Here is an example:
+
+By default an "admin" user exists, and we can see its record in the database by running:
 
     ./scripts/mongo-cli.sh
     ...
@@ -143,11 +145,48 @@ By default an "admin" user exists, and we can see its record by running:
 
 This will show the record associated with the user admin and potentially other users.
 
-If you want to add information to the admin user, you can run:
+In a new terminal window, create a new user to demonstrate unique vs. non-unique fields:
+
+    ./scripts/reset-password.sh some-new-user
+
+### Adding non-unique fields to users
+
+Back in the Mongo CLI, you will now see two users.
+
+In yet another terminal window, open a CLI for the Node app.
 
     ./scripts/node-cli.sh
-    ...
-    await app.c('database').client().db('login').collection('userInfo').insert({hello: "world"});
+
+To add a **non-unique** field to both users, run:
+
+    await app.c('authentication')
+      .addNonUniqueFieldToUser('admin', 'hello', 'world');
+    await app.c('authentication')
+      .addNonUniqueFieldToUser('some-new-user', 'hello', 'world');
+
+The same code can be used to modify an existing field. The code does nothing if the user does not exist.
+
+You can also remove this field:
+
+    await app.c('authentication')
+      .removeFieldFromUser('admin', 'hello');
+    await app.c('authentication')
+      .removeFieldFromUser('some-new-user', 'hello');
+
+### Adding unique fields to users
+
+Back the Node CLI, you can add a unique field to the admin user:
+
+    await app.c('authentication')
+      .addUniqueFieldToUser('admin', 'hello', 'world');
+
+Now, if you try to add the same field and value to another user, you will get an error:
+
+    await app.c('authentication')
+        .addUniqueFieldToUser('some-new-user', 'hello', 'world');
+    > Uncaught:
+    Error: Cannot add unique field hello to user some-new-user with value world because a different user, admin, already has that value in the same field.
+        at /usr/src/app/app/authentication/index.js:154:15
 
 Sending emails
 -----

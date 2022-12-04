@@ -78,6 +78,21 @@ class Authentication extends require('../component/index.js') {
     }
   }
 
+  collection() {
+    return this.app().c('database').client()
+      .db('login')
+      .collection('userInfo');
+  }
+
+  fieldNameValToObj(
+    fieldName,
+    fieldValue
+  ) {
+    let obj = {}
+    obj[fieldName] = fieldValue;
+    return obj;
+  }
+
   ifUserWithUniqueFieldExists(
     fieldName,
     fieldValue,
@@ -87,12 +102,9 @@ class Authentication extends require('../component/index.js') {
     this.validateUniqueFieldName(fieldName);
     this.validateUniqueFieldValue(fieldValue);
 
-    let searchObj = {}
-    searchObj[fieldName] = fieldValue;
+    const searchObj = this.fieldNameValToObj(fieldName, fieldValue);
 
-    this.app().c('database').client()
-      .db('login')
-      .collection('userInfo').find(searchObj).toArray()
+    this.collection().find(searchObj).toArray()
       .then((result) => {
         if (result.length) {
           ifExists(result[0].username);
@@ -103,11 +115,27 @@ class Authentication extends require('../component/index.js') {
       });
   }
 
-  async uniqueFieldToUsername(
+  async addNonUniqueFieldToUser(
+    username,
     fieldName,
     fieldValue
   ) {
+    await this.collection().updateOne({
+      username: username,
+    }, {
+      $set: this.fieldNameValToObj(fieldName, fieldValue),
+    });
+  }
 
+  async removeFieldFromUser(
+    username,
+    fieldName,
+  ) {
+    await this.collection().updateOne({
+      username: username,
+    }, {
+      $unset: this.fieldNameValToObj(fieldName, ""),
+    });
   }
 
   async addUniqueFieldToUser(
@@ -119,12 +147,14 @@ class Authentication extends require('../component/index.js') {
     this.validateUniqueFieldName(fieldName);
     this.validateUniqueFieldValue(fieldValue);
 
+    const that = this;
+
     this.ifUserWithUniqueFieldExists(fieldName, fieldValue, (existing) => {
       if (username != existing) {
         throw Error('Cannot add unique field ' + fieldName + ' to user ' + username + ' with value ' + fieldValue + ' because a different user, ' + existing + ', already has that value in the same field.');
       }
-    }, () => {
-      console.log('Adding unique field is not yet implemented');
+    }, async () => {
+      await that.addNonUniqueFieldToUser(username, fieldName, fieldValue);
     });
   }
 
