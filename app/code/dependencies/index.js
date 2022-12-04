@@ -29,7 +29,8 @@ class Dependencies {
 
   getInOrder(
     components,
-    app
+    app,
+    errAsString = false
   ) {
     let ret = {
       errors: [],
@@ -44,7 +45,7 @@ class Dependencies {
     }
     catch (err) {
       ret.results = this.merge(ret.results, components);
-      ret.errors.push(err.stack);
+      ret.errors.push(errAsString ? err.toString() : err.stack);
     }
 
     return {

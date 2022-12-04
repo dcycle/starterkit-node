@@ -88,7 +88,7 @@ class Authentication extends require('../component/index.js') {
     fieldName,
     fieldValue
   ) {
-    let obj = {}
+    let obj = {};
     obj[fieldName] = fieldValue;
     return obj;
   }

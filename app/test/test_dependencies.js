@@ -134,7 +134,7 @@ test('Dependencies calculated correctly', t => {
       },
     },
   ].forEach(function(data) {
-    var output = my.getInOrder(data.in, data.app);
+    const output = my.getInOrder(data.in, data.app, true);
 
     if (JSON.stringify(output) != JSON.stringify(data.expected)) {
       console.log({
