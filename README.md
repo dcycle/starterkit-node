@@ -8,6 +8,7 @@ Dcycle Node.js starterkit
 * Quickstart
 * Let's Encrypt on a server
 * Creating new users
+* Adding arbitrary unique information such as email addresses to users
 * Sending emails
 * Dcycle Node Starterkit design patterns
   * Component-based modular system
@@ -123,6 +124,30 @@ Creating new users
 You can run:
 
     ./scripts/reset-password.sh some-new-user
+
+Adding arbitrary unique information such as email addresses to users
+-----
+
+By default users only have a username which needs to be unique.
+
+It is also possible to add other information to user records.
+
+By default an "admin" user exists, and we can see its record by running:
+
+    ./scripts/mongo-cli.sh
+    ...
+    show dbs
+    use login
+    show collections
+    db.userInfo.find();
+
+This will show the record associated with the user admin and potentially other users.
+
+If you want to add information to the admin user, you can run:
+
+    ./scripts/node-cli.sh
+    ...
+    await app.c('database').client().db('login').collection('userInfo').insert({hello: "world"});
 
 Sending emails
 -----

@@ -20,6 +20,10 @@ class LoginWithGitHub extends require('../component/index.js') {
     return this.app().config().modules['./loginWithGitHub/index.js'].baseUrl + this.callbackPath();
   }
 
+  profileToEmail(profile) {
+
+  }
+
   async init(
     app /*:: : Object */
   ) /*:: : Object */ {
@@ -40,19 +44,32 @@ class LoginWithGitHub extends require('../component/index.js') {
     },
     function(accessToken, refreshToken, profile, done) {
 
+      const email = that.profileToEmail(profile);
+      app.c('authentication').uniqueFieldToUsername('email', email)
+        .then((username) => {
+          console.log(username);
+        });
+
+      // Figure out what the username is, use the same username as GitHub, and
+      // also
+
+
       app.c('authentication')
         .user('admin')
         .then(function(user) {
           done(null, user);
         });
     }));
-
     // $FlowFixMe
     const expressSession = require('express-session');
 
     const expressApp = app.c('express').expressApp();
 
     expressApp.use(expressSession({
+      // https://stackoverflow.com/a/40396102/1207752
+      saveUninitialized: false,
+      resave: false,
+      secret: app.c('env').required('EXPRESS_SESSION_SECRET'),
       name: 'github-auth-session',
       keys: ['key1', 'key2']
     }));

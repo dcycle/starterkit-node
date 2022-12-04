@@ -44,7 +44,7 @@ class Dependencies {
     }
     catch (err) {
       ret.results = this.merge(ret.results, components);
-      ret.errors.push(err.toString());
+      ret.errors.push(err.stack);
     }
 
     return {

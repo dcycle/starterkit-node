@@ -78,6 +78,56 @@ class Authentication extends require('../component/index.js') {
     }
   }
 
+  ifUserWithUniqueFieldExists(
+    fieldName,
+    fieldValue,
+    ifExists,
+    ifDoesNotExist
+  ) {
+    this.validateUniqueFieldName(fieldName);
+    this.validateUniqueFieldValue(fieldValue);
+
+    let searchObj = {}
+    searchObj[fieldName] = fieldValue;
+
+    this.app().c('database').client()
+      .db('login')
+      .collection('userInfo').find(searchObj).toArray()
+      .then((result) => {
+        if (result.length) {
+          ifExists(result[0].username);
+        }
+        else {
+          ifDoesNotExist();
+        }
+      });
+  }
+
+  async uniqueFieldToUsername(
+    fieldName,
+    fieldValue
+  ) {
+
+  }
+
+  async addUniqueFieldToUser(
+    username,
+    fieldName,
+    fieldValue
+  ) {
+    this.validateUsername(username);
+    this.validateUniqueFieldName(fieldName);
+    this.validateUniqueFieldValue(fieldValue);
+
+    this.ifUserWithUniqueFieldExists(fieldName, fieldValue, (existing) => {
+      if (username != existing) {
+        throw Error('Cannot add unique field ' + fieldName + ' to user ' + username + ' with value ' + fieldValue + ' because a different user, ' + existing + ', already has that value in the same field.');
+      }
+    }, () => {
+      console.log('Adding unique field is not yet implemented');
+    });
+  }
+
   /** Register a user, throw an error if there is an issue. */
   async registerUser(
     username /*:: : string */,
@@ -93,20 +143,35 @@ class Authentication extends require('../component/index.js') {
   validateUsername(
     username /*:: : string */
   ) {
-
-    if (!username.length) {
-      throw Error('Usernames cannot be empty.');
-    }
+    this.valiedateGenericNonEmpty(username, 'Usernames');
   }
 
   /** Validate a password, throw an error if it does not validate. */
   validatePassword(
     password /*:: : string */
   ) {
+    this.valiedateGenericNonEmpty(password, 'Passowords');
+  }
 
-    if (!password.length) {
-      throw Error('Passwords cannot be empty.');
+  valiedateGenericNonEmpty(
+    value,
+    message
+  ) {
+    if (!value.length) {
+      throw Error(value + ' cannot be empty.');
     }
+  }
+
+  validateUniqueFieldName(
+    fieldName /*:: : string */
+  ) {
+    this.valiedateGenericNonEmpty(fieldName, 'Field names');
+  }
+
+  validateUniqueFieldValue(
+    uniqueFieldValue /*:: : string */
+  ) {
+    this.valiedateGenericNonEmpty(uniqueFieldValue, 'Unique field values');
   }
 
   async allUsers() {
