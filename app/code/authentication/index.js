@@ -29,6 +29,7 @@ class Authentication extends require('../component/index.js') {
   dependencies() {
     return [
       './database/index.js',
+      './crypto/index.js',
     ];
   }
 
@@ -91,6 +92,52 @@ class Authentication extends require('../component/index.js') {
     let obj = {};
     obj[fieldName] = fieldValue;
     return obj;
+  }
+
+  async uniqueFieldToUsername(
+    fieldName,
+    fieldValue,
+    desiredUsername
+  ) {
+    const existing = await this.asyncUserWithUniqueFieldValueIfExists(fieldName, fieldValue);
+
+    if (existing) {
+      return existing;
+    }
+
+    const username = await this.newUsernameLike(desiredUsername);
+
+    const user = await this
+      .createOrAlterUser(username, this.app().c('crypto').random());
+
+    await this.addUniqueFieldToUser(username, fieldName, fieldValue);
+
+    return username;
+  }
+
+  async newUsernameLike(desiredUsername) {
+    let candidate = desiredUsername;
+    let count = 1;
+
+    do {
+      if (!await this.userExists(candidate)) {
+        return await this.registerUser(candidate, this.app().c('crypto').random());
+      }
+    } while (candidate = desiredUsername + (count++));
+  }
+
+  async asyncUserWithUniqueFieldValueIfExists(
+    fieldName,
+    fieldValue
+  ) {
+    const searchObj = this.fieldNameValToObj(fieldName, fieldValue);
+
+    users = await this.collection().find(searchObj).toArray();
+
+    if (users.length) {
+      return result[0].username;
+    }
+    return '';
   }
 
   ifUserWithUniqueFieldExists(
