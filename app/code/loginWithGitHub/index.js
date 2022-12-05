@@ -68,7 +68,7 @@ class LoginWithGitHub extends require('../component/index.js') {
       clientSecret: secret,
       callbackURL: that.callbackURL(),
     }, async (accessToken, refreshToken, profile, done) => {
-      username = await that.profileToUsername(profile);
+      const username = await that.profileToUsername(profile);
       app.c('authentication')
         .user(username)
         .then((user) => {
