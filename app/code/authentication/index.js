@@ -122,7 +122,8 @@ class Authentication extends require('../component/index.js') {
 
     do {
       if (!await this.userExists(candidate)) {
-        return await this.registerUser(candidate, this.app().c('crypto').random());
+        await this.registerUser(candidate, this.app().c('crypto').random());
+        return candidate;
       }
     } while (candidate = desiredUsername + (count++));
   }
