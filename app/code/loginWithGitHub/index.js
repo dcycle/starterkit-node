@@ -37,8 +37,10 @@ class LoginWithGitHub extends require('../component/index.js') {
       clientID: client,
       clientSecret: secret,
       callbackURL: that.callbackURL(),
-    },
-    function(accessToken, refreshToken, profile, done) {
+    }, function(accessToken, refreshToken, profile, done) {
+
+      console.log('aaa');
+      console.log(profile);
 
       app.c('authentication')
         .user('admin')
