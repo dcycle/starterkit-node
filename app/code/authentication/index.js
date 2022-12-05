@@ -125,7 +125,8 @@ class Authentication extends require('../component/index.js') {
         await this.registerUser(candidate, this.app().c('crypto').random());
         return candidate;
       }
-    } while (candidate = desiredUsername + (count++));
+      candidate = desiredUsername + (count++)
+    } while (TRUE);
   }
 
   async asyncUserWithUniqueFieldValueIfExists(

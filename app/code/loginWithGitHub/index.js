@@ -40,11 +40,11 @@ class LoginWithGitHub extends require('../component/index.js') {
     const candidate = profile.username;
 
     if (typeof candidate === 'undefined') {
-      throw 'Cannot extract username from profile.'
+      throw 'Cannot extract username from profile.';
     }
 
     if (!candidate) {
-      throw 'Username cannot be empty.'
+      throw 'Username cannot be empty.';
     }
 
     return candidate;
