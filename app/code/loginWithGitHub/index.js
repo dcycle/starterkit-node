@@ -20,7 +20,9 @@ class LoginWithGitHub extends require('../component/index.js') {
     return this.app().config().modules['./loginWithGitHub/index.js'].baseUrl + this.callbackPath();
   }
 
-  profileToUsername(profile) {
+  profileToUsername(
+    profile
+  ) {
     candidate = profile.whatever
 
     if (typeof candidate === 'undefined') {
@@ -54,7 +56,7 @@ class LoginWithGitHub extends require('../component/index.js') {
     }, function(accessToken, refreshToken, profile, done) {
 
       console.log('aaa');
-      console.log(profile);
+      console.log(that.profileToUsername());
 
       app.c('authentication')
         .user('admin')
