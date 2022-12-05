@@ -132,7 +132,7 @@ class Authentication extends require('../component/index.js') {
   ) {
     const searchObj = this.fieldNameValToObj(fieldName, fieldValue);
 
-    users = await this.collection().find(searchObj).toArray();
+    const users = await this.collection().find(searchObj).toArray();
 
     if (users.length) {
       return result[0].username;
