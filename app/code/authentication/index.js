@@ -99,6 +99,7 @@ class Authentication extends require('../component/index.js') {
     fieldValue,
     desiredUsername
   ) {
+    this.validateUsername(desiredUsername);
     const existing = await this.asyncUserWithUniqueFieldValueIfExists(fieldName, fieldValue);
 
     if (existing) {
@@ -220,6 +221,9 @@ class Authentication extends require('../component/index.js') {
   validateUsername(
     username /*:: : string */
   ) {
+    if (typeof username === 'undefined') {
+      throw Error('Username cannot be undefined.');
+    }
     this.valiedateGenericNonEmpty(username, 'Usernames');
   }
 
