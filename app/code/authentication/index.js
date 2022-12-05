@@ -137,7 +137,7 @@ class Authentication extends require('../component/index.js') {
     const users = await this.collection().find(searchObj).toArray();
 
     if (users.length) {
-      return result[0].username;
+      return users[0].username;
     }
     return '';
   }
