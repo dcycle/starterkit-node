@@ -29,7 +29,7 @@ class LoginWithGitHub extends require('../component/index.js') {
       throw 'Cannot extract username from profile.'
     }
 
-    if (typeof !candidate) {
+    if (!candidate) {
       throw 'Username cannot be empty.'
     }
 
