@@ -20,6 +20,20 @@ class LoginWithGitHub extends require('../component/index.js') {
     return this.app().config().modules['./loginWithGitHub/index.js'].baseUrl + this.callbackPath();
   }
 
+  profileToUsername(profile) {
+    candidate = profile.whatever
+
+    if (typeof candidate === 'undefined') {
+      throw 'Cannot extract username from profile.'
+    }
+
+    if (typeof !candidate) {
+      throw 'Username cannot be empty.'
+    }
+
+    return candidate;
+  }
+
   async init(
     app /*:: : Object */
   ) /*:: : Object */ {
