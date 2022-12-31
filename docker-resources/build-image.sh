@@ -12,6 +12,8 @@ set -e
 #   NoSQL database simple driver.
 # body-parser:
 #   Process data sent in an HTTP request body.
+# ejs:
+#   For templating, see https://github.com/mde/ejs.
 # passport:
 #   Authentication framework.
 # passport-local-mongoose:
@@ -34,6 +36,7 @@ set -e
 #   JWTs or Json Web Tokens are an industry standard token.
 
 npm install \
+  ejs \
   express \
   mongoose \
   mongodb \

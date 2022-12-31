@@ -10,6 +10,7 @@ services:
       - "./app/code:/usr/src/app/app"
       - "./app/test:/usr/src/app/test"
       - "./app/config:/usr/src/app/config"
+      - "./app/views:/usr/src/app/views"
     links:
       - mongo:mongo
     environment:

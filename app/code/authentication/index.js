@@ -221,22 +221,22 @@ class Authentication extends require('../component/index.js') {
 
   /** Validate a username, throw an error if it does not validate. */
   validateUsername(
-    username /*:: : string */
+    username
   ) {
     if (typeof username === 'undefined') {
       throw Error('Username cannot be undefined.');
     }
-    this.valiedateGenericNonEmpty(username, 'Usernames');
+    this.validateGenericNonEmpty(username, 'Usernames');
   }
 
   /** Validate a password, throw an error if it does not validate. */
   validatePassword(
     password /*:: : string */
   ) {
-    this.valiedateGenericNonEmpty(password, 'Passowords');
+    this.validateGenericNonEmpty(password, 'Passowords');
   }
 
-  valiedateGenericNonEmpty(
+  validateGenericNonEmpty(
     value,
     message
   ) {
@@ -248,13 +248,13 @@ class Authentication extends require('../component/index.js') {
   validateUniqueFieldName(
     fieldName /*:: : string */
   ) {
-    this.valiedateGenericNonEmpty(fieldName, 'Field names');
+    this.validateGenericNonEmpty(fieldName, 'Field names');
   }
 
   validateUniqueFieldValue(
     uniqueFieldValue /*:: : string */
   ) {
-    this.valiedateGenericNonEmpty(uniqueFieldValue, 'Unique field values');
+    this.validateGenericNonEmpty(uniqueFieldValue, 'Unique field values');
   }
 
   async allUsers() {

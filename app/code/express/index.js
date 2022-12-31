@@ -15,6 +15,10 @@ class Express extends require('../component/index.js') {
     this._httpServer = this.http().Server(this._expressApp);
     this._middlewares = {};
 
+    // https://codeforgeek.com/ejs-template-engine-in-nodejs/
+    this._expressApp.set('views', '/usr/src/app/views');
+    this._expressApp.set('view engine', 'ejs');
+
     return this;
   }
   async exitGracefully() {
