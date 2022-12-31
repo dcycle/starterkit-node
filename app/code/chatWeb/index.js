@@ -19,10 +19,10 @@ class ChatWeb extends require('../component/index.js') {
     const io = app.c('socket').socketIoHttp();
 
     app.c('express').addRoute('chat', 'get', path, (req, res) => {
-        res.sendFile('private.html',
-        { root: '/usr/src/app/private' });
-      }
-    );
+      res.render('chat', {
+        name: req.user.username,
+      });
+    });
 
     app.c('chat').addHook((message) => {
       io.emit('message', message);
