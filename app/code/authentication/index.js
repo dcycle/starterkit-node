@@ -116,7 +116,9 @@ class Authentication extends require('../component/index.js') {
     return username;
   }
 
-  async newUsernameLike(desiredUsername) {
+  async newUsernameLike(
+    desiredUsername
+  ) /*:: : Promise<string> */ {
     let candidate = desiredUsername;
     let count = 1;
 
@@ -126,7 +128,9 @@ class Authentication extends require('../component/index.js') {
         return candidate;
       }
       candidate = desiredUsername + (count++);
-    } while (TRUE);
+    } while (true);
+
+    return '';
   }
 
   async asyncUserWithUniqueFieldValueIfExists(
