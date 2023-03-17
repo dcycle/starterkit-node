@@ -49,7 +49,7 @@ class Chat extends require('../component/index.js') {
 
   addMessage(messageObject) {
     const message = this.message()(messageObject);
-    message.save((err))
+    message.save()
       .then(() => {
         this.invoke(messageObject);
       });
