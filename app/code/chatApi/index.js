@@ -21,17 +21,16 @@ class ChatApi extends require('../component/index.js') {
     const path = '/messages';
 
     app.c('express').addRoute('chatApi', 'post', path, (req, res) => {
-        app.c('chat').addMessage(req.body);
-        res.sendStatus(200);
-      }
-    );
+      app.c('chat').addMessage(req.body);
+      res.sendStatus(200);
+    });
 
     app.c('express').addRoute('chatApi', 'get', path, (req, res) => {
-        app.c('chat').message().find({},(err, messages)=> {
+      app.c('chat').message().find({})
+        .then((messages) => {
           res.send(messages);
         });
-      }
-    );
+    });
 
   }
 

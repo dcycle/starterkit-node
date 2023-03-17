@@ -5,11 +5,12 @@
  */
 class PluginAuthenticationDashboardApiAll {
   invoke(app, callback) {
-    app.c('authentication').userDetails().find({},(err, users)=> {
-      callback([
-        new (app.class('dashboardApi/dashboardSingleNumber'))('User accounts', users.length),
-      ]);
-    });
+    app.c('authentication').userDetails().find({})
+      .then((users) => {
+        callback([
+          new (app.class('dashboardApi/dashboardSingleNumber'))('User accounts', users.length),
+        ]);
+      });
   }
 }
 
