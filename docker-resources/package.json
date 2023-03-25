@@ -1,0 +1,22 @@
+{
+  "name": "starterkit-node",
+  "version": "0.0.0",
+  "private": true,
+  "dependencies": {
+    "ejs": "*",
+    "express": "*",
+    "mongoose": "*",
+    "mongodb": "*",
+    "body-parser": "*",
+    "passport": "*",
+    "passport-local-mongoose": "*",
+    "socket.io": "*",
+    "express-session": "*",
+    "js-yaml": "*",
+    "nodemailer": "*",
+    "passport-github2": "*",
+    "deepmerge": "*",
+    "argon2": "*",
+    "jsonwebtoken": "*"
+  }
+}
