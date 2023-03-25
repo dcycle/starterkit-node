@@ -35,19 +35,5 @@ set -e
 # jsonwebtoken:
 #   JWTs or Json Web Tokens are an industry standard token.
 
-npm install \
-  ejs \
-  express \
-  mongoose \
-  mongodb \
-  body-parser \
-  passport \
-  passport-local-mongoose \
-  socket.io \
-  express-session \
-  js-yaml \
-  nodemailer \
-  passport-github2 \
-  deepmerge \
-  argon2 \
-  jsonwebtoken
+cp /docker-resources/package.json /usr/src/app/package.json
+npm install
