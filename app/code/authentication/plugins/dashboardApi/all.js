@@ -1,5 +1,3 @@
-// @flow
-
 /**
  * Authentication Dahsboard Api All plugin.
  */
@@ -14,5 +12,4 @@ class PluginAuthenticationDashboardApiAll {
   }
 }
 
-// $FlowExpectedError
 module.exports = new PluginAuthenticationDashboardApiAll();

@@ -1,4 +1,3 @@
-// @flow
 /**
  * Get all endpoints.
  */
@@ -8,7 +7,6 @@ class RestEndpoint {
   constructor(
     app /*:: : Object */
   ) {
-    // $FlowFixMe
     this._app = app;
   }
 
@@ -35,7 +33,6 @@ class RestEndpoint {
   }
 
   fullEndpointPath() /*:: : string */{
-    // $FlowFixMe
     const app = this._app;
 
     return app.c('rest').path() + '/' + this.endpoint();
@@ -47,5 +44,4 @@ class RestEndpoint {
 
 }
 
-// $FlowExpectedError
 module.exports = RestEndpoint;

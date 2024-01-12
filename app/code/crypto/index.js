@@ -1,4 +1,3 @@
-// @flow
 /**
  * Generate random strings, and other crypto operations.
  */
@@ -22,12 +21,13 @@ class Crypto {
   }
 
   crypto() {
+    // @ts-expect-error
     return require('crypto');
   }
 
   argon2() {
-     // $FlowFixMe
-     return require('argon2');
+    // @ts-expect-error
+    return require('argon2');
   }
 
   /**
@@ -57,5 +57,4 @@ class Crypto {
 
 }
 
-// $FlowExpectedError
 module.exports = new Crypto();

@@ -1,8 +1,8 @@
-// @flow
 /**
  * REST API.
  */
 
+require('../component/index.js');
 class Rest extends require('../component/index.js') {
 
   dependencies() {
@@ -17,20 +17,17 @@ class Rest extends require('../component/index.js') {
     return this.results;
   }
 
-  async init(
-    app /*:: : Object */
-  ) /*:: : Object */ {
+  async init(app) {
     super.init(app);
     this.results = [];
+    return this;
   }
 
   path() {
     return this.app().config().modules['./rest/index.js'].path;
   }
 
-  async run(
-    app /*:: : Object */
-  ) /*:: : Object */ {
+  async run(app)  {
 
     const that = this;
 
@@ -51,9 +48,10 @@ class Rest extends require('../component/index.js') {
         res.send(new (app.class('rest/restResultFormatter'))().formatAsJson(e.result(req)));
       });
     });
+
+    return this;
   }
 
 }
 
-// $FlowExpectedError
 module.exports = new Rest();

@@ -1,4 +1,3 @@
-// @flow
 /**
  * Allow users to log in with GitHub.
  */
@@ -50,16 +49,14 @@ class LoginWithGitHub extends require('../component/index.js') {
     return candidate;
   }
 
-  async init(
-    app /*:: : Object */
-  ) /*:: : Object */ {
+  async init(app)  {
     super.init(app);
 
     const client = app.config().modules['./loginWithGitHub/index.js'].client;
     const secret = app.config().modules['./loginWithGitHub/index.js'].secret;
 
     const passport = app.c('authentication').passport();
-    // $FlowFixMe
+    // @ts-expect-error
     const gitHubStrategy = require('passport-github2').Strategy;
 
     const that = this;
@@ -76,7 +73,7 @@ class LoginWithGitHub extends require('../component/index.js') {
         });
     }));
 
-    // $FlowFixMe
+    // @ts-expect-error
     const expressSession = require('express-session');
 
     const expressApp = app.c('express').expressApp();
@@ -128,8 +125,8 @@ class LoginWithGitHub extends require('../component/index.js') {
       return res.redirect('/');
     });
 
+    return this;
   }
 }
 
-// $FlowExpectedError
 module.exports = new LoginWithGitHub();

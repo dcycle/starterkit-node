@@ -1,14 +1,10 @@
-// @flow
 /**
  *
  * You can test this by running:
  */
 
 const module_exports /*:: : Object */ = class {
-  async init(
-    app /*:: : Object */
-  ) /*:: : Object */ {
-    // $FlowFixMe
+  async init(app)  {
     this._app = app;
     return this;
   }
@@ -20,7 +16,6 @@ const module_exports /*:: : Object */ = class {
   }
 
   app() {
-    // $FlowFixMe
     return this._app;
   }
 
@@ -46,15 +41,14 @@ const module_exports /*:: : Object */ = class {
   invokePlugin(componentName, pluginName, callback) {
     this.assertInitialized();
     const candidateFilename = this.componentDir() + 'plugins/' + componentName + '/' + pluginName + '.js';
+    // @ts-expect-error
     if (require('fs').existsSync(candidateFilename)) {
-      // $FlowFixMe
-      require(candidateFilename).invoke(this.app(), callback);
+        require(candidateFilename).invoke(this.app(), callback);
     }
   }
 
-  async run(
-    app /*:: : Object */
-  ) /*:: : Object */ {
+  async run(app)  {
+    return this;
   }
 
   assertFlag(
@@ -63,14 +57,11 @@ const module_exports /*:: : Object */ = class {
   ) {
     const err = 'Expecting ' + flagName + ' to be ' + JSON.stringify(value);
 
-    // $FlowFixMe
     if (typeof this.flags === 'undefined') {
       throw err + ' but no flags are set';
     }
-    // $FlowFixMe
     if (this.flags[flagName] !== value) {
-      // $FlowFixMe
-      throw err + ' but it is ' + JSON.stringify(this.flags[flagName]);
+        throw err + ' but it is ' + JSON.stringify(this.flags[flagName]);
     }
   }
 
@@ -78,12 +69,9 @@ const module_exports /*:: : Object */ = class {
     flagName /*:: : string */,
     value
   ) {
-    // $FlowFixMe
     if (typeof this.flags === 'undefined') {
-      // $FlowFixMe
-      this.flags = {};
+        this.flags = {};
     }
-    // $FlowFixMe
     this.flags[flagName] = value;
   }
 
@@ -94,7 +82,11 @@ const module_exports /*:: : Object */ = class {
     this.setFlag(flagName, value);
   }
 
-  dependencies() /*:: : Array<string> */ {
+  /**
+   * Returns the dependencies.
+   * @returns {String[]}
+   */
+  dependencies() {
     return [];
   }
 

@@ -1,4 +1,3 @@
-// @flow
 /**
  * My database module.
  *
@@ -6,9 +5,7 @@
  */
 
 class Database extends require('../component/index.js') {
-  async init(
-    app /*:: : Object */
-  ) /*:: : Object */ {
+  async init(app)  {
     super.init(app);
 
     await this.mongoose().connect(this.uri());
@@ -31,11 +28,11 @@ class Database extends require('../component/index.js') {
     return this._client;
   }
   mongoose() {
-    // $FlowExpectedError
+    // @ts-expect-error
     return require('mongoose');
   }
   mongodb() {
-    // $FlowExpectedError
+    // @ts-expect-error
     return require('mongodb');
   }
   uri() {
@@ -49,5 +46,4 @@ class Database extends require('../component/index.js') {
   }
 }
 
-// $FlowExpectedError
 module.exports = new Database();

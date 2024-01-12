@@ -1,4 +1,3 @@
-// @flow
 /**
  * Provide user/pass authentication.
  */
@@ -11,9 +10,7 @@ class UserPassAuth extends require('../component/index.js') {
     ];
   }
 
-  async run(
-    app /*:: : Object */
-  ) /*:: : Object */ {
+  async run(app)  {
 
     const expressApp = app.component('./express/index.js').expressApp();
 
@@ -48,9 +45,10 @@ class UserPassAuth extends require('../component/index.js') {
         });
       })(req, res, next);
     });
+
+    return this;
   }
 
 }
 
-// $FlowExpectedError
 module.exports = new UserPassAuth();

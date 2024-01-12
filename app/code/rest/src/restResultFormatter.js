@@ -1,4 +1,3 @@
-// @flow
 /**
  * Format results.
  */
@@ -24,5 +23,4 @@ class RestResultFormatter {
 
 }
 
-// $FlowExpectedError
 module.exports = RestResultFormatter;

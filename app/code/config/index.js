@@ -1,14 +1,12 @@
-// @flow
 /**
  * Loads configuration.
  */
 
 class Config extends require('../component/index.js') {
-  async init(
-    app /*:: : Object */
-  ) /*:: : Object */ {
+  async init(app)  {
     this._app = app;
     this._config = this.loadFromFiles();
+    return this;
   }
 
   config() {
@@ -29,7 +27,7 @@ class Config extends require('../component/index.js') {
   add(file, existing) {
     let ret = existing;
 
-    // $FlowFixMe
+    // @ts-expect-error
     const merge = require('deepmerge');
 
     const newyaml = this.fileToObject(file);
@@ -41,6 +39,7 @@ class Config extends require('../component/index.js') {
 
   fileToObject(file) {
     const yaml = this._app.component('js-yaml');
+    // @ts-expect-error
     const fs   = require('fs');
 
     if (!fs.existsSync(file)) {
@@ -62,5 +61,4 @@ class Config extends require('../component/index.js') {
 
 }
 
-// $FlowExpectedError
 module.exports = new Config();

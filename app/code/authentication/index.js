@@ -1,12 +1,11 @@
-// @flow
 /**
  * Provide authentication.
  */
 
 class Authentication extends require('../component/index.js') {
   async init(
-    app /*:: : Object */
-  ) /*:: : Object */ {
+    app
+  ) {
     super.init(app);
 
     const Schema = app.component('./database/index.js').mongoose().Schema;
@@ -15,7 +14,6 @@ class Authentication extends require('../component/index.js') {
       password: String
     });
     UserDetail.plugin(this.passportLocalMongoose());
-    // $FlowExpectedError
     this.myUserDetails = app.c('database').mongoose().model('userInfo', UserDetail, 'userInfo');
 
     this.setFlagBool('initialized', true);
@@ -45,14 +43,13 @@ class Authentication extends require('../component/index.js') {
     }
   }
 
-  /** Mockable wrapper around require('passport-local-mongoose'). */
-  passportLocalMongoose() /*:: : Object */ {
-    // $FlowExpectedError
+  passportLocalMongoose() {
+    // @ts-expect-error
     return require('passport-local-mongoose');
   }
 
   passport() {
-    // $FlowFixMe
+    // @ts-expect-error
     return require('passport');
   }
 
@@ -60,7 +57,6 @@ class Authentication extends require('../component/index.js') {
   userDetails() /*:: : Object */ {
     this.assertFlag('initialized', true);
 
-    // $FlowExpectedError
     return this.myUserDetails;
   }
 
@@ -118,7 +114,7 @@ class Authentication extends require('../component/index.js') {
 
   async newUsernameLike(
     desiredUsername
-  ) /*:: : Promise<string> */ {
+  ) {
     let candidate = desiredUsername;
     let count = 1;
 
@@ -270,7 +266,7 @@ class Authentication extends require('../component/index.js') {
   }
 
   async userIdExists(id) {
-    // $FlowFixMe
+    // @ts-expect-error
     const ObjectId  = require('mongodb').ObjectID;
 
     return (await this.userDetails().find({_id: ObjectId(id)})).length;
@@ -295,5 +291,4 @@ class Authentication extends require('../component/index.js') {
   }
 }
 
-// $FlowExpectedError
 module.exports = new Authentication();

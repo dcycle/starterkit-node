@@ -1,4 +1,3 @@
-// @flow
 /**
  *
  * You can test this by running:
@@ -163,5 +162,4 @@ class Dependencies {
 
 }
 
-// $FlowExpectedError
 module.exports = new Dependencies();

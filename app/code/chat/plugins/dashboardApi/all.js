@@ -1,5 +1,3 @@
-// @flow
-
 /**
  * Chat Dahsboard Api All plugin.
  */
@@ -14,5 +12,4 @@ class PluginChatDashboardApiAll {
   }
 }
 
-// $FlowExpectedError
 module.exports = new PluginChatDashboardApiAll();

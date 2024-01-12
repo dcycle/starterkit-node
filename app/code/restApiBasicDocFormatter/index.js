@@ -1,4 +1,3 @@
-// @flow
 /**
  * REST API basic formatter.
  */
@@ -36,5 +35,4 @@ class RestApiBasicDocFormatter extends require('../component/index.js') {
 
 }
 
-// $FlowExpectedError
 module.exports = new RestApiBasicDocFormatter();

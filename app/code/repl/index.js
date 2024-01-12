@@ -1,12 +1,9 @@
-// @flow
 /**
  * Provide authentication.
  */
 
 class Repl extends require('../component/index.js') {
-  async run(
-    app /*:: : Object */
-  ) /*:: : Object */ {
+  async run(app)  {
 
     const port = app.config().modules['./repl/index.js'].port;
 
@@ -17,5 +14,4 @@ class Repl extends require('../component/index.js') {
 
 }
 
-// $FlowExpectedError
 module.exports = new Repl();

@@ -1,4 +1,3 @@
-// @flow
 /**
  * User records.
  */
@@ -10,7 +9,7 @@ class Token extends require('../component/index.js') {
   }
 
   jwt() {
-    // $FlowFixMe
+    // @ts-expect-error
     return require('jsonwebtoken');
   }
 
@@ -23,9 +22,7 @@ class Token extends require('../component/index.js') {
     ];
   }
 
-  async run(
-    app /*:: : Object */
-  ) /*:: : Object */ {
+  async run(app)  {
     const that = this;
 
     app.c('express').addRoute('tokenRequest', 'get', '/token/request', (req, res) => {
@@ -46,6 +43,8 @@ class Token extends require('../component/index.js') {
           res.send(JSON.stringify(o));
         });
     });
+
+    return this;
   }
 
   /**
@@ -89,5 +88,4 @@ class Token extends require('../component/index.js') {
 
 }
 
-// $FlowExpectedError
 module.exports = new Token();

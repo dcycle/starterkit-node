@@ -1,4 +1,3 @@
-// @flow
 /**
  * My database module.
  *
@@ -6,9 +5,7 @@
  */
 
 class Express extends require('../component/index.js') {
-  async init(
-    app /*:: : Object */
-  ) /*:: : Object */ {
+  async init(app)  {
     this._app = app;
 
     this._expressApp = this.express()();
@@ -24,9 +21,7 @@ class Express extends require('../component/index.js') {
   async exitGracefully() {
   }
 
-  async run(
-    app /*:: : Object */
-  ) /*:: : Object */ {
+  async run(app)  {
     const port = app.config().modules['./express/index.js'].port;
     this.httpServer().listen(port, function() {
       console.log('listening on *:' + port);
@@ -62,7 +57,7 @@ class Express extends require('../component/index.js') {
       }
     ];
 
-    if (typeof this._middlewares[key] !== 'undefined' && this._middlewares[key] !== []) {
+    if (typeof this._middlewares[key] !== 'undefined') {
       ret = this._middlewares[key];
     }
 
@@ -70,14 +65,14 @@ class Express extends require('../component/index.js') {
   }
 
   express() {
-    // $FlowFixMe
+    // @ts-expect-error
     return require('express');
   }
   httpServer() {
     return this._httpServer;
   }
   http() {
-    // $FlowExpectedError
+    // @ts-expect-error
     return require('node:http');
   }
   expressApp() {
@@ -85,5 +80,4 @@ class Express extends require('../component/index.js') {
   }
 }
 
-// $FlowExpectedError
 module.exports = new Express();

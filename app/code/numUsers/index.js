@@ -1,4 +1,3 @@
-// @flow
 /**
  * Get the number of users connected to socket.io.
  *
@@ -6,9 +5,7 @@
  */
 
 class NumUsers extends require('../component/index.js') {
-  async init(
-    app /*:: : Object */
-  ) /*:: : Object */ {
+  async init(app)  {
     super.init(app);
 
     const that = this;
@@ -35,7 +32,6 @@ class NumUsers extends require('../component/index.js') {
    * Mockable wrapper around our socket module.
    */
   socket() {
-    // $FlowExpectedError
     return require('../socket/index.js');
   }
 
@@ -50,5 +46,4 @@ class NumUsers extends require('../component/index.js') {
 
 }
 
-// $FlowExpectedError
 module.exports = new NumUsers();

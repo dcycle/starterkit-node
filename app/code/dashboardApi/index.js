@@ -1,4 +1,3 @@
-// @flow
 /**
  * Allows other components to expose information to a dashboard.
  */
@@ -16,5 +15,4 @@ class DashboardApi extends require('../component/index.js') {
 
 }
 
-// $FlowExpectedError
 module.exports = new DashboardApi();

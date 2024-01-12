@@ -1,12 +1,9 @@
-// @flow
 /**
  * Puts a body property in the req.
  */
 
 class BodyParser extends require('../component/index.js') {
-  async init(
-    app /*:: : Object */
-  ) /*:: : Object */ {
+  async init(app)  {
     super.init(app);
 
     const expressApp = app.component('./express/index.js').expressApp();
@@ -24,5 +21,4 @@ class BodyParser extends require('../component/index.js') {
   }
 }
 
-// $FlowExpectedError
 module.exports = new BodyParser();

@@ -1,4 +1,3 @@
-// @flow
 /**
  * The main server file.
  */

@@ -1,4 +1,3 @@
-// @flow
 /**
  * Get environment variables.
  */
@@ -7,6 +6,7 @@ class Env {
   required(
     name /*:: : string */
   ) {
+    // @ts-expect-error
     const candidate = process.env[name];
     if (typeof candidate === 'undefined') {
       throw Error('Environemnt variable ' + name + ' is required.');
@@ -18,6 +18,7 @@ class Env {
     name /*:: : string */,
     fallback /*:: : string */
   ) {
+    // @ts-expect-error
     const candidate = process.env[name];
     if (typeof candidate === 'undefined' || candidate === '') {
       return fallback;
@@ -26,5 +27,4 @@ class Env {
   }
 }
 
-// $FlowExpectedError
 module.exports = new Env();

@@ -1,4 +1,3 @@
-// @flow
 /**
  * Abstract class providing web authentication.
  */
@@ -14,9 +13,7 @@ class WebAuth extends require('../component/index.js') {
     ];
   }
 
-  async init(
-    app /*:: : Object */
-  ) /*:: : Object */ {
+  async init(app)  {
     this._app = app;
 
     const expressApp = app.component('./express/index.js').expressApp();
@@ -66,10 +63,7 @@ class WebAuth extends require('../component/index.js') {
     });
   }
 
-  async run(
-    app /*:: : Object */
-  ) /*:: : Object */ {
-    // $FlowExpectedError
+  async run(app)  {
 
     app.component('./express/index.js').expressApp().post('/logout', function(req, res, next) {
       req.logout(function(err) {
@@ -77,9 +71,10 @@ class WebAuth extends require('../component/index.js') {
         res.redirect('/');
       });
     });
+
+    return this;
   }
 
 }
 
-// $FlowExpectedError
 module.exports = new WebAuth();

@@ -1,4 +1,3 @@
-// @flow
 /**
  * Send mail using SMTP.
  *
@@ -9,9 +8,7 @@
 
 class Smtp extends require('../component/index.js') {
 
-  async init(
-    app /*:: : Object */
-  ) /*:: : Object */ {
+  async init(app)  {
     this._app = app;
 
     this._servers = [];
@@ -20,7 +17,7 @@ class Smtp extends require('../component/index.js') {
   }
 
   nodemailer() {
-    // $FlowFixMe
+    // @ts-expect-error
     return require('nodemailer');
   }
 
@@ -40,8 +37,7 @@ class Smtp extends require('../component/index.js') {
       };
 
       if (typeof server.user !== 'undefined' && server.user !== "") {
-        // $FlowFixMe
-        transportInfo.auth = {
+            transportInfo.auth = {
           user: server.user,
           pass: server.pass,
         };
@@ -55,5 +51,4 @@ class Smtp extends require('../component/index.js') {
 
 }
 
-// $FlowExpectedError
 module.exports = new Smtp();

@@ -1,4 +1,3 @@
-// @flow
 /**
  * My socket module.
  *
@@ -6,9 +5,7 @@
  */
 
 class Socket extends require('../component/index.js') {
-  async init(
-    app /*:: : Object */
-  ) /*:: : Object */ {
+  async init(app)  {
     super.init(app);
 
     const http = app.component('./express/index.js').httpServer();
@@ -22,7 +19,7 @@ class Socket extends require('../component/index.js') {
    * Mockable wrapper around the socket.io module.
    */
   socketIo() {
-    // $FlowExpectedError
+    // @ts-expect-error
     return require('socket.io');
   }
   socketIoHttp() {
@@ -33,11 +30,9 @@ class Socket extends require('../component/index.js') {
       './express/index.js',
     ];
   }
-  async run(
-    app /*:: : Object */
-  ) /*:: : Object */ {
+  async run(app)  {
+    return this;
   }
 }
 
-// $FlowExpectedError
 module.exports = new Socket();

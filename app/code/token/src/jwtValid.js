@@ -1,4 +1,3 @@
-// @flow
 /**
  * An token which cannot be interpreted by JWT.
  */
@@ -12,27 +11,19 @@ class JwtValid extends require('./token.js') {
     app /*:: : Object */
   ) {
     super();
-    // $FlowFixMe
     this._token = token;
-    // $FlowFixMe
     this._userId = userId;
-    // $FlowFixMe
     this._session = session;
-    // $FlowFixMe
     this._app = app;
   }
 
   async toObjectAboutValidity() /*:: : Object */ {
-    // $FlowFixMe
     const token = this._token;
 
-    // $FlowFixMe
     const userId = this._userId;
 
-    // $FlowFixMe
     const session = this._session;
 
-    // $FlowFixMe
     const app = this._app;
 
     let info = [];
@@ -94,5 +85,4 @@ class JwtValid extends require('./token.js') {
 
 }
 
-// $FlowExpectedError
 module.exports = JwtValid;

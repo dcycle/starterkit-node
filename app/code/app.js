@@ -1,5 +1,3 @@
-// @flow
-
 /**
  * Singleton representing the whole application.
  *
@@ -57,16 +55,16 @@ class App {
   components() /*:: : Object */ {
     // https://stackoverflow.com/a/1535650/1207752
     // https://github.com/facebook/flow/issues/8689
-    // $FlowFixMe[method-unbinding]
+    // @ts-expect-error
     if (typeof this.components.ret == 'undefined') {
       // https://stackoverflow.com/a/1535650/1207752
       // https://github.com/facebook/flow/issues/8689
-      // $FlowFixMe[method-unbinding]
+      // @ts-expect-error
       this.components.ret = Object.keys(this.config().modules);
     }
     // https://stackoverflow.com/a/1535650/1207752
     // https://github.com/facebook/flow/issues/8689
-    // $FlowFixMe[method-unbinding]
+    // @ts-expect-error
     return this.components.ret;
   }
 
@@ -83,7 +81,7 @@ class App {
   componentsWithDependencies() /*:: : Array<string> */ {
     // https://stackoverflow.com/a/1535650/1207752
     // https://github.com/facebook/flow/issues/8689
-    // $FlowFixMe[method-unbinding]
+    // @ts-expect-error
     if (typeof this.componentsWithDependencies.ret == 'undefined') {
       // It has not... perform the initialization
 
@@ -96,12 +94,12 @@ class App {
       }
       // https://stackoverflow.com/a/1535650/1207752
       // https://github.com/facebook/flow/issues/8689
-      // $FlowFixMe[method-unbinding]
+      // @ts-expect-error
       this.componentsWithDependencies.ret = components.results;
     }
     // https://stackoverflow.com/a/1535650/1207752
     // https://github.com/facebook/flow/issues/8689
-    // $FlowFixMe[method-unbinding]
+    // @ts-expect-error
     return this.componentsWithDependencies.ret;
   }
 
@@ -111,7 +109,6 @@ class App {
   component(
     component /*:: : string */
   ) {
-    // $FlowFixMe
     return require(component);
   }
 
@@ -128,14 +125,14 @@ class App {
    */
   config()  /*:: : Object */ {
     // https://github.com/facebook/flow/issues/8689
-    // $FlowFixMe[method-unbinding]
+    // @ts-expect-error
     if (typeof this.config.ret == 'undefined') {
       // https://github.com/facebook/flow/issues/8689
-      // $FlowFixMe[method-unbinding]
+      // @ts-expect-error
       this.config.ret = this.component(this.configModuleName()).config();
     }
     // https://github.com/facebook/flow/issues/8689
-    // $FlowFixMe[method-unbinding]
+    // @ts-expect-error
     return this.config.ret;
   }
 
@@ -194,6 +191,7 @@ class App {
    */
   async exitGracefully() {
     await this.component('./database/index.js').exitGracefully();
+    // @ts-expect-error
     process.exit(0);
   }
 
@@ -242,5 +240,4 @@ class App {
   }
 }
 
-// $FlowExpectedError
 module.exports = new App();

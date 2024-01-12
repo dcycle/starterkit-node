@@ -1,4 +1,3 @@
-// @flow
 /**
  * Abstract class providing web authentication.
  */
@@ -12,9 +11,7 @@ class ChatApi extends require('../component/index.js') {
     ];
   }
 
-  async run(
-    app /*:: : Object */
-  ) /*:: : Object */ {
+  async run(app)  {
 
     const expressApp = app.c('express').expressApp();
 
@@ -31,10 +28,9 @@ class ChatApi extends require('../component/index.js') {
           res.send(messages);
         });
     });
-
+    return this;
   }
 
 }
 
-// $FlowExpectedError
 module.exports = new ChatApi();

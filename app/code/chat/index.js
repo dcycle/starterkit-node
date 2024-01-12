@@ -1,12 +1,15 @@
-// @flow
+// @ts-check
+// The TypeScript engine will check all JavaScript in this file.
 
 /**
  * Chat functionality.
  */
 class Chat extends require('../component/index.js') {
-  async init(
-    app /*:: : Object */
-  ) /*:: : Object */ {
+  /**
+   * @property {Function} init Initializes this object.
+   * @returns Chat
+   */
+  async init(app)  {
     super.init(app);
 
     this.myMessage = app.component('./database/index.js').mongoose().model('Message', {
@@ -22,6 +25,10 @@ class Chat extends require('../component/index.js') {
   myMessage;
   /* jshint ignore:end */
 
+  /**
+   * Returns the dependencies.
+   * @returns {String[]}
+   */
   dependencies() {
     return [
       './database/index.js',
@@ -69,5 +76,4 @@ class Chat extends require('../component/index.js') {
 
 }
 
-// $FlowExpectedError
 module.exports = new Chat();

@@ -51,6 +51,7 @@ services:
 networks:
   default:
     name: ${DOCKERNETWORK}
+    external: true
 
 volumes:
   mongo:

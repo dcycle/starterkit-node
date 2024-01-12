@@ -1,13 +1,10 @@
-// @flow
 /**
  * Send mail.
  */
 
 class Mail extends require('../component/index.js') {
 
-  async init(
-    app /*:: : Object */
-  ) /*:: : Object */ {
+  async init(app)  {
     this._app = app;
 
     this._servers = [];
@@ -54,5 +51,4 @@ class Mail extends require('../component/index.js') {
 
 }
 
-// $FlowExpectedError
 module.exports = new Mail();

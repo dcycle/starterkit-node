@@ -1,4 +1,3 @@
-// @flow
 /**
  * Manage time.
  */
@@ -20,5 +19,4 @@ class Time extends require('../component/index.js') {
 
 }
 
-// $FlowExpectedError
 module.exports = new Time();

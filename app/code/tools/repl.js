@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+// @ts-nocheck
 
 // Based on code by Roman Coedo licensed with MIT license.
 // See "The app CLI" section in ./README.md.

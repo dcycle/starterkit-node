@@ -1,4 +1,3 @@
-// @flow
 /**
  * Get all endpoints.
  */
@@ -22,7 +21,6 @@ class RestGetEndpointsEndpoint extends require('./restEndpoint.js') {
   }
 
   result() /*:: : Object */ {
-    // $FlowFixMe
     const app = this._app;
 
     let ret = [];
@@ -40,5 +38,4 @@ class RestGetEndpointsEndpoint extends require('./restEndpoint.js') {
 
 }
 
-// $FlowExpectedError
 module.exports = RestGetEndpointsEndpoint;

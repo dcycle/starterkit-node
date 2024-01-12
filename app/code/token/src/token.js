@@ -1,4 +1,3 @@
-// @flow
 /**
  * An abstract token.
  */
@@ -11,5 +10,4 @@ class Token {
 
 }
 
-// $FlowExpectedError
 module.exports = Token;

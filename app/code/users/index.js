@@ -1,4 +1,3 @@
-// @flow
 /**
  * Manage users.
  */
@@ -26,5 +25,4 @@ class Users extends require('../component/index.js') {
 
 }
 
-// $FlowExpectedError
 module.exports = new Users();

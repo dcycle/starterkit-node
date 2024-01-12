@@ -1,4 +1,3 @@
-// @flow
 /**
  * Reset the password for a user.
  */

@@ -1,4 +1,3 @@
-// @flow
 /**
  * Generate a password.
  */

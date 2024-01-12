@@ -1,4 +1,3 @@
-// @flow
 /**
  * Abstract class providing web authentication.
  */
@@ -12,9 +11,7 @@ class ChatWeb extends require('../component/index.js') {
     ];
   }
 
-  async run(
-    app /*:: : Object */
-  ) /*:: : Object */ {
+  async run(app)  {
     const path = app.config().modules['./chatWeb/index.js'].path;
     const io = app.c('socket').socketIoHttp();
 
@@ -27,10 +24,9 @@ class ChatWeb extends require('../component/index.js') {
     app.c('chat').addHook((message) => {
       io.emit('message', message);
     });
-
+    return this;
   }
 
 }
 
-// $FlowExpectedError
 module.exports = new ChatWeb();

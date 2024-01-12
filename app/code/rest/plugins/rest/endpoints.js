@@ -1,5 +1,3 @@
-// @flow
-
 /**
  * An endpoint to display all endpoints.
  */
@@ -11,5 +9,4 @@ class PluginRestRestEndpoint {
   }
 }
 
-// $FlowExpectedError
 module.exports = new PluginRestRestEndpoint();
