@@ -577,6 +577,8 @@ Typechecking
 
 In January, 2024, we moved away from using [Flow](https://flow.org) and moved to the approach described in [Using Typescript without compilation, by Pascal Schilp, dev.to, Mar 26, 2023](https://dev.to/thepassle/using-typescript-without-compilation-3ko4) and [Type Safe JavaScript with JSDoc, by TruckJS, Medium, Sep. 4, 2018](https://medium.com/@trukrs/type-safe-javascript-with-jsdoc-7a2a63209b76).
 
+For this we are using <https://github.com/dcycle/docker-typescript>.
+
 Resources
 -----
 
