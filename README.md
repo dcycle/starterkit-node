@@ -579,6 +579,11 @@ In January, 2024, we moved away from using [Flow](https://flow.org) and moved to
 
 For this we are using <https://github.com/dcycle/docker-typescript>.
 
+The reasons are:
+
+* I prefer the syntax of Typescript/JSDoc to the unweildy syntax of Flow.
+* Flow seems to require type definitions, whereas Typescript will surmise type definitions if they don't exist.
+
 Resources
 -----
 
