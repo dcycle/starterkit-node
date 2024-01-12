@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Type checking our Javascript code.
+# Type check our Javascript code.
 set -e
 
 echo '=> Running type checking using TypeScript.'
