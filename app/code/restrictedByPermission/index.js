@@ -47,34 +47,6 @@ class RestrictedByPermission extends require('../component/index.js') {
         // Redirect to noaccess/index.html
         res.status(403).sendFile(`${restrictedfolderpath}/permission-${req.params.permissionId}/no-access/index.html`);
       }
-      // console.log(1108);
-      // console.log(req);
-      // console.log(req.user);
-
-      // // console.log('req.user:', req.user); // Log the entire req.user object
-      // const permissionId = req.params.permissionId;
-      // // console.log("********************permissionId**************************");
-      // // console.log(permissionId);
-      // // console.log(req.user);
-      // // Check if req.user and req.user.permissions are defined
-      // const hasPermission = req.user?.permissions && req.user.permissions?.[`view-content-${permissionId}`] === 1;
-      // console.log("hello");
-      // console.log(req.user);
-      // console.log("permissions");
-      // console.log(hasPermission);
-
-      // // Implement your actual permission logic here
-      // if (hasPermission) {
-      //   // Permission granted, proceed to the next middleware or route handler
-      //   next();
-      // } else {
-      //   // console.log("********************permissionId**************************");
-      //   // console.log(permissionId);
-      //   // console.log(req.user);
-
-      //   // Redirect to noaccess/index.html
-      //   res.status(403).sendFile(`${restrictedfolderpath}/permission-${permissionId}/no-access/index.html`);
-      // }
     };
 
     // Add middleware
