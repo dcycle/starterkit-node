@@ -91,7 +91,7 @@ class Authentication extends require('../component/index.js') {
     if (userStringifiedThenParsed[fieldName]) {
       return userStringifiedThenParsed[fieldName];
     }
-    return defaultValue
+    return defaultValue;
   }
 
   fieldNameValToObj(
