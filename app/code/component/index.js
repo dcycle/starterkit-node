@@ -43,7 +43,7 @@ const module_exports /*:: : Object */ = class {
     const candidateFilename = this.componentDir() + 'plugins/' + componentName + '/' + pluginName + '.js';
     // @ts-expect-error
     if (require('fs').existsSync(candidateFilename)) {
-        require(candidateFilename).invoke(this.app(), callback);
+      require(candidateFilename).invoke(this.app(), callback);
     }
   }
 
