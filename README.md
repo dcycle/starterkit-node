@@ -44,6 +44,11 @@ You can create a new account or regenerate a random password for an existing acc
 
     ./scripts/reset-password.sh some-username
 
+User sessions are stored in memory, not disk
+-----
+
+This is something that would be a good thing to fix eventually, but currently as soon as the application crashes (which happens often during development), you need to log back in.
+
 Quickstart
 -----
 
@@ -189,6 +194,12 @@ Now, if you try to add the same field and value to another user, you will get an
     > Uncaught:
     Error: Cannot add unique field hello to user some-new-user with value world because a different user, admin, already has that value in the same field.
         at /usr/src/app/app/authentication/index.js:154:15
+
+### Getting a user's field value
+
+    ./scripts/node-cli.sh
+    const u = await app.c('authentication').user('admin');
+    app.c('authentication').userFieldValue(u, 'view-content-permission-xyz', '0');
 
 Sending emails
 -----
@@ -371,6 +382,17 @@ This should give you the same number of users online as you see in the web inter
 You can **pipe** commands to the cli, like this:
 
     echo 'app.c("random").random()' | ./scripts/node-cli.sh
+
+Getting logs
+-----
+
+If in your code you use something like:
+
+    console.log('hello');
+
+Then you can access this by running:
+
+    docker compose logs node
 
 MongoDB crud (create - read - update - delete)
 -----
@@ -599,7 +621,7 @@ In some cases you might run into an issue where you cannot successfully start th
 ENOSPC: System limit for number of file watchers reached
 ```
 
-If such is the case you might want to increase the number of file watchers *on the Docker host machine*. 
+If such is the case you might want to increase the number of file watchers *on the Docker host machine*.
 
 To see how many file watchers you have:
 
