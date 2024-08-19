@@ -18,7 +18,7 @@ if [ -z "$3" ]; then
 fi
 
 docker-compose exec -T \
-  --env MY_USER="$MY_USER" \
-  --env MY_FIELD="$MY_FIELD" \
-  --env MY_VALUE="$MY_VALUE" \
+  --env MY_USER="$1" \
+  --env MY_FIELD="$2" \
+  --env MY_VALUE="$3" \
   node /bin/sh -c 'node /usr/src/app/app/tools/add-field-value-to-user.js'
