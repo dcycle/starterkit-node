@@ -141,8 +141,8 @@ it('User with access xyz permission should see the content of restricted by perm
     console.log('go to the home page');
     await page.goto('http://node:8080/login');
 
-    await page.type('[name=username]', 'admin');
-    await page.type('[name=password]', process.env.ADMIN_PASSWORD);
+    await page.type('[name=username]', 'xyz');
+    await page.type('[name=password]', process.env.XYZ_PASSWORD);
     await page.keyboard.press('Enter');
     await page.waitForSelector('#messages');
 
