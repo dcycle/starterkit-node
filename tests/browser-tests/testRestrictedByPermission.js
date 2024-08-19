@@ -169,3 +169,49 @@ it('User with access xyz permission should see the content of restricted by perm
   }
   await browser.close();
 });
+
+it("User without access xyz permission shouldn't see the content of restricted by permissions xyz folder files", async function() {
+  this.timeout(25000);
+  const puppeteer = require('puppeteer');
+  const browser = await puppeteer.launch({
+     headless: true,
+     args: ['--no-sandbox', '--disable-setuid-sandbox']
+  });
+  var result = false;
+  try {
+    console.log('Testing ' + __filename);
+    const page = await browser.newPage();
+    console.log('set viewport');
+    await page.setViewport({ width: 1280, height: 800 });
+    console.log('go to the home page');
+    await page.goto('http://node:8080/login');
+
+    await page.type('[name=username]', 'xyz2');
+    await page.type('[name=password]', process.env.XYZ2_PASSWORD);
+    await page.keyboard.press('Enter');
+    await page.waitForSelector('#message');
+
+    const response = await page.goto('http://node:8080/private/restricted-by-permission/permission-xyz/access/index.html');
+    // Assert status and message
+    expect(response.status()).to.equal(403);
+
+    // Check the HTML content
+    const content = await page.content();
+    expect(content).to.include("Sorry You don't have access to xyz files.");
+
+    console.log("xyz2 user should access xyz2 folder files");
+    const response2 = await page.goto('http://node:8080/private/restricted-by-permission/permission-xyz2/access/style.css');
+
+    // Assert status and message
+    expect(response2.status()).to.equal(200);
+
+    // Check the HTML content
+    const content2 = await page.content();
+    expect(content2).to.include("/* you have accessed-styles xyz2*/");
+
+  }
+  catch (error) {
+    await testBase.showError(error, browser);
+  }
+  await browser.close();
+});

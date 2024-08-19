@@ -12,8 +12,12 @@ ADMIN_PASSWORD=$(./scripts/generate-password.sh)
 ./scripts/reset-password.sh admin "$ADMIN_PASSWORD"
 XYZ_PASSWORD=$(./scripts/generate-password.sh)
 ./scripts/reset-password.sh xyz "$XYZ_PASSWORD"
+XYZ2_PASSWORD=$(./scripts/generate-password.sh)
+./scripts/reset-password.sh xyz2 "$XYZ2_PASSWORD"
 
 ./scripts/add-field-value-to-user.sh xyz view-content-permission-xyz 1
+./scripts/add-field-value-to-user.sh xyz2 view-content-permission-xyz 0
+./scripts/add-field-value-to-user.sh xyz2 view-content-permission-xyz2 1
 
 
 echo 'Sending an email'
@@ -27,6 +31,7 @@ docker run --rm \
   -v "$(pwd)"/tests/browser-tests:/app/test \
   -e ADMIN_PASSWORD="$ADMIN_PASSWORD" \
   -e XYZ_PASSWORD="$XYZ_PASSWORD" \
+  -e XYZ2_PASSWORD="$XYZ2_PASSWORD" \
   -e TOKEN="$TOKEN" \
   --network "$DOCKERNETWORK" \
   -v "$(pwd)"/do-not-commit/screenshots:/artifacts/screenshots \
