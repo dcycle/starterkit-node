@@ -159,9 +159,9 @@ it('User with access xyz permission should see the content of restricted by perm
     const content = await page.content();
     expect(content).to.include("Sorry You don't have access to xyz files.");
 
-    // const u = await app.c('authentication').user('admin');
+    const u = await app.c('authentication').user('admin');
     // Updating permission for Admin user to access xyz.
-    // app.c('authentication').userFieldValue(u, 'view-content-permission-xyz', '1');
+    app.c('authentication').userFieldValue(u, 'view-content-permission-xyz', '1');
 
     // console.log('After updating permission go to the xyz access index.html file');
     // const response2 = await page.goto('http://node:8080/private/restricted-by-permission/permission-xyz/access/index.html');
