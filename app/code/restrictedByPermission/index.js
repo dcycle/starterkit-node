@@ -75,6 +75,7 @@ class RestrictedByPermission extends require('../component/index.js') {
         // Construct the file path to the requested content
         const filePath = `${restrictedfolderpath}/permission-${permissionId}/access/${requestedUri}`;
         // Require the filesystem module
+        // @ts-expect-error
         const fs = require('fs');
         // Check if the requested file exists
         fs.access(filePath, fs.constants.F_OK, (err) => {
