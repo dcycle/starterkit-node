@@ -11,8 +11,10 @@ source ./scripts/lib/source-env.source.sh
 ADMIN_PASSWORD=$(./scripts/generate-password.sh)
 ./scripts/reset-password.sh admin "$ADMIN_PASSWORD"
 XYZ_PASSWORD=$(./scripts/generate-password.sh)
-./scripts/reset-password.sh xyz "$ADMIN_PASSWORD"
+./scripts/reset-password.sh xyz "$XYZ_PASSWORD"
+
 ./scripts/add-field-value-to-user.sh xyz view-content-permission-xyz 1
+
 
 echo 'Sending an email'
 
