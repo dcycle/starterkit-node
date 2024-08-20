@@ -10,6 +10,7 @@ class WebAuth extends require('../component/index.js') {
       './express/index.js',
       './env/index.js',
       'express-session',
+      './database/index.js'
     ];
   }
 
@@ -17,11 +18,12 @@ class WebAuth extends require('../component/index.js') {
     this._app = app;
 
     const expressApp = app.component('./express/index.js').expressApp();
-
     const expressSession = app.component('express-session')({
       secret: app.component('./env/index.js').required('EXPRESS_SESSION_SECRET'),
       resave: false,
-      saveUninitialized: false
+      saveUninitialized: false,
+      // Store session in mongo db.
+      store: app.component('./database/index.js').mongoStore()
     });
 
     expressApp.use(expressSession);

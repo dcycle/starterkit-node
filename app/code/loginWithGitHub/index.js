@@ -8,6 +8,7 @@ class LoginWithGitHub extends require('../component/index.js') {
     return [
       './express/index.js',
       './authentication/index.js',
+      './database/index.js'
     ];
   }
 
@@ -80,7 +81,9 @@ class LoginWithGitHub extends require('../component/index.js') {
 
     expressApp.use(expressSession({
       name: 'github-auth-session',
-      keys: ['key1', 'key2']
+      keys: ['key1', 'key2'],
+      // Store session in mongo db.
+      store: app.component('./database/index.js').mongoStore()
     }));
     expressApp.use(passport.initialize());
     expressApp.use(passport.session());

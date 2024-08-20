@@ -35,6 +35,23 @@ class Database extends require('../component/index.js') {
     // @ts-expect-error
     return require('mongodb');
   }
+  connectMongo() {
+    // Load MongoDB session store for Connect and Express written in Typescript.
+    // @ts-expect-error
+    return require('connect-mongo');
+  }
+  mongoStore() {
+    const mongoStore = this.connectMongo();
+    const clientPromise = this.client();
+    return mongoStore.create({
+      // A connection string for creating a new MongoClient connection.
+      mongoUrl: this.uri(),
+      // Optional: Default is 'sessions'
+      collectionName: 'sessions',
+      // Optional: Time to live for sessions in seconds (14 days)
+      ttl: 14 * 24 * 60 * 60
+    });
+  }
   uri() {
     const user = String(require('../env/index.js').required('MONGO_USER'));
     const pass = String(require('../env/index.js').required('MONGO_PASS'));

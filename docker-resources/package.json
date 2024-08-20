@@ -17,6 +17,7 @@
     "passport-github2": "*",
     "deepmerge": "*",
     "argon2": "*",
-    "jsonwebtoken": "*"
+    "jsonwebtoken": "*",
+    "connect-mongo": "*"
   }
 }
