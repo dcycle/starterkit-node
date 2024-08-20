@@ -30,6 +30,7 @@ services:
       - VIRTUAL_HOST=${VIRTUAL_HOST}
       - LETSENCRYPT_HOST=${VIRTUAL_HOST}
       - LETSENCRYPT_EMAIL="letsencrypt@${VIRTUAL_HOST}"
+      - CRASHTEST_TOKEN=${CRASHTEST_TOKEN}
     ports:
       - "${DOCKERPORT}:8080"
 

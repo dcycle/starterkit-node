@@ -21,6 +21,12 @@ var screenshot = exports.screenshot = async function(page, name, content) {
   });
 };
 
+exports.sleep = async function(ms) {
+  return new Promise((resolve) => {
+    setTimeout(resolve, ms);
+  });
+};
+
 exports.assertInSourceCode = async function(page, text, filename="") {
   if (filename == "") {
     filename = Math.random();

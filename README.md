@@ -45,10 +45,10 @@ You can create a new account or regenerate a random password for an existing acc
 
     ./scripts/reset-password.sh some-username
 
-User sessions are stored in memory, not disk
+User sessions are stored on disk, not in memory
 -----
 
-This is something that would be a good thing to fix eventually, but currently as soon as the application crashes (which happens often during development), you need to log back in.
+This means that if your appliation is restarted or crashes, you won't have to log back in.
 
 Quickstart
 -----
@@ -601,15 +601,15 @@ Only endpoints that publicly accessible are currently supported, for example:
 
 Access to content by permission
 -----
-Sometimes, only certain authenticated users should have access to certain content. 
+Sometimes, only certain authenticated users should have access to certain content.
 That's what the restrictedByPermission module does. Here's how it works.
 
 By default files of app/private/restricted-by-permission/permission-{permissionId}/access/* folder are restrcited to authenticated user and anonymous user. If you try to access restricted by permission folders then app/private/restricted-by-permission/permission-{permissionId}/no-access/index.html content will be displayed with 403 status.
 
-If admin or any authenticated user wants to access files for example:- app/private/restricted-by-permission/permission-xyz/access/index.html or app/private/restricted-by-permission/permission-xyz/access/styles.css .... then we have to assign a permission to the 
+If admin or any authenticated user wants to access files for example:- app/private/restricted-by-permission/permission-xyz/access/index.html or app/private/restricted-by-permission/permission-xyz/access/styles.css .... then we have to assign a permission to the
 respective user based on permissionId.
 
-permissionId should be the part after pemission- in folder name. 
+permissionId should be the part after pemission- in folder name.
 example:- from above example  permission-xyz/access/* is the restricted folder, `xyz` is the permission id.
 
 By running below command in terminal, you are giving permission to admin to access permission-xyz/access/* folder.
@@ -632,9 +632,6 @@ Disable permission to user:- Run below command to remove permission to access fi
     // Remove permission to access files of permission-xyz folder.
     app.c('authentication').userFieldValue(u, 'view-content-permission-xyz', '0');
 ```
-
-
-
 
 Typechecking
 -----

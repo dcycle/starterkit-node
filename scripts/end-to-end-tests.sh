@@ -19,7 +19,6 @@ XYZ2_PASSWORD=$(./scripts/generate-password.sh)
 ./scripts/add-field-value-to-user.sh xyz2 view-content-permission-xyz 0
 ./scripts/add-field-value-to-user.sh xyz2 view-content-permission-xyz2 1
 
-
 echo 'Sending an email'
 
 TOKEN=$(./scripts/generate-password.sh)
@@ -32,6 +31,7 @@ docker run --rm \
   -e ADMIN_PASSWORD="$ADMIN_PASSWORD" \
   -e XYZ_PASSWORD="$XYZ_PASSWORD" \
   -e XYZ2_PASSWORD="$XYZ2_PASSWORD" \
+  -e CRASHTEST_TOKEN="$CRASHTEST_TOKEN" \
   -e TOKEN="$TOKEN" \
   --network "$DOCKERNETWORK" \
   -v "$(pwd)"/do-not-commit/screenshots:/artifacts/screenshots \

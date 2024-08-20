@@ -38,5 +38,6 @@ grep DOCKERNETWORK "$ENVLOC" > /dev/null || echo "export DOCKERNETWORK=$DOCKERNE
 grep EXPRESS_SESSION_SECRET "$ENVLOC" > /dev/null || echo "export EXPRESS_SESSION_SECRET=$(./scripts/lib/generate-uuid.sh)" >> "$ENVLOC"
 grep SALT "$ENVLOC" > /dev/null || echo "export SALT=$(./scripts/lib/generate-uuid.sh)" >> "$ENVLOC"
 grep ENVIRONMENT_USAGE "$ENVLOC" > /dev/null || echo "export ENVIRONMENT_USAGE=$TARGET_ENV" >> "$ENVLOC"
+grep CRASHTEST_TOKEN "$ENVLOC" > /dev/null ||  echo "export CRASHTEST_TOKEN=$(./scripts/lib/generate-uuid.sh)" >> "$ENVLOC"
 
 source "$ENVLOC"

@@ -8,6 +8,8 @@ modules:
         verb: get
       - route: chatApi
         verb: post
+      - route: CrashTest
+        verb: get
     authenticatedJson:
       - route: tokenRequest
         verb: get
@@ -51,4 +53,5 @@ modules:
   ./staticPath/index.js:
     paths:
       - /usr/src/app/static
+  ./crashTest/index.js: {}
   ./dashboardApi/index.js: {}
