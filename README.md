@@ -610,10 +610,9 @@ If admin or any authenticated user wants to access files for example:- app/priva
 respective user based on permissionId.
 
 permissionId should be the part after pemission- in folder name. 
-example:- from above example  permission-xyz is the restricted folder, `xyz` is the permission id.
+example:- from above example  permission-xyz/access/* is the restricted folder, `xyz` is the permission id.
 
-By running below command in terminal, you are giving permission to admin to access permission-xyz
-folder.
+By running below command in terminal, you are giving permission to admin to access permission-xyz/access/* folder.
 ```
     ./scripts/node-cli.sh
     // Load admin user.
@@ -624,7 +623,7 @@ folder.
 
 With this admin can access files of folder permission-xyz/access.
 
-Disable permission to user:- Run below command to remove permission to access files of permission-xyz folder for admin user.
+Disable permission to user:- Run below command to remove permission to access files of permission-xyz/access folder for admin user.
 
 ```
     ./scripts/node-cli.sh
