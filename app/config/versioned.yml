@@ -41,6 +41,9 @@ modules:
     secret: 'override this in ./app/config/unversioned.yml; see README.md'
     baseUrl: 'override this in ./app/config/unversioned.yml; see README.md'
     callback: '/auth/github/callback'
+  ./restrictedByPermission/index.js:
+    restrictedfolderpath:
+      - /usr/src/app/private/restricted-by-permission/
   ./repl/index.js:
     port: 8001
   ./express/index.js:

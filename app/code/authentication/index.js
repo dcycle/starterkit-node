@@ -81,6 +81,19 @@ class Authentication extends require('../component/index.js') {
       .collection('userInfo');
   }
 
+  userFieldValue(
+    userObj,
+    fieldName,
+    defaultValue
+  ) {
+    // I'm not sure why this is necessary, but it is.
+    const userStringifiedThenParsed = JSON.parse(JSON.stringify(userObj));
+    if (userStringifiedThenParsed[fieldName]) {
+      return userStringifiedThenParsed[fieldName];
+    }
+    return defaultValue;
+  }
+
   fieldNameValToObj(
     fieldName,
     fieldValue

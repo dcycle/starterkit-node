@@ -26,6 +26,7 @@ Dcycle Node.js starterkit
 * GitHub Apps
 * Security tokens
 * REST API
+* Access to content by permission
 * Typechecking
 * Troubleshooting
 * Resources
@@ -43,6 +44,11 @@ This project uses [Passport](https://www.passportjs.org/) for authentication alo
 You can create a new account or regenerate a random password for an existing account by typing, on the command line:
 
     ./scripts/reset-password.sh some-username
+
+User sessions are stored in memory, not disk
+-----
+
+This is something that would be a good thing to fix eventually, but currently as soon as the application crashes (which happens often during development), you need to log back in.
 
 Quickstart
 -----
@@ -189,6 +195,12 @@ Now, if you try to add the same field and value to another user, you will get an
     > Uncaught:
     Error: Cannot add unique field hello to user some-new-user with value world because a different user, admin, already has that value in the same field.
         at /usr/src/app/app/authentication/index.js:154:15
+
+### Getting a user's field value
+
+    ./scripts/node-cli.sh
+    const u = await app.c('authentication').user('admin');
+    app.c('authentication').userFieldValue(u, 'view-content-permission-xyz', '0');
 
 Sending emails
 -----
@@ -371,6 +383,17 @@ This should give you the same number of users online as you see in the web inter
 You can **pipe** commands to the cli, like this:
 
     echo 'app.c("random").random()' | ./scripts/node-cli.sh
+
+Getting logs
+-----
+
+If in your code you use something like:
+
+    console.log('hello');
+
+Then you can access this by running:
+
+    docker compose logs node
 
 MongoDB crud (create - read - update - delete)
 -----
@@ -576,6 +599,43 @@ Only endpoints that publicly accessible are currently supported, for example:
 
     /api/v1/endpoints
 
+Access to content by permission
+-----
+Sometimes, only certain authenticated users should have access to certain content. 
+That's what the restrictedByPermission module does. Here's how it works.
+
+By default files of app/private/restricted-by-permission/permission-{permissionId}/access/* folder are restrcited to authenticated user and anonymous user. If you try to access restricted by permission folders then app/private/restricted-by-permission/permission-{permissionId}/no-access/index.html content will be displayed with 403 status.
+
+If admin or any authenticated user wants to access files for example:- app/private/restricted-by-permission/permission-xyz/access/index.html or app/private/restricted-by-permission/permission-xyz/access/styles.css .... then we have to assign a permission to the 
+respective user based on permissionId.
+
+permissionId should be the part after pemission- in folder name. 
+example:- from above example  permission-xyz/access/* is the restricted folder, `xyz` is the permission id.
+
+By running below command in terminal, you are giving permission to admin to access permission-xyz/access/* folder.
+```
+    ./scripts/node-cli.sh
+    // Load admin user.
+    const u = await app.c('authentication').user('admin');
+    // Enable permission to access files of permission-xyz folder.
+    app.c('authentication').userFieldValue(u, 'view-content-permission-xyz', '1');
+```
+
+With this admin can access files of folder permission-xyz/access.
+
+Disable permission to user:- Run below command to remove permission to access files of permission-xyz/access folder for admin user.
+
+```
+    ./scripts/node-cli.sh
+    // Load admin user.
+    const u = await app.c('authentication').user('admin');
+    // Remove permission to access files of permission-xyz folder.
+    app.c('authentication').userFieldValue(u, 'view-content-permission-xyz', '0');
+```
+
+
+
+
 Typechecking
 -----
 
@@ -599,7 +659,7 @@ In some cases you might run into an issue where you cannot successfully start th
 ENOSPC: System limit for number of file watchers reached
 ```
 
-If such is the case you might want to increase the number of file watchers *on the Docker host machine*. 
+If such is the case you might want to increase the number of file watchers *on the Docker host machine*.
 
 To see how many file watchers you have:
 
