@@ -26,6 +26,7 @@ Dcycle Node.js starterkit
 * GitHub Apps
 * Security tokens
 * REST API
+* Access to content by permission
 * Typechecking
 * Troubleshooting
 * Resources
@@ -597,6 +598,44 @@ If you simply visit /api/v1, you will see documentation about the API.
 Only endpoints that publicly accessible are currently supported, for example:
 
     /api/v1/endpoints
+
+Access to content by permission
+-----
+Sometimes, only certain authenticated users should have access to certain content. 
+That's what the restrictedByPermission module does. Here's how it works.
+
+By default files of app/private/restricted-by-permission/permission-{permissionId}/access/* folder are restrcited to authenticated user and anonymous user. If you try to access restricted by permission folders then app/private/restricted-by-permission/permission-{permissionId}/no-access/index.html content will be displayed with 403 status.
+
+If admin or any authenticated user wants to access files for example:- app/private/restricted-by-permission/permission-xyz/access/index.html or app/private/restricted-by-permission/permission-xyz/access/styles.css .... then we have to assign a permission to the 
+respective user based on permissionId.
+
+permissionId should be the part after pemission- in folder name. 
+example:- from above example  permission-xyz is the restricted folder, `xyz` is the permission id.
+
+By running below command in terminal, you are giving permission to admin to access permission-xyz
+folder.
+```
+    ./scripts/node-cli.sh
+    // Load admin user.
+    const u = await app.c('authentication').user('admin');
+    // Enable permission to access files of permission-xyz folder.
+    app.c('authentication').userFieldValue(u, 'view-content-permission-xyz', '1');
+```
+
+With this admin can access files of folder permission-xyz/access.
+
+Disable permission to user:- Run below command to remove permission to access files of permission-xyz folder for admin user.
+
+```
+    ./scripts/node-cli.sh
+    // Load admin user.
+    const u = await app.c('authentication').user('admin');
+    // Remove permission to access files of permission-xyz folder.
+    app.c('authentication').userFieldValue(u, 'view-content-permission-xyz', '0');
+```
+
+
+
 
 Typechecking
 -----
