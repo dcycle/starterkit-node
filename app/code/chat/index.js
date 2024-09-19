@@ -12,10 +12,17 @@ class Chat extends require('../component/index.js') {
   async init(app)  {
     super.init(app);
 
-    this.myMessage = app.component('./database/index.js').mongoose().model('Message', {
+    const Schema = app.component('./database/index.js').mongoose().Schema;
+    const Message = new Schema({
       name : String,
-      message : String,
+      message : String
+    },
+    {
+      // This will add createdAt and updatedAt fields.
+      timestamps: true
     });
+
+    this.myMessage = app.component('./database/index.js').mongoose().model('Message', Message);
 
     return this;
   }

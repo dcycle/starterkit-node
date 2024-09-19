@@ -12,8 +12,6 @@
           Welcome <%=name%>. User(s) currently online: <span id="numusers">...</span>
         </div>
         <br>
-        <input id = "name" class="form-control" placeholder="Name">
-        <br>
         <textarea id = "message" class="form-control" placeholder="Your Message Here">
 </textarea>
         <br>
@@ -32,8 +30,9 @@
     <script>
       $(() => {
       $("#send").click(()=>{
+        const messagesender = "<%=name%>";
          sendMessage({
-            name: $("#name").val(),
+            name: messagesender,
             message:$("#message").val()});
           })
         getMessages()
