@@ -11,8 +11,12 @@ class Authentication extends require('../component/index.js') {
     const Schema = app.component('./database/index.js').mongoose().Schema;
     const UserDetail = new Schema({
       username: String,
-      password: String
+      password: String,
+    }, {
+      // This will add createdAt and updatedAt fields.
+      timestamps: true
     });
+
     UserDetail.plugin(this.passportLocalMongoose());
     this.myUserDetails = app.c('database').mongoose().model('userInfo', UserDetail, 'userInfo');
 
