@@ -22,6 +22,10 @@ class ChatbotCalculator extends require('../component/index.js') {
         return this.evaluateExpression(prompt);
       }
       else {
+        /** 
+         * We will get Invalid expression if we dont mention operator before prompt.
+         * example:- '+20', '-390', '-(2 * 100) - 10', '*((2 * 100) - 10)'.
+         */
         const expression = `${previousResult}${prompt}`;
         return this.evaluateExpression(expression);
       }
