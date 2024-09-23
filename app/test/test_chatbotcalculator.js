@@ -1,5 +1,6 @@
 const test = require('ava');
 const sinon = require('sinon');
+const { expect } = require('chai');
 
 let my = require('/mycode/chatbotCalculator/index.js');
 
