@@ -18,6 +18,7 @@
     "deepmerge": "*",
     "argon2": "*",
     "jsonwebtoken": "*",
-    "connect-mongo": "*"
+    "connect-mongo": "*",
+    "uuid": "*"    
   }
 }

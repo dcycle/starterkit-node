@@ -54,4 +54,6 @@ modules:
     paths:
       - /usr/src/app/static
   ./crashTest/index.js: {}
+  ./chatbot/index.js: {}
+  ./chatbotCalculator/index.js: {}  
   ./dashboardApi/index.js: {}
