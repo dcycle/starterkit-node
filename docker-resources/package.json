@@ -19,6 +19,7 @@
     "argon2": "*",
     "jsonwebtoken": "*",
     "connect-mongo": "*",
-    "uuid": "*"    
+    "uuid": "*",
+    "mathjs": "*"
   }
 }

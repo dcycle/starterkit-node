@@ -46,8 +46,12 @@ class ChatbotCalculator extends require('../component/index.js') {
    */
   evaluateExpression(expression) {
     try {
-      // Evaluate the expression safely
-      const result = Function(`'use strict'; return (${expression})`)();
+      // @ts-ignore
+      const { create, all } = require('mathjs');
+      // Create a mathjs instance
+      const math = create(all);
+      // Use math.js to evaluate the expression safely
+      const result = math.evaluate(expression);
       return result;
     } catch (error) {
       return 'Invalid expression';
@@ -57,6 +61,7 @@ class ChatbotCalculator extends require('../component/index.js') {
   dependencies() {
     return [
       './chatbot/index.js',
+      'mathjs'
     ];
   }
 }
