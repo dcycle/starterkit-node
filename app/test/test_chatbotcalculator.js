@@ -46,7 +46,7 @@ test('should return "Invalid expression" for an invalid expression', t => {
   t.true(result === 'Invalid expression', expression + ' results in "Invalid expression", as expected (result is ' + result+ ')');
 });
 
-test('should return "Invalid expression" for a non-numeric expression', () => {
+test('should return "Invalid expression" for a non-numeric expression', t => {
   const expression = 'foo + 100';
   const result = my.evaluateExpression(expression);
   // Should catch non-numeric expression
