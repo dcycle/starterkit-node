@@ -23,7 +23,7 @@ class ChatbotCalculator extends require('../component/index.js') {
       }
       else {
         /** 
-         * We will get Invalid expression if we dont mention operator before prompt.
+         * We will get Invalid expression if we dont mention operator before prompt for consecutive conversations requests.
          * example:- '+20', '-390', '-(2 * 100) - 10', '*((2 * 100) - 10)'.
          */
         const expression = `${previousResult}${prompt}`;
