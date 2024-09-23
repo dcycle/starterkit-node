@@ -63,7 +63,7 @@
       // Use the 'login' database
       .db('login')
       // Access the 'ChatbotConversations' collection
-      .collection('ChatbotConversations');
+      .collection('chatbotconversations');
   }
 
   /**
@@ -90,13 +90,15 @@
 
     // Retrieve previous conversation if conversationId is provided.
     let previous = await this.getPreviousConversation(conversationId);
+    let previousResult = 0;
     if (previous.length > 0) {
       // Get the plugin from the previous conversation.      
       plugin = previous[0].plugin;
+      previousResult = previous[0].result;
     }
 
     // Process the chat based on the plugin type.
-    return this.processChatByPlugin(plugin, text, previous);
+    return this.processChatByPlugin(plugin, text.trim(), previousResult, conversationId);
   }
 
   /**
@@ -115,13 +117,14 @@
    * Process the chat based on the specified plugin.
    * @param {String} plugin The plugin to use for processing.
    * @param {String} text The input text for the chat.
-   * @param {String} previousResult The result from the previous conversation, if available.
+   * @param {String|Number} previousResult The result from the previous conversation, if available.
+   * @param {String} conversationId The previous conversation ids.
    * @returns The response object with the result or error message.
    */
-  async processChatByPlugin(plugin, text, previousResult) {
+  async processChatByPlugin(plugin, text, previousResult, conversationId) {
     // Check if the specified plugin exists.
     if (plugin === 'calculator') {
-      return await this.handleCalculatorPlugin(text, previousResult);
+      return await this.handleCalculatorPlugin(text, previousResult, conversationId);
     } else {
       // Return error if plugin is not found.      
       return { errors: [`Plugin ${plugin} does not exist`] };
@@ -131,10 +134,11 @@
   /**
    * Handle the calculator plugin's chat processing.
    * @param {String} text The input text for the calculator.
-   * @param {String} previousResult The result from the previous calculation.
+   * @param {String|Number} previousResult The result from the previous calculation.
+   * @param {String} conversationId The previous conversation ids.
    * @returns The response object with the calculation result.
    */
-  async handleCalculatorPlugin(text, previousResult) {
+  async handleCalculatorPlugin(text, previousResult, conversationId) {
     try {
       const result = await this._app.c('chatbotCalculator').calculate(text, previousResult);
       // Import UUID for generating unique conversation IDs.
@@ -144,17 +148,18 @@
       const response = {
         result,
         // Generate a new conversation ID.        
-        conversationId: uuidv4(),
+        conversationId: conversationId || uuidv4(),
       };
 
-      // Save the conversation to the database.
-      await this.storeConversation({
-        plugin: 'calculator',
-        conversationId: response.conversationId,
-        userInput: text,
-        result: response.result,
-      });
-
+      if (result !== 'Invalid expression') {
+        // Save the conversation to the database.
+        await this.storeConversation({
+          plugin: 'calculator',
+          conversationId: response.conversationId,
+          userInput: text,
+          result: response.result,
+        });
+      }
       // Return the successful response.
       return response;
 

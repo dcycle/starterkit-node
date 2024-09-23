@@ -22,7 +22,8 @@ class ChatbotCalculator extends require('../component/index.js') {
         return this.evaluateExpression(prompt);
       }
       else {
-        return this.evaluateExpression(previousResult + prompt);
+        const expression = `${previousResult}${prompt}`;
+        return this.evaluateExpression(expression);
       }
     } catch (error) {
       return 'Invalid expression';
