@@ -5,7 +5,7 @@ let my = require('/mycode/chatbotCalculator/index.js');
 
 test('should return correct result for a valid expression',  t => {
   const expression = '2+2';
-  const result = chatbot.evaluateExpression(expression);
+  const result = my.evaluateExpression(expression);
   // 2 + 2 = 4
   expect(result).toBe(4);
   t.true(result === 4, expression + ' results in 4, as expected (result is ' + result+ ')');
@@ -13,21 +13,21 @@ test('should return correct result for a valid expression',  t => {
 
 test('should return correct result for a valid expression-1', t => {
   const expression = '(2 * 100) - 10';
-  const result = chatbot.evaluateExpression(expression);
+  const result = my.evaluateExpression(expression);
   // (2 * 100) - 10 = 190
   t.true(result === 190, expression + ' results in 190, as expected (result is ' + result+ ')');
 });
 
 test('should return correct result for a valid expression-2', t => {
   const expression = '+2';
-  const result = chatbot.evaluateExpression(expression);
+  const result = my.evaluateExpression(expression);
   // +2 = 2
   t.true(result === 2, expression + ' results in 2, as expected (result is ' + result+ ')');
 });
 
 test('should return correct result for a simple addition', t => {
   const expression = '190 + 100';
-  const result = chatbot.evaluateExpression(expression);
+  const result = my.evaluateExpression(expression);
   // 190 + 100 = 290
   t.true(result === 290, expression + ' results in 290, as expected (result is ' + result+ ')');
 });
