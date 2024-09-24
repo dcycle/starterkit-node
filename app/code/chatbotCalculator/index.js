@@ -19,8 +19,6 @@ class ChatbotCalculator extends require('../component/index.js') {
   async calculate(prompt, previousResult) {
     try {
       if (!previousResult) {
-        console.log("----Before previos result ----------");
-        console.log(prompt);
         return this.evaluateExpression(prompt);
       }
       else {
@@ -56,7 +54,6 @@ class ChatbotCalculator extends require('../component/index.js') {
       const math = create(all);
       // Use math.js to evaluate the expression safely
       console.log("before math evaluate");
-      console.log(expression);
       const result = math.evaluate(expression);
       console.log("after math evaluate");
       console.log(result);
