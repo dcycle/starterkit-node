@@ -27,8 +27,6 @@ class ChatbotCalculator extends require('../component/index.js') {
          * example:- '+20', '-390', '-(2 * 100) - 10', '*((2 * 100) - 10)'.
          */
         const expression = `${previousResult}${prompt}`;
-        console.log("----expression--------");
-        console.log(expression);
         return this.evaluateExpression(expression);
       }
     } catch (error) {
@@ -53,10 +51,7 @@ class ChatbotCalculator extends require('../component/index.js') {
       // Create a mathjs instance
       const math = create(all);
       // Use math.js to evaluate the expression safely
-      console.log("before math evaluate");
       const result = math.evaluate(expression);
-      console.log("after math evaluate");
-      console.log(result);
       return result;
     } catch (error) {
       // Log the error for debugging
@@ -68,7 +63,6 @@ class ChatbotCalculator extends require('../component/index.js') {
   dependencies() {
     return [
       './chatbot/index.js',
-      'mathjs'
     ];
   }
 }
