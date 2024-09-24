@@ -96,6 +96,9 @@
       plugin = previous[0].plugin;
       previousResult = previous[0].result;
     }
+    else if (!plugin) {
+      return { errors: [ 'Conversation not found this id ' + conversationId] };
+    }
 
     // Process the chat based on the plugin type.
     return this.processChatByPlugin(plugin, text.trim(), previousResult, conversationId);
