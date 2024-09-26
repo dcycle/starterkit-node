@@ -43,6 +43,6 @@ grep ENVIRONMENT_USAGE "$ENVLOC" > /dev/null || echo "export ENVIRONMENT_USAGE=$
 grep CRASHTEST_TOKEN "$ENVLOC" > /dev/null ||  echo "export CRASHTEST_TOKEN=$(./scripts/lib/generate-uuid.sh)" >> "$ENVLOC"
 grep WHATSAPP_DEV_MODE "$ENVLOC" > /dev/null || echo "export WHATSAPP_DEV_MODE=true" >> "$ENVLOC"
 grep WHATSAPPSENDM_API_TOKEN "$ENVLOC" > /dev/null ||  echo "export WHATSAPPSENDM_API_TOKEN=$(./scripts/lib/generate-uuid.sh)" >> "$ENVLOC"
-grep WHATSAPP_FROM "$ENVLOC" > /dev/null ||  echo "export WHATSAPPSENDM_API_TOKEN=$(./scripts/lib/generate-uuid.sh)" >> "$ENVLOC"
+grep WHATSAPP_FROM "$ENVLOC" > /dev/null ||  echo "export WHATSAPP_FROM=$(./scripts/lib/generate-uuid.sh)" >> "$ENVLOC"
 
 source "$ENVLOC"
