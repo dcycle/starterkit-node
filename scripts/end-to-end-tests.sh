@@ -33,9 +33,13 @@ docker run --rm \
   -e XYZ2_PASSWORD="$XYZ2_PASSWORD" \
   -e CRASHTEST_TOKEN="$CRASHTEST_TOKEN" \
   -e TOKEN="$TOKEN" \
+  -e WHATSAPPSENDM_API_TOKEN="$WHATSAPPSENDM_API_TOKEN" \
+  -e TWILIO_USER="$TWILIO_USER" \
+  -e WHATSAPP_DEV_MODE="$WHATSAPP_DEV_MODE" \
   --network "$DOCKERNETWORK" \
   -v "$(pwd)"/do-not-commit/screenshots:/artifacts/screenshots \
   -v "$(pwd)"/do-not-commit/dom-captures:/artifacts/dom-captures \
+  -v "$(pwd)"/unversioned/output:/unversioned/output \
   dcycle/browsertesting:4
 
 BASE="$(pwd)"
