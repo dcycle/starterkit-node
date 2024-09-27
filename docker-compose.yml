@@ -11,6 +11,7 @@ services:
       - "./app/test:/usr/src/app/test"
       - "./app/config:/usr/src/app/config"
       - "./app/views:/usr/src/app/views"
+      - "./unversioned/output:/output"
     links:
       - mongo:mongo
     environment:
