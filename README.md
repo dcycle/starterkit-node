@@ -27,6 +27,7 @@ Dcycle Node.js starterkit
 * Security tokens
 * REST API
 * Access to content by permission
+* Whatsapp Message Send/Recieve Functionality
 * Typechecking
 * Troubleshooting
 * Resources
@@ -632,6 +633,112 @@ Disable permission to user:- Run below command to remove permission to access fi
     // Remove permission to access files of permission-xyz folder.
     app.c('authentication').userFieldValue(u, 'view-content-permission-xyz', '0');
 ```
+
+Whatsapp Message Send/Recieve Functionality
+-----
+
+**Send WhatsApp Message:**
+
+To send a WhatsApp message, ensure the following environment variables are present and valid in the `.env` file:
+
+- `TWILIO_USER`
+- `TWILIO_PASS`
+- `WHATSAPP_FROM`
+- `WHATSAPP_DEV_MODE`
+
+- If `WHATSAPP_DEV_MODE=true` (development environment), the message is saved to `./unversioned/output/whatsapp-send.json`.
+- If `WHATSAPP_DEV_MODE=false` (production environment), the message is sent to the specified `sendTo` number.
+
+Ensure `WHATSAPP_DEV_MODE=true` in the development environment.
+
+**Testing WhatsApp Message Sending Functionality in Terminal:**
+
+1. Access the Node.js client:
+   ```
+   ./scripts/node-cli.sh
+   ```
+
+2. Run the following code, replacing `<country code>` and `<phone number>`:
+   ```
+   >> await app.c('whatsAppSend').parsepropertySendMessage('{"message": "<Message content>", "sendTo":"<country code><phone number>"}');
+   ```
+   Example:
+   ```
+   >> await app.c('whatsAppSend').parsepropertySendMessage('{"message": "This is a test message", "sendTo":"+150XXXXXXX"}');
+   ```
+   Sending media message:
+   ```
+   >> await app.c('whatsAppSend').parsepropertySendMessage('{"message": "This is a test message", "sendTo":"+150XXXXXXX","mediaUrl": "<valid url of a image or video or excel or csv >"');
+   ```
+
+**Testing WhatsApp Message Sending Functionality Using curl:**
+
+- **In Development Environment:**
+   ```
+    curl -X POST \
+        -H "Content-Type: application/json" \
+        --data '{"message": "This is a test message000", "sendTo": "+XXXXXXXXXX"}' \
+         http://0.0.0.0:8792/whatsappmessage/send/<WHATSAPPSENDM_API_TOKEN>
+
+   ```
+
+- **In Production Environment:**
+   ```
+        curl -X POST \
+           -H "Content-Type: application/json" \
+           --data '{"message": "This is a test message", "sendTo": "+XXXXXXXXXX"}' \
+           https://whatsapp-communication.dcycleproject.org/whatsappmessage/send/<WHATSAPPSENDM_API_TOKEN>
+   ```
+    modify message and sendTo according to your requirement.
+
+    * If you are a authorised user then access .env and copy WHATSAPPSENDM_API_TOKEN value and replace in above command.
+
+- **Sending media message :**
+
+    ```
+        curl -X POST -H "Content-Type: application/json" --data '{"message": "<media caption message or leave empty>", "sendTo": "+91XXXXXXXXXX","mediaUrl": "<valid url of a image or video or excel or csv >"}' <base url>/whatsappmessage/send/<WHATSAPPSENDM_API_TOKEN>
+    ```
+
+**Receive WhatsApp Message:**
+
+Whenever a WhatsApp message is sent to the `WHATSAPP_FROM` number, it is saved to `./unversioned/output/whatsapp.json`. If the message's account SID equals to `TWILIO_USER`, then the message saved to the `whatsappmessages` collection in the database.
+
+You can verify whether the message is saved to the database:
+
+1. Send a message:
+   ```
+   WHATSAPP_TO=[PUT YOUR WHATSAPP NUMBER HERE]
+
+   cd ~/whatsapp-communication
+   curl "https://api.twilio.com/2010-04-01/Accounts/${TWILIO_USER}/Messages.json" -X POST \
+   --data-urlencode "To=whatsapp:${WHATSAPP_TO}" \
+   --data-urlencode "From=whatsapp:${WHATSAPP_FROM}" \
+   --data-urlencode 'Body=This is a reply' \
+   -u ${TWILIO_USER}:${TWILIO_PASS}
+   ```
+
+2. In a separate terminal window, log into the Mongo CLI and check what happened:
+   ```
+   ./scripts/mongo-cli.sh
+
+   Show databases by running:
+   ```
+   ```
+   show dbs;
+   ...
+   arbitraryDatabase  0.000GB
+   ...
+
+   use arbitraryDatabase
+   switched to db arbitraryDatabase
+
+   show collections;
+   arbitraryCollection
+
+   db.whatsappmessages.find();
+   ```
+
+    Verify your message record exist.
 
 Typechecking
 -----

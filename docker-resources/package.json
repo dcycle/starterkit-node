@@ -20,6 +20,7 @@
     "jsonwebtoken": "*",
     "connect-mongo": "*",
     "uuid": "*",
-    "mathjs": "*"
+    "mathjs": "*",
+    "twilio": "*"
   }
 }
