@@ -57,3 +57,15 @@ exports.showError = async function (error, browser) {
   await browser.close();
   console.log(error);
 };
+
+exports.getcontentOfAFile = (filePath) => {
+  try {
+    // Read the file's content synchronously
+    const fileContent = fs.readFileSync(filePath, 'utf8');
+    return fileContent;
+  } catch (error) {
+    // Handle errors
+    console.error('Error reading file:', error);
+    return false;
+  }
+};
