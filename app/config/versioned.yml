@@ -58,7 +58,11 @@ modules:
     paths:
       - /usr/src/app/static
   ./crashTest/index.js: {}
-  ./chatbot/index.js: {}
+  ./chatbot/index.js:
+    plugins:
+      calculator:
+        name: calculator
+        plugin: chatbotCalculator
   ./chatbotCalculator/index.js: {}
   ./dashboardApi/index.js: {}
   ./webhookWhatsApp/index.js: {}

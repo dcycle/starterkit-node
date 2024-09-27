@@ -16,7 +16,7 @@ class ChatbotCalculator extends require('../component/index.js') {
    *
    * @returns number
    */
-  async calculate(prompt, previousResult) {
+  async getResult(prompt, previousResult) {
     try {
       if (!previousResult) {
         return this.evaluateExpression(prompt);
