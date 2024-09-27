@@ -56,7 +56,7 @@ modules:
   ./crashTest/index.js: {}
   ./chatbot/index.js:
     plugins:
-      calculator: 
+      calculator:
         name: calculator
         plugin: chatbotCalculator
   ./chatbotCalculator/index.js: {}
