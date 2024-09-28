@@ -1,7 +1,7 @@
 // // test/chatbot.test.js
-// const test = require('ava');
-// const sinon = require('sinon');
-// const Chatbot = require('/mycode/chatbot/index.js'); // Adjust the path accordingly
+const test = require('ava');
+const sinon = require('sinon');
+const Chatbot = require('/mycode/chatbot/index.js'); // Adjust the path accordingly
 
 // // Mock the dependencies
 // const mockApp = {
