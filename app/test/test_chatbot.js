@@ -39,8 +39,8 @@ mockApp.component.withArgs('./database/index.js').returns({
 // Mock the chatbot conversation model
 const mockChatbotModel = {
   find: sinon.stub(),
-  sort: sinon.stub().returnsThis(),
-  limit: sinon.stub().returnsThis(),
+  sort: sinon.stub().returnsThis(), // Allow chaining
+  limit: sinon.stub().returnsThis(), // Allow chaining
   save: sinon.stub().returns(Promise.resolve()), // Mock save method
 };
 
@@ -104,12 +104,10 @@ test('should return error if no plugin or conversationId is provided', async t =
 });
 
 test('should fetch previous conversation', async t => {
-  // Mock the behavior of find to return a promise with an array
-  mockChatbotModel.find.returns({
-    sort: () => ({
-      limit: () => Promise.resolve([{ plugin: 'examplePlugin', result: 'previous result' }])
-    })
-  });
+  // Mock the behavior of find to return an object with chaining
+  mockChatbotModel.find.returns(mockChatbotModel); // Allow chaining from find
+  mockChatbotModel.sort.returns(mockChatbotModel); // Allow chaining from sort
+  mockChatbotModel.limit.returns(Promise.resolve([{ plugin: 'examplePlugin', result: 'previous result' }])); // Return promise for limit
 
   const previousConvo = await Chatbot.getPreviousConversation('12345');
   
