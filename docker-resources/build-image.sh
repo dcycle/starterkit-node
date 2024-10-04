@@ -35,5 +35,9 @@ set -e
 # jsonwebtoken:
 #   JWTs or Json Web Tokens are an industry standard token.
 
+
 cp /docker-resources/package.json /usr/src/app/package.json
 npm install
+
+# Install global packages
+npm install -g astro

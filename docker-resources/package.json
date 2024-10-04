@@ -1,26 +1,15 @@
 {
-  "name": "starterkit-node",
+  "name": "starterkit-astro",
   "version": "0.0.0",
   "private": true,
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro start",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
   "dependencies": {
-    "ejs": "*",
-    "express": "*",
-    "mongoose": "*",
-    "mongodb": "*",
-    "body-parser": "*",
-    "passport": "*",
-    "passport-local-mongoose": "*",
-    "socket.io": "*",
-    "express-session": "*",
-    "js-yaml": "*",
-    "nodemailer": "*",
-    "passport-github2": "*",
-    "deepmerge": "*",
-    "argon2": "*",
-    "jsonwebtoken": "*",
-    "connect-mongo": "*",
-    "uuid": "*",
-    "mathjs": "*",
-    "twilio": "*"
+    "astro": "^4.15.10"
   }
 }
