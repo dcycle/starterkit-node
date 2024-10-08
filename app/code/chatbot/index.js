@@ -31,7 +31,7 @@
     this.chatbotconversation = app.component('./database/index.js').mongoose().model('ChatbotConversations', ChatbotConSchema);
     // Store the app reference for later use.
     this._app = app;
-  
+
     // Return the initialized chatbot instance.
     return this;
   }
@@ -68,7 +68,14 @@
 
   /**
    * Fetch the "chatbotconversations" model.
-   * @returns {Object} The chatbot conversation model.
+   * @returns {function} The chatbot conversation model.
+   *   This is a function, but also contains a property "find" which itself is
+   *   a function. Therefore if you run ./scripts/node-cli.sh, you can do:
+   *     typeof app.c('chatbot').allChatBotConversations;
+   *     # 'function'
+   *     typeof app.c('chatbot').allChatBotConversations().find;
+   *     # 'function'
+   *   Therefore this function acts like an object sometimes.
    */
   allChatBotConversations() {
     // Returns the chatbot conversation model for querying.
@@ -92,7 +99,7 @@
     let previous = await this.getPreviousConversation(conversationId);
     let previousResult = 0;
     if (previous.length > 0) {
-      // Get the plugin from the previous conversation.      
+      // Get the plugin from the previous conversation.
       plugin = previous[0].plugin;
       previousResult = previous[0].result;
     }
@@ -119,9 +126,23 @@
    */
   async getPreviousConversation(conversationId) {
     if (conversationId) {
+      // @ts-ignore
       return await this.allChatBotConversations().find({ 'conversationId': conversationId }).sort({ createdAt: -1 }).limit(1);
     }
     return [];
+  }
+
+  /**
+   * Get a UUID.
+   *
+   * @returns string
+   *   A UUID.
+   */
+  uuid() {
+    // Import UUID for generating unique conversation IDs.
+    // @ts-ignore
+    const { v4: uuidv4 } = require('uuid');
+    return uuidv4();
   }
 
   /**
@@ -134,14 +155,10 @@
    */
   async createAndStoreResponse(result, text, conversationId, plugin) {
     try {
-      // Import UUID for generating unique conversation IDs.
-      // @ts-ignore
-      const { v4: uuidv4 } = require('uuid');
-
       const response = {
         result,
-        // Generate a new conversation ID.        
-        conversationId: conversationId || uuidv4(),
+        // Generate a new conversation ID.
+        conversationId: conversationId || this.uuid(),
       };
 
       if (result !== 'Invalid expression') {
