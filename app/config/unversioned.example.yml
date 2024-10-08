@@ -15,6 +15,10 @@ modules:
     client: 'client_id'
     secret: 'secret'
     baseUrl: 'https://www.staticauth.com'
+  ./loginWithGmail/index.js:
+    client: 'client_id'
+    secret: 'secret'
+    baseUrl: 'https://www.staticauth.com'
   ./smtp/index.js:
     servers:
       myServer:

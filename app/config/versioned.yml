@@ -47,6 +47,11 @@ modules:
     secret: 'override this in ./app/config/unversioned.yml; see README.md'
     baseUrl: 'override this in ./app/config/unversioned.yml; see README.md'
     callback: '/auth/github/callback'
+  ./loginWithGmail/index.js:
+    client: 'override this in ./app/config/unversioned.yml; see README.md'
+    secret: 'override this in ./app/config/unversioned.yml; see README.md'
+    baseUrl: 'override this in ./app/config/unversioned.yml; see README.md'
+    callback: '/auth/gmail/callback'
   ./restrictedByPermission/index.js:
     restrictedfolderpath:
       - /usr/src/app/private/restricted-by-permission/
