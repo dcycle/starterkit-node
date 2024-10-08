@@ -4,7 +4,7 @@
 #
 set -e
 
-DOMAIN_AND_PORT=$(docker-compose port node 8080)
+DOMAIN_AND_PORT=$(docker compose port node 8080)
 
 ./scripts/reset-password.sh admin
 

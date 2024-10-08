@@ -35,7 +35,7 @@ source ./scripts/lib/hook.source.sh set-docker-compose-files
 
 # Cannot quote $DOCKER_COMPOSE_FILES here
 # shellcheck disable=SC2086
-docker-compose $DOCKER_COMPOSE_FILES up -d --build
+docker compose $DOCKER_COMPOSE_FILES up -d --build
 ./scripts/docker-compose.sh restart
 ./scripts/docker-compose.sh ps
 ./scripts/uli.sh
