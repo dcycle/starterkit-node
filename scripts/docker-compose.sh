@@ -18,4 +18,4 @@ fi
 
 # Cannot quote $DOCKER_COMPOSE_FILES here
 # shellcheck disable=SC2086
-docker-compose $COMPOSEFILES "$@"
+docker compose $COMPOSEFILES "$@"

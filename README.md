@@ -29,6 +29,7 @@ Dcycle Node.js starterkit
 * Access to content by permission
 * Whatsapp Message Send/Recieve Functionality
 * Typechecking
+* The chatbot framework
 * Troubleshooting
 * Resources
 
@@ -751,6 +752,68 @@ The reasons are:
 
 * I prefer the syntax of Typescript/JSDoc to the unweildy syntax of Flow.
 * Flow seems to require type definitions, whereas Typescript will surmise type definitions if they don't exist.
+
+The chatbot framework
+-----
+
+    await app.c('chatbot')
+      .chat({
+        plugin: 'calculator',
+        text: '2+2',
+      });
+
+This should return:
+
+    {
+      result: 4,
+      conversationId: '47388896-c8fd-400f-b123-0a9e16ea171f',
+    }
+
+Then we can do
+
+    await app.c('chatbot')
+      .chat({
+        conversationId: '47388896-c8fd-400f-b123-0a9e16ea171f',
+        text: '+5',
+    });
+
+This should return:
+
+    {
+      result: 9,
+      conversationId: '47388896-c8fd-400f-b123-0a9e16ea171f',
+    }
+
+If we do
+
+    await app.c('chatbot')
+      .chat({
+        plugin: 'this-plugin-does-not-exist',
+        text: '2+2',
+      });
+
+This should return:
+
+    {
+      errors: [
+        'Plugin this-plugin-does-not-exist does not exist',
+      ],
+    }
+
+If we do
+
+    await app.c('chatbot')
+      .chat({
+        text: '2+2',
+      });
+
+This should return:
+
+    {
+      errors: [
+        'Specify either a plugin or a conversationId',
+      ],
+    }
 
 Troubleshooting
 -----
