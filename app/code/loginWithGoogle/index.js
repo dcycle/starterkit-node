@@ -36,7 +36,12 @@ class LoginWithGoogle extends require('../component/index.js') {
   profileToGoogleEmail(
     profile
   ) {
-    const email = profile.email['0'].value;
+    // Check if profile.emails exists and has at least one email
+    if (!profile.emails || !Array.isArray(profile.emails) || profile.emails.length === 0) {
+      throw new Error('Cannot extract email from profile: No emails found.');
+    }
+
+    const email = profile.emails['0'].value;
 
     if (typeof email === 'undefined') {
       throw 'Cannot extract email from profile.';
