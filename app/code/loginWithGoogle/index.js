@@ -1,8 +1,8 @@
 /**
- * Allow users to log in with Gmail.
+ * Allow users to log in with Google.
  */
 
-class LoginWithGmail extends require('../component/index.js') {
+class LoginWithGoogle extends require('../component/index.js') {
 
   dependencies() {
     return [
@@ -13,27 +13,27 @@ class LoginWithGmail extends require('../component/index.js') {
   }
 
   callbackPath() {
-    return this.app().config().modules['./loginWithGmail/index.js'].callback;
+    return this.app().config().modules['./loginWithGoogle/index.js'].callback;
   }
 
   callbackURL() {
-    return this.app().config().modules['./loginWithGmail/index.js'].baseUrl + this.callbackPath();
+    return this.app().config().modules['./loginWithGoogle/index.js'].baseUrl + this.callbackPath();
   }
 
   async profileToUsername(
     profile
   ) {
-    const gmailUsername = this.profileToGmailUsername(profile);
+    const googleUsername = this.profileToGoogleUsername(profile);
 
     return await this.app().c('authentication').
       uniqueFieldToUsername(
-        'gmail_username',
-        gmailUsername,
-        gmailUsername
+        'google_username',
+        googleUsername,
+        googleUsername
       );
   }
 
-  profileToGmailUsername(
+  profileToGoogleUsername(
     profile
   ) {
     const candidate = profile.username;
@@ -52,8 +52,8 @@ class LoginWithGmail extends require('../component/index.js') {
   async init(app)  {
     super.init(app);
 
-    const client = app.config().modules['./loginWithGmail/index.js'].client;
-    const secret = app.config().modules['./loginWithGmail/index.js'].secret;
+    const client = app.config().modules['./loginWithGoogle/index.js'].client;
+    const secret = app.config().modules['./loginWithGoogle/index.js'].secret;
 
     const passport = app.c('authentication').passport();
     // @ts-expect-error
@@ -95,15 +95,15 @@ class LoginWithGmail extends require('../component/index.js') {
 
     // GET /auth/google
     //   Use passport.authenticate() as route middleware to authenticate the
-    //   request.  The first step in Gmail authentication will involve
-    //   redirecting the user to gmail.com.  After authorization, Gmail will
-    //   redirect the user back to this application at /auth/google/callback.
+    //   request.  The first step in Google authentication will involve
+    //   redirecting the user to https://accounts.google.com/.  After authorization, 
+    //   Google will redirect the user back to this application at /auth/google/callback.
 
     app.c('express').addMiddleware('google_auth', 'get', [
       passport.authenticate('google', { scope: ['user:email'] })
     ]);
 
-    app.c('express').addRoute('google_auth', 'get', '/auth/gmail', (req, res) => {
+    app.c('express').addRoute('google_auth', 'get', '/auth/google', (req, res) => {
       // The request will be redirected to GitHub for authentication, so this
       // function will not be called.
     });
@@ -132,4 +132,4 @@ class LoginWithGmail extends require('../component/index.js') {
   }
 }
 
-module.exports = new LoginWithGmail();
+module.exports = new LoginWithGoogle();
