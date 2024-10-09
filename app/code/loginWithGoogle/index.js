@@ -100,7 +100,7 @@ class LoginWithGoogle extends require('../component/index.js') {
     //   Google will redirect the user back to this application at /auth/google/callback.
 
     app.c('express').addMiddleware('google_auth', 'get', [
-      passport.authenticate('google', { scope: ['profile'] })
+      passport.authenticate('google', { scope: ['profile', 'email'] })
     ]);
 
     app.c('express').addRoute('google_auth', 'get', '/auth/google', (req, res) => {
