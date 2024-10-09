@@ -20,33 +20,33 @@ class LoginWithGoogle extends require('../component/index.js') {
     return this.app().config().modules['./loginWithGoogle/index.js'].baseUrl + this.callbackPath();
   }
 
-  async profileToUsername(
+  async profileToEmail(
     profile
   ) {
-    const googleUsername = this.profileToGoogleUsername(profile);
+    const googleEmail = this.profileToGoogleEmail(profile);
 
     return await this.app().c('authentication').
       uniqueFieldToUsername(
-        'google_username',
-        googleUsername,
-        googleUsername
+        'google_email',
+        googleEmail,
+        googleEmail
       );
   }
 
-  profileToGoogleUsername(
+  profileToGoogleEmail(
     profile
   ) {
-    const candidate = profile.username;
+    const email = profile.email['0'].value;
 
-    if (typeof candidate === 'undefined') {
-      throw 'Cannot extract username from profile.';
+    if (typeof email === 'undefined') {
+      throw 'Cannot extract email from profile.';
     }
 
-    if (!candidate) {
-      throw 'Username cannot be empty.';
+    if (!email) {
+      throw 'Email cannot be empty.';
     }
 
-    return candidate;
+    return email;
   }
 
   async init(app)  {
@@ -66,7 +66,7 @@ class LoginWithGoogle extends require('../component/index.js') {
         callbackURL: that.callbackURL(),
       },
       async (accessToken, refreshToken, profile, done) => {
-        const username = await that.profileToUsername(profile);
+        const username = await that.profileToEmail(profile);
         app.c('authentication')
           .user(username)
           .then((user) => {
@@ -100,7 +100,7 @@ class LoginWithGoogle extends require('../component/index.js') {
     //   Google will redirect the user back to this application at /auth/google/callback.
 
     app.c('express').addMiddleware('google_auth', 'get', [
-      passport.authenticate('google', { scope: ['profile', 'email'] })
+      passport.authenticate('google', { scope: ['email'] })
     ]);
 
     app.c('express').addRoute('google_auth', 'get', '/auth/google', (req, res) => {
