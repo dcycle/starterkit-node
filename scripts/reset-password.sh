@@ -12,4 +12,4 @@ fi
 export MY_USERNAME="$1"
 # Password is optional.
 export MY_PASSWORD="$2"
-docker-compose exec -T --env MY_USERNAME="$MY_USERNAME" --env MY_PASSWORD="$MY_PASSWORD" node /bin/sh -c 'node /usr/src/app/app/tools/reset-password.js'
+docker compose exec -T --env MY_USERNAME="$MY_USERNAME" --env MY_PASSWORD="$MY_PASSWORD" node /bin/sh -c 'node /usr/src/app/app/tools/reset-password.js'
