@@ -78,7 +78,6 @@ class LoginWithGoogle extends require('../component/index.js') {
             .then((user) => {
               done(null, user);
             });
-          done(null, user);
         } catch (error) {
           done(error); // Pass the error to the next middleware
         }            
