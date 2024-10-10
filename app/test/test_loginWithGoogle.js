@@ -23,7 +23,9 @@ test('profileToEmail should return username when email is valid', async t => {
 
   t.is(result, expectedUsername);
   t.true(my.app().c().uniqueFieldToUsername.calledOnce);
-  t.true(my.app().c().uniqueFieldToUsername.calledWith('google_email', 'test@example.com', 'test@example.com'));
+  t.true(my.app().c().uniqueFieldToUsername.calledWith(
+    'google_email', 'test@example.com', 'test@example.com'
+  ));
 });
 
 test('profileToGoogleEmail should throw an error if profile.emails is missing', t => {
