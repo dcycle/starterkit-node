@@ -40,11 +40,11 @@ test('profileToGoogleEmail should throw an error if profile.emails is missing', 
 
 test('profileToGoogleEmail should throw an error if profile.emails is empty', t => {
   const profile = { emails: [] };
-  
+
   const error = t.throws(() => {
     my.profileToGoogleEmail(profile);
   }, { instanceOf: Error });
-  
+
   t.is(error.message, 'Cannot extract email from profile: No emails found.');
 });
 
@@ -60,10 +60,10 @@ test('profileToGoogleEmail should throw an error if email is undefined', t => {
 
 test('profileToGoogleEmail should throw an error if email is empty', t => {
   const profile = { emails: [{ value: '' }] };
-  
+
   const error = t.throws(() => {
     my.profileToGoogleEmail(profile);
   });
-  
+
   t.is(error, 'Email cannot be empty.');
 });
