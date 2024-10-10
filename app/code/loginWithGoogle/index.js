@@ -100,7 +100,7 @@ class LoginWithGoogle extends require('../component/index.js') {
     expressApp.use(passport.session());
 
     app.c('express').addRoute('googleErr', 'get', '/auth/google-error', (req, res) => {
-      const errorMessage = req.flash('error') || 'You have cancelled the login with Google.';
+      const errorMessage = 'You have cancelled the login with Google.';
       // Redirect to /login with the message
       res.redirect(`/login?error=${encodeURIComponent(errorMessage)}`);      
     });
