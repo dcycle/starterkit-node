@@ -21,6 +21,7 @@
     "connect-mongo": "*",
     "uuid": "*",
     "mathjs": "*",
-    "twilio": "*"
+    "twilio": "*",
+    "passport-google-oauth20": "*"
   }
 }

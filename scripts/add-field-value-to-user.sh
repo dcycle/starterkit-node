@@ -17,7 +17,7 @@ if [ -z "$3" ]; then
   exit 1
 fi
 
-docker-compose exec -T \
+docker compose exec -T \
   --env MY_USER="$1" \
   --env MY_FIELD="$2" \
   --env MY_VALUE="$3" \
