@@ -71,12 +71,17 @@ class LoginWithGoogle extends require('../component/index.js') {
         callbackURL: that.callbackURL(),
       },
       async (accessToken, refreshToken, profile, done) => {
-        const username = await that.profileToEmail(profile);
-        app.c('authentication')
-          .user(username)
-          .then((user) => {
-            done(null, user);
-          });
+        try {
+          const username = await that.profileToEmail(profile);
+          app.c('authentication')
+            .user(username)
+            .then((user) => {
+              done(null, user);
+            });
+          done(null, user);
+        } catch (error) {
+          done(error); // Pass the error to the next middleware
+        }            
       }
     ));
 
@@ -95,7 +100,9 @@ class LoginWithGoogle extends require('../component/index.js') {
     expressApp.use(passport.session());
 
     app.c('express').addRoute('googleErr', 'get', '/auth/google-error', (req, res) => {
-      res.send('Unknown Error');
+      const errorMessage = req.flash('error') || 'You have cancelled the login with Google.';
+      // Redirect to /login with the message
+      res.redirect(`/login?error=${encodeURIComponent(errorMessage)}`);      
     });
 
     // GET /auth/google
@@ -117,6 +124,8 @@ class LoginWithGoogle extends require('../component/index.js') {
       function(req, res, next) {
         const callback = passport.authenticate('google', {
           failureRedirect: '/auth/google-error',
+          // Enable flash messages if using express-flash.
+          failureFlash: true,
         });
         try {
           callback(req, res, next);
