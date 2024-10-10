@@ -552,11 +552,12 @@ Here is how it works:
 
 * Make sure you have a publicly-accessible, https domain, for example https://www.example.com.
 * Make sure you have a gmail account
-* Configuring the Google OAuth consent screen and setting up credentials for your application.
+* Configure the Google OAuth consent screen and setting up credentials for your application.
 * While configuring Oauth consent screen in scope you have to select
 .../auth/userinfo.email	(To See your primary Google Account email address).
 * While Configuring Credential Authorization redirection add callback URL: https://www.example.com/auth/google/callback
-* Generate a new client secret and take note of the client ID and client secret.
+* copy client secret and take note of the client ID and client secret from
+  oauth consent screen to ./app/config/unversioned.yml.
 * Make sure you have a file called ./app/config/unversioned.yml; in the file, have a section with your client id and secret:
 
 ```
