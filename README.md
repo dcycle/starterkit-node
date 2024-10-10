@@ -223,7 +223,7 @@ Then, on the prompt:
 
 Then, you can run:
 
-    docker-compose ps
+    docker compose ps
 
 And visit the URL for MailHog, and you will see your message.
 
@@ -354,7 +354,7 @@ There are two ways to interact with Node.js:
 
 Whether or not your application has been started using ./scripts/deploy.sh (see Quickstart, above), you can type:
 
-    docker-compose run --rm node /bin/sh -c 'node'
+    docker compose run --rm node /bin/sh -c 'node'
 
 This allows you to test Javascript in isolation and does not interact with your running application. The simplest example is running:
 
@@ -820,7 +820,7 @@ Troubleshooting
 
 ### ENOSPC: System limit for number of file watchers reached
 
-In some cases you might run into an issue where you cannot successfully start the node service. `docker-compose logs node` might give you an error which looks like:
+In some cases you might run into an issue where you cannot successfully start the node service. `docker compose logs node` might give you an error which looks like:
 
 ```
 ENOSPC: System limit for number of file watchers reached
