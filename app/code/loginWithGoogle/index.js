@@ -12,14 +12,29 @@ class LoginWithGoogle extends require('../component/index.js') {
     ];
   }
 
+  /**
+   * Retrieves the callback path for Google authentication.
+   * @returns {string} The callback path.
+   */
   callbackPath() {
     return this.app().config().modules['./loginWithGoogle/index.js'].callback;
   }
 
+  /**
+   * Constructs the full callback URL for Google authentication.
+   * @returns {string} The full callback URL.
+   */
   callbackURL() {
     return this.app().config().modules['./loginWithGoogle/index.js'].baseUrl + this.callbackPath();
   }
 
+  /**
+   * Stores and Retrieves email extracted from google profile into and
+   * from mongoose userInfo collection.
+   * @param {Object} profile - The Google user profile.
+   * @returns {Promise<string>} The username associated with the Google email.
+   * @throws Will throw an error if the email cannot be extracted.
+   */
   async profileToEmail(
     profile
   ) {
@@ -33,6 +48,12 @@ class LoginWithGoogle extends require('../component/index.js') {
       );
   }
 
+  /**
+   * Extracts the email address from the Google profile.
+   * @param {Object} profile - The Google user profile.
+   * @returns {string} The extracted email.
+   * @throws Will throw an error if no email is found or if the email is invalid.
+   */
   profileToGoogleEmail(
     profile
   ) {
@@ -54,6 +75,11 @@ class LoginWithGoogle extends require('../component/index.js') {
     return email;
   }
 
+  /**
+   * Initializes the Google authentication strategy with Passport.js.
+   * @param {Object} app - The application instance.
+   * @returns {GoogleAuth} The current instance for method chaining.
+   */
   async init(app)  {
     super.init(app);
 
@@ -73,6 +99,7 @@ class LoginWithGoogle extends require('../component/index.js') {
       async (accessToken, refreshToken, profile, done) => {
         try {
           const username = await that.profileToEmail(profile);
+          // Creates a user session.
           app.c('authentication')
             .user(username)
             .then((user) => {
@@ -97,10 +124,13 @@ class LoginWithGoogle extends require('../component/index.js') {
     }));
     expressApp.use(passport.initialize());
     expressApp.use(passport.session());
-
+    /**
+     * If user cancel the permission in accounts.google.com page
+     * then redirect to apps login page.
+     */
     app.c('express').addRoute('googleErr', 'get', '/auth/google-error', (req, res) => {
       const errorMessage = 'You have cancelled the login with Google.';
-      // Redirect to /login with the message
+      // Redirect to /login with the message.
       res.redirect(`/login?error=${encodeURIComponent(errorMessage)}`);      
     });
 
@@ -111,6 +141,7 @@ class LoginWithGoogle extends require('../component/index.js') {
     //   Google will redirect the user back to this application at /auth/google/callback.
 
     app.c('express').addMiddleware('google_auth', 'get', [
+      // Limit Access to only email from google.
       passport.authenticate('google', { scope: ['email'] })
     ]);
 
@@ -119,6 +150,7 @@ class LoginWithGoogle extends require('../component/index.js') {
       // function will not be called.
     });
 
+    // Middleware to handle the Google authentication callback.
     app.c('express').addMiddleware('google_auth_callback', 'get', [
       function(req, res, next) {
         const callback = passport.authenticate('google', {
@@ -135,6 +167,7 @@ class LoginWithGoogle extends require('../component/index.js') {
       }
     ]);
 
+    // Route to handle successful authentication callback
     app.c('express').addRoute('google_auth_callback', 'get', this.callbackPath(), (req, res) => {
       // We'll register the route here, but the middlewares, defined in run(),
       // actually calls the github callback.
