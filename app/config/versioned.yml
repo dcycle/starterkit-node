@@ -22,6 +22,8 @@ modules:
         verb: post
       - route: whatsappSend
         verb: post
+      - route: googleErr
+        verb; get
   ./rest/index.js:
     path: '/api/v1'
   ./chatWeb/index.js:

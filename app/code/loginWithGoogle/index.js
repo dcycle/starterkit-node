@@ -94,7 +94,7 @@ class LoginWithGoogle extends require('../component/index.js') {
     expressApp.use(passport.initialize());
     expressApp.use(passport.session());
 
-    app.c('express').addRoute('google_err', 'get', '/auth/google-error', (req, res) => {
+    app.c('express').addRoute('googleErr', 'get', '/auth/google-error', (req, res) => {
       res.send('Unknown Error');
     });
 
