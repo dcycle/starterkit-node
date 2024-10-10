@@ -17,13 +17,13 @@ test('profileToEmail should return username when email is valid', async t => {
   const expectedUsername = 'test@example.com';
 
   // Mocking uniqueFieldToUsername to return the expected username
-  my.app.returns(expectedUsername);
+  my.app.c().uniqueFieldToUsername.returns(expectedUsername);
 
   const result = await my.profileToEmail(profile);
 
   t.is(result, expectedUsername);
-  t.true(my.app.calledOnce);
-  t.true(my.app.calledWith('google_email', 'test@example.com', 'test@example.com'));
+  t.true(my.app().c().uniqueFieldToUsername.calledOnce);
+  t.true(my.app().c().uniqueFieldToUsername.calledWith('google_email', 'test@example.com', 'test@example.com'));
 });
 
 test('profileToGoogleEmail should throw an error if profile.emails is missing', t => {
