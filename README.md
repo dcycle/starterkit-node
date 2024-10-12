@@ -805,7 +805,7 @@ GOOGLE_SHEETS_SPREADSHEET_ID=<spread_sheet_id>
 GOOGLE_SHEETS_SHEET_ID=<sheet1>
 
 ./scripts/fetch-google-sheets.sh "$GOOGLE_SHEETS_API_KEY" "$GOOGLE_SHEETS_SPREADSHEET_ID" "$GOOGLE_SHEETS_SHEET_ID" ./app/unversioned/scripts/data.csv
-await app.c('googleSheetsToCSV').main("$GOOGLE_SHEETS_API_KEY","$GOOGLE_SHEETS_SPREADSHEET_ID","¢GOOGLE_SHEETS_SHEET_ID","/output/todaydata.csv");
+await app.c('googleSheetToCSV').main("$GOOGLE_SHEETS_API_KEY","$GOOGLE_SHEETS_SPREADSHEET_ID","¢GOOGLE_SHEETS_SHEET_ID","/output/todaydata.csv");
 
 ```
 
@@ -857,7 +857,7 @@ GOOGLE_SHEETS_SPREADSHEET_ID='<google sheet id>'
 # Name of the sheet within the spreadsheet (optional)
 GOOGLE_SHEETS_SHEET_ID='<Sheet name>'
 
-await app.c('googleSheetsToCSV').main("$GOOGLE_SERVICE_ACCOUNT_FILE","$GOOGLE_SHEETS_SPREADSHEET_ID","$GOOGLE_SHEETS_SHEET_ID","/output/todaydata-private.csv", "true");
+await app.c('googleSheetToCSV').main("$GOOGLE_SERVICE_ACCOUNT_FILE","$GOOGLE_SHEETS_SPREADSHEET_ID","$GOOGLE_SHEETS_SHEET_ID","/output/todaydata-private.csv", "true");
 
 ```
 
