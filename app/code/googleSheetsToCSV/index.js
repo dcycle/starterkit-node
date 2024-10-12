@@ -7,12 +7,13 @@ class GoogleSheetToCsv extends require('../component/index.js') {
     try {
       let finalValues;
       const SCOPES = ['https://www.googleapis.com/auth/spreadsheets'];
+      // @ts-expect-error
+      const { google } = require('googleapis');
       if (isPrivate) {
         const auth = new google.auth.GoogleAuth({
           keyFile: serviceAccountFile,
           scopes: SCOPES,
         });
-
         const sheets = google.sheets({ version: 'v4', auth });
         const response = await sheets.spreadsheets.values.get({
           spreadsheetId: spreadsheetId,
@@ -20,8 +21,6 @@ class GoogleSheetToCsv extends require('../component/index.js') {
         });
         finalValues = response.data.values || [];
       } else {
-        // @ts-expect-error
-        const { google } = require('googleapis');
         const sheets = google.sheets({ version: 'v4', auth: apiKey });
         const response = await sheets.spreadsheets.values.get({
           spreadsheetId: spreadsheetId,
@@ -39,6 +38,7 @@ class GoogleSheetToCsv extends require('../component/index.js') {
   }
 
   writeToCsv(data, csvFile) {
+    let response = "";
     try {
       // @ts-expect-error
       const fs = require('fs');
@@ -46,9 +46,13 @@ class GoogleSheetToCsv extends require('../component/index.js') {
       fs.mkdirSync(require('path').dirname(csvFile), { recursive: true });
       const csvContent = data.map(row => row.join(',')).join('\n');
       fs.writeFileSync(csvFile, csvContent, 'utf-8');
-      console.log(`**** Data successfully written to ${csvFile}. *****`);
+      response = `**** Data successfully written to ${csvFile}. *****`;
+      console.log(response);
+      return response;
     } catch (error) {
-      console.error(`Error writing to ${csvFile}:`, error);
+      response = `Error writing to ${csvFile}:` + error;
+      console.error(response);
+      return response;
     }
   }
 
@@ -60,11 +64,12 @@ class GoogleSheetToCsv extends require('../component/index.js') {
       isPrivate,
       isPrivate ? apiKeyOrServiceAccountFile : null
     );
-
     if (data) {
-      this.writeToCsv(data, csvFile);
+      return this.writeToCsv(data, csvFile);
     } else {
-      console.error('Failed to retrieve data from Google Sheet.');
+      const response = 'Failed to retrieve data from Google Sheet.';
+      console.error(response);
+      return response;
     }
   }
 
