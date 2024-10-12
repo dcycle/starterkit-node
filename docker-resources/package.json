@@ -21,6 +21,8 @@
     "connect-mongo": "*",
     "uuid": "*",
     "mathjs": "*",
-    "twilio": "*"
+    "twilio": "*",
+    "fs": "*",
+    "googleapis": "*"
   }
 }
