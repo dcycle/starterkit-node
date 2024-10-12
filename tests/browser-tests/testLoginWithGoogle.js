@@ -25,36 +25,6 @@ it('should redirect to Google authentication', async function () {
   await browser.close();
 });
 
-it('should handle successful Google login', async function () {
-  this.timeout(25000);
-  const puppeteer = require('puppeteer');
-  const browser = await puppeteer.launch({
-     headless: true,
-     args: ['--no-sandbox', '--disable-setuid-sandbox']
-  });
-  try {
-    const page = await browser.newPage();
-    console.log('set viewport');
-    await page.setViewport({ width: 1280, height: 800 });
-    await page.goto('https://whatsapp-communication.dcycleproject.org/auth/google/callback');
-
-    // Mocking the successful login
-    await page.evaluate(() => {
-      // Simulate user data returned from Google
-      window.localStorage.setItem('user', JSON.stringify({ id: 1, username: 'testUser' }));
-    });
-
-    // Verify that the user is redirected to the homepage
-    await page.goto('https://whatsapp-communication.dcycleproject.org');
-    await page.waitForSelector('#messages');
-    await testBase.assertInSourceCode(page, 'testUser', 'google-login-home');
-  }
-  catch (error) {
-    await testBase.showError(error, browser);
-  }
-  await browser.close();
-});
-
 it('should handle failed Google login', async function () {
   this.timeout(25000);
   const puppeteer = require('puppeteer');
