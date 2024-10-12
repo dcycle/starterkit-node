@@ -76,7 +76,7 @@ class LoginWithGoogle extends require('../component/index.js') {
   /**
    * Initializes the Google authentication strategy with Passport.js.
    * @param {Object} app - The application instance.
-   * @returns {GoogleAuth} The current instance for method chaining.
+   * @returns {Promise<this>} The initialized component instance.
    */
   async init(app)  {
     super.init(app);
