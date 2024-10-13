@@ -49,5 +49,5 @@ test('profileToGoogleDisplayName should throw an error if displayName is empty',
     my.profileToGoogleDisplayName(profile);
   });
 
-  t.is(error.message, 'Cannot extract displayName from profile: No displayName found');
+  t.is(error.message, 'Cannot extract displayName from profile: No displayName found.');
 });
