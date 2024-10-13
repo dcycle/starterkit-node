@@ -15,58 +15,39 @@ test.beforeEach(t => {
   my.app = appStub;
 });
 
-test('profileToEmail should return username when email is valid', async t => {
-  const profile = { emails: [{ value: 'test@example.com' }] };
-  const expectedUsername = 'test@example.com';
+test('profileToDisplayName should return username when displayName is valid', async t => {
+  const profile = { displayName: "abcd efg" };
+  const expectedUsername = 'abcd efg';
 
   // Mocking uniqueFieldToUsername to return the expected username
   appStub().c().uniqueFieldToUsername.returns(expectedUsername);
 
-  const result = await my.profileToEmail(profile);
+  const result = await my.profileToDisplayName;(profile);
 
   t.is(result, expectedUsername);
   t.true(appStub().c().uniqueFieldToUsername.calledOnce);
   t.true(appStub().c().uniqueFieldToUsername.calledWith(
-    'google_email', 'test@example.com', 'test@example.com'
+    'google_display_name', 'abcd efg', 'abcd efg'
   ));
 });
 
-test('profileToGoogleEmail should throw an error if profile.emails is missing', t => {
+test('profileToGoogleDisplayName should throw an error if profile.displayName is missing', t => {
   const profile = {};
 
   const error = t.throws(() => {
-    my.profileToGoogleEmail(profile);
+    my.profileToGoogleDisplayName(profile);
   }, { instanceOf: Error });
 
-  t.is(error.message, 'Cannot extract email from profile: No emails found.');
+  t.is(error.message, 'Cannot extract displayName from profile: No displayName found.');
 });
 
-test('profileToGoogleEmail should throw an error if profile.emails is empty', t => {
-  const profile = { emails: [] };
+
+test('profileToGoogleDisplayName; should throw an error if displayName is empty', t => {
+  const profile = { displayName: "" };
 
   const error = t.throws(() => {
-    my.profileToGoogleEmail(profile);
-  }, { instanceOf: Error });
-
-  t.is(error.message, 'Cannot extract email from profile: No emails found.');
-});
-
-test('profileToGoogleEmail should throw an error if email is undefined', t => {
-  const profile = { emails: [{}] };
-
-  const error = t.throws(() => {
-    my.profileToGoogleEmail(profile);
+    my.profileToGoogleDisplayName;(profile);
   });
 
-  t.is(error.message, 'Cannot extract email from profile.');
-});
-
-test('profileToGoogleEmail should throw an error if email is empty', t => {
-  const profile = { emails: [{ value: '' }] };
-
-  const error = t.throws(() => {
-    my.profileToGoogleEmail(profile);
-  });
-
-  t.is(error.message, 'Email cannot be empty.');
+  t.is(error.message, 'displayName cannot be empty.');
 });

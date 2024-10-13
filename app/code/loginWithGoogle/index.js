@@ -29,48 +29,48 @@ class LoginWithGoogle extends require('../component/index.js') {
   }
 
   /**
-   * Stores and Retrieves email extracted from google profile into and
+   * Stores and Retrieves displayName extracted from google profile into and
    * from mongoose userInfo collection.
    * @param {Object} profile - The Google user profile.
-   * @returns {Promise<string>} The username associated with the Google email.
-   * @throws Will throw an error if the email cannot be extracted.
+   * @returns {Promise<string>} The username associated with the Google displayName.
+   * @throws Will throw an error if the displayName cannot be extracted.
    */
-  async profileToEmail(
+  async profileToDisplayName(
     profile
   ) {
-    const googleEmail = this.profileToGoogleEmail(profile);
+    const googleDisplayName = this.profileToGoogleDisplayName(profile);
 
     return await this.app().c('authentication').
       uniqueFieldToUsername(
-        'google_email',
-        googleEmail,
-        googleEmail
+        'google_display_name',
+        googleDisplayName,
+        googleDisplayName
       );
   }
 
   /**
-   * Extracts the email address from the Google profile.
+   * Extracts the displayName address from the Google profile.
    * @param {Object} profile - The Google user profile.
-   * @returns {string} The extracted email.
-   * @throws Will throw an error if no email is found or if the email is invalid.
+   * @returns {string} The extracted displayName.
+   * @throws Will throw an error if no displayName is found or if the displayName is invalid.
    */
-   profileToGoogleEmail(profile) {
-    // Check if profile.emails exists and has at least one email
-    if (!profile.emails || !Array.isArray(profile.emails) || profile.emails.length === 0) {
-      throw new Error('Cannot extract email from profile: No emails found.');
+   profileToGoogleDisplayName(profile) {
+    // Check if profile.displayName exists.
+    if (!profile.displayName) {
+      throw new Error('Cannot extract displayName from profile: No displayName found.');
     }
     // Use bracket notation for better readability
-    const email = profile.emails[0].value;
+    const displayName = profile.displayName;
 
-    if (typeof email === 'undefined') {
-      throw new Error('Cannot extract email from profile.');
+    if (typeof displayName === 'undefined') {
+      throw new Error('Cannot extract displayName from profile.');
     }
 
-    if (!email) {
-      throw new Error('Email cannot be empty.');
+    if (!displayName) {
+      throw new Error('Display Name cannot be empty.');
     }
 
-    return email;
+    return displayName;
   }
 
   /**
@@ -96,7 +96,8 @@ class LoginWithGoogle extends require('../component/index.js') {
       },
       async (accessToken, refreshToken, profile, done) => {
         try {
-          const username = await that.profileToEmail(profile);
+          console.log(profile);
+          const username = await that.profileToDisplayName(profile);
           // Creates a user session.
           app.c('authentication')
             .user(username)
@@ -139,8 +140,8 @@ class LoginWithGoogle extends require('../component/index.js') {
     //   Google will redirect the user back to this application at /auth/google/callback.
 
     app.c('express').addMiddleware('google_auth', 'get', [
-      // Limit Access to only email from google.
-      passport.authenticate('google', { scope: ['email'] })
+      // Limit Access to only profile from google.
+      passport.authenticate('google', { scope: ['profile'] })
     ]);
 
     app.c('express').addRoute('google_auth', 'get', '/auth/google', (req, res) => {
