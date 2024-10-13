@@ -554,7 +554,7 @@ Here is how it works:
 * Make sure you have a gmail account
 * Configure the Google OAuth consent screen and setting up credentials for your application.
 * While configuring Oauth consent screen in scope you have to select
-.../auth/userinfo.email	(To See your primary Google Account email address).
+.../auth/userinfo.email	(To See your primary Google Account name, email address, language preference, and profile picture with dcycleproject.org.).
 * While Configuring Credential Authorization redirection add callback URL: https://www.example.com/auth/google/callback
 * copy client secret and take note of the client ID and client secret from
   oauth consent screen to ./app/config/unversioned.yml.
@@ -596,7 +596,8 @@ Configuring the Google OAuth consent screen and setting up credentials for your 
    - Upload a logo and fill in additional branding details.
 
 5. **Configure Scopes**:
-   - Click **Add or Remove Scopes** and select the necessary scopes your app will use (e.g., email, profile).
+   - Click **Add or Remove Scopes** and select the necessary scopes your app will use. For this
+   project we are accessing profile scope.  Google will share name, email address, language preference, and profile picture with dcycleproject.org.
 
 6. **Add Test Users** (if needed):
    - If in testing mode, add users who will test the application.
