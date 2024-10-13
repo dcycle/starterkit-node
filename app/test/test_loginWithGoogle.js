@@ -42,12 +42,12 @@ test('profileToGoogleDisplayName should throw an error if profile.displayName is
 });
 
 
-test('profileToGoogleDisplayName; should throw an error if displayName is empty', t => {
+test('profileToGoogleDisplayName should throw an error if displayName is empty', t => {
   const profile = { displayName: "" };
 
   const error = t.throws(() => {
     my.profileToGoogleDisplayName(profile);
   });
 
-  t.is(error.message, 'displayName cannot be empty.');
+  t.is(error.message, 'Cannot extract displayName from profile: No displayName found');
 });
