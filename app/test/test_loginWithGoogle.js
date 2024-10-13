@@ -22,7 +22,7 @@ test('profileToDisplayName should return username when displayName is valid', as
   // Mocking uniqueFieldToUsername to return the expected username
   appStub().c().uniqueFieldToUsername.returns(expectedUsername);
 
-  const result = await my.profileToDisplayName;(profile);
+  const result = await my.profileToDisplayName(profile);
 
   t.is(result, expectedUsername);
   t.true(appStub().c().uniqueFieldToUsername.calledOnce);
@@ -46,7 +46,7 @@ test('profileToGoogleDisplayName; should throw an error if displayName is empty'
   const profile = { displayName: "" };
 
   const error = t.throws(() => {
-    my.profileToGoogleDisplayName;(profile);
+    my.profileToGoogleDisplayName(profile);
   });
 
   t.is(error.message, 'displayName cannot be empty.');
