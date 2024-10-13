@@ -795,17 +795,12 @@ Creating a Google Sheet with Public View Mode
 
 Replace API Key and Spreadsheet ID
 
-Replace api_key, spread_sheet_id, and sheet1 in the below shell command with your actual API key, spreadsheet ID, and sheet ID (if different from Sheet1):
+Replace GOOGLE_SHEETS_API_KEY, GOOGLE_SHEETS_SPREADSHEET_ID, and GOOGLE_SHEETS_SHEET_ID in the below shell command with your actual API key, spreadsheet ID, and sheet ID (if different from Sheet1):
 
 ```
 ./scripts/node-cli.sh 
 
-GOOGLE_SHEETS_API_KEY=<api_key>
-GOOGLE_SHEETS_SPREADSHEET_ID=<spread_sheet_id>
-GOOGLE_SHEETS_SHEET_ID=<sheet1>
-
-./scripts/fetch-google-sheets.sh "$GOOGLE_SHEETS_API_KEY" "$GOOGLE_SHEETS_SPREADSHEET_ID" "$GOOGLE_SHEETS_SHEET_ID" ./app/unversioned/scripts/data.csv
-await app.c('googleSheetToCSV').main("$GOOGLE_SHEETS_API_KEY","$GOOGLE_SHEETS_SPREADSHEET_ID","¢GOOGLE_SHEETS_SHEET_ID","/output/todaydata.csv");
+await app.c('googleSheetToCSV').main("<GOOGLE_SHEETS_API_KEY>","<GOOGLE_SHEETS_SPREADSHEET_ID>","<GOOGLE_SHEETS_SHEET_ID>","/output/todaydata.csv");
 
 ```
 
@@ -850,14 +845,7 @@ Replace placeholder and Run below code in node cli terminal.
 ```
 ./scripts/node-cli.sh
 
-# Path to your service account key JSON file
-GOOGLE_SERVICE_ACCOUNT_FILE='/output/sensitive-data/<path of your downloaded service account json file>'
-# ID of the Google Spreadsheet
-GOOGLE_SHEETS_SPREADSHEET_ID='<google sheet id>'
-# Name of the sheet within the spreadsheet (optional)
-GOOGLE_SHEETS_SHEET_ID='<Sheet name>'
-
-await app.c('googleSheetToCSV').main("$GOOGLE_SERVICE_ACCOUNT_FILE","$GOOGLE_SHEETS_SPREADSHEET_ID","$GOOGLE_SHEETS_SHEET_ID","/output/todaydata-private.csv", "true");
+await app.c('googleSheetToCSV').main("<GOOGLE_SERVICE_ACCOUNT_FILE>","<GOOGLE_SHEETS_SPREADSHEET_ID>","<GOOGLE_SHEETS_SHEET_ID>","/output/todaydata-private.csv", "true");
 
 ```
 
