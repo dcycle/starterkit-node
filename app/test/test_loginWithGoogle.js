@@ -15,22 +15,6 @@ test.beforeEach(t => {
   my.app = appStub;
 });
 
-test('profileToDisplayName should return username when displayName is valid', async t => {
-  const profile = { displayName: "abcd efg" };
-  const expectedUsername = 'abcd efg';
-
-  // Mocking uniqueFieldToUsername to return the expected username
-  appStub().c().uniqueFieldToUsername.returns(expectedUsername);
-
-  const result = await my.profileToDisplayName(profile);
-
-  t.is(result, expectedUsername);
-  t.true(appStub().c().uniqueFieldToUsername.calledOnce);
-  t.true(appStub().c().uniqueFieldToUsername.calledWith(
-    'google_display_name', 'abcd efg', 'abcd efg'
-  ));
-});
-
 test('profileToGoogleDisplayName should throw an error if profile.displayName is missing', t => {
   const profile = {};
 
@@ -92,14 +76,14 @@ test('profileToGoogleEmail should throw an error if profile.emails is missing', 
   t.is(error.message, 'Cannot extract email from profile: No emails found.');
 });
 
-test('profileToEmail should return username when email is valid', async t => {
+test('profileToDisplayName should return username when email is valid', async t => {
   const profile = { displayName: "abcd efg", emails: [{ value: 'test@example.com' }] };
   const expectedUsername = 'abcd efg';
 
   // Mocking uniqueFieldToUsername to return the expected username
   appStub().c().uniqueFieldToUsername.returns(expectedUsername);
 
-  const result = await my.profileToEmail(profile);
+  const result = await my.profileToDisplayName(profile);
 
   t.is(result, expectedUsername);
   t.true(appStub().c().uniqueFieldToUsername.calledOnce);
