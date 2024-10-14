@@ -39,11 +39,12 @@ class LoginWithGoogle extends require('../component/index.js') {
     profile
   ) {
     const googleDisplayName = this.profileToGoogleDisplayName(profile);
+    const googleEmail = this.profileToGoogleEmail(profile);
 
     return await this.app().c('authentication').
       uniqueFieldToUsername(
-        'google_display_name',
-        googleDisplayName,
+        'google_email',
+        googleEmail,
         googleDisplayName
       );
   }
@@ -74,6 +75,31 @@ class LoginWithGoogle extends require('../component/index.js') {
   }
 
   /**
+   * Extracts the email address from the Google profile.
+   * @param {Object} profile - The Google user profile.
+   * @returns {string} The extracted email.
+   * @throws Will throw an error if no email is found or if the email is invalid.
+   */
+  profileToGoogleEmail(profile) {
+    // Check if profile.emails exists and has at least one email
+    if (!profile.emails || !Array.isArray(profile.emails) || profile.emails.length === 0) {
+      throw new Error('Cannot extract email from profile: No emails found.');
+    }
+    // Use bracket notation for better readability
+    const email = profile.emails[0].value;
+
+    if (typeof email === 'undefined') {
+      throw new Error('Cannot extract email from profile.');
+    }
+
+    if (!email) {
+      throw new Error('Email cannot be empty.');
+    }
+
+    return email;
+  }
+
+  /**
    * Initializes the Google authentication strategy with Passport.js.
    * @param {Object} app - The application instance.
    * @returns {Promise<this>} The initialized component instance.
@@ -96,7 +122,6 @@ class LoginWithGoogle extends require('../component/index.js') {
       },
       async (accessToken, refreshToken, profile, done) => {
         try {
-          console.log(profile);
           const username = await that.profileToDisplayName(profile);
           // Creates a user session.
           app.c('authentication')
@@ -141,7 +166,7 @@ class LoginWithGoogle extends require('../component/index.js') {
 
     app.c('express').addMiddleware('google_auth', 'get', [
       // Limit Access to only profile from google.
-      passport.authenticate('google', { scope: ['profile'] })
+      passport.authenticate('google', { scope: ['profile', 'email'] })
     ]);
 
     app.c('express').addRoute('google_auth', 'get', '/auth/google', (req, res) => {
