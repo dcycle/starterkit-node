@@ -11,7 +11,11 @@ modules:
     defaultServer:
       name: myServer
       component: './smtp/index.js'
-  ./loginWithGitHub/index.js:
+  ./loginWithGmail/index.js:
+    client: 'client_id'
+    secret: 'secret'
+    baseUrl: 'https://www.staticauth.com'
+  ./loginWithGoogle/index.js:
     client: 'client_id'
     secret: 'secret'
     baseUrl: 'https://www.staticauth.com'
