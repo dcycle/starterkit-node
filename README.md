@@ -24,6 +24,8 @@ Dcycle Node.js starterkit
 * Mongoose vs MongoDB
 * Logging in with GitHub
 * GitHub Apps
+* Logging in with Google
+* Configuring the Google OAuth consent screen and setting up credentials for your application.
 * Security tokens
 * REST API
 * Access to content by permission
@@ -225,7 +227,7 @@ Then, on the prompt:
 
 Then, you can run:
 
-    docker-compose ps
+    docker compose ps
 
 And visit the URL for MailHog, and you will see your message.
 
@@ -356,7 +358,7 @@ There are two ways to interact with Node.js:
 
 Whether or not your application has been started using ./scripts/deploy.sh (see Quickstart, above), you can type:
 
-    docker-compose run --rm node /bin/sh -c 'node'
+    docker compose run --rm node /bin/sh -c 'node'
 
 This allows you to test Javascript in isolation and does not interact with your running application. The simplest example is running:
 
@@ -542,6 +544,98 @@ At this point an authorization token will be provided to your app, allowing you 
 For example, if you want your app to be able to access your visitors' public repositories, you can call:
 
     curl -u GITHUB_USERNAME:ACCESS_TOKEN "https://api.github.com/user/repos?visibility=public"
+
+Logging in with Google
+-----
+
+It is possible to log in with Google.
+
+Here is how it works:
+
+* Make sure you have a publicly-accessible, https domain, for example https://www.example.com.
+* Make sure you have a gmail account
+* Configure the Google OAuth consent screen and setting up credentials for your application.
+* While configuring Oauth consent screen in scope you have to select
+.../auth/userinfo.email	(To See your primary Google Account name, email address, language preference, and profile picture with dcycleproject.org.).
+* While Configuring Credential Authorization redirection add callback URL: https://www.example.com/auth/google/callback
+* copy client secret and take note of the client ID and client secret from
+  oauth consent screen to ./app/config/unversioned.yml.
+* Make sure you have a file called ./app/config/unversioned.yml; in the file, have a section with your client id and secret:
+
+```
+# This can be used for API keys or anything which differs from one
+# environment to another.
+---
+modules:
+  ./loginWithGoogle/index.js:
+    client: 'client_id'
+    secret: 'secret'
+    baseUrl: 'https://www.example.com'
+```
+
+Configuring the Google OAuth consent screen and setting up credentials for your application
+-----
+### Step 1: Create or Select a Google Cloud Project
+1. **Go to Google Cloud Console**: [Google Cloud Console](https://console.cloud.google.com/).
+2. **Create a New Project** (if necessary):
+   - Click on the project dropdown and select **New Project**.
+   - Enter a project name and click **Create**.
+
+### Step 2: Configure OAuth Consent Screen
+1. **Navigate to APIs & Services**:
+   - Click on **APIs & Services** in the left sidebar.
+   - Select **OAuth consent screen**.
+
+2. **Choose User Type**:
+   - Select **External** if your app is for general users or **Internal** for G Suite users.
+
+3. **Fill Out Application Information**:
+   - **App Name**: Enter your application name (e.g., Example App).
+   - **User Support Email**: Enter an email for user support.
+   - **Developer Contact Information**: Provide your email address.
+
+4. **Add Branding Information** (optional):
+   - Upload a logo and fill in additional branding details.
+
+5. **Configure Scopes**:
+   - Click **Add or Remove Scopes** and select the necessary scopes your app will use. For this
+   project we are accessing profile scope.  Google will share name, email address, language preference, and profile picture with dcycleproject.org.
+
+6. **Add Test Users** (if needed):
+   - If in testing mode, add users who will test the application.
+
+7. **Save and Continue**:
+   - Click **Save and Continue** after filling out all required fields.
+
+### Step 3: Set Up OAuth 2.0 Credentials
+1. **Go to Credentials**:
+   - In the left sidebar, select **Credentials**.
+
+2. **Create Credentials**:
+   - Click on **Create Credentials** and choose **OAuth client ID**.
+
+3. **Configure OAuth Client ID**:
+   - **Application Type**: Select **Web application**.
+   - **Name**: Give your client ID a name (e.g., Example App Client).
+   - **Authorized Redirect URIs**:
+     - Add your redirect URI (e.g., `https://example.com/auth/google/callback`).
+
+4. **Save**:
+   - Click **Create** to finish.
+
+### Step 4: Note Your Client ID and Client Secret
+- After creating your credentials, you’ll see a dialog with your **Client ID** and **Client Secret**. Save these securely; you'll need them for your application.
+
+### Step 5: Configure Your Application
+- Use the **Client ID** and **Client Secret** in your application to set up Google OAuth authentication.
+- Make sure your application handles the callback at the specified redirect URI.
+
+### Step 6: Testing
+- Test your integration by attempting to log in with Google, ensuring that the callback URI works correctly.
+
+### Step 7: Publish (if applicable)
+- If you are ready to make your app available to all users, return to the **OAuth consent screen** and click **Publish App**.
+
 
 Security tokens
 -----
@@ -931,7 +1025,7 @@ Troubleshooting
 
 ### ENOSPC: System limit for number of file watchers reached
 
-In some cases you might run into an issue where you cannot successfully start the node service. `docker-compose logs node` might give you an error which looks like:
+In some cases you might run into an issue where you cannot successfully start the node service. `docker compose logs node` might give you an error which looks like:
 
 ```
 ENOSPC: System limit for number of file watchers reached

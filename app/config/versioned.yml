@@ -22,6 +22,8 @@ modules:
         verb: post
       - route: whatsappSend
         verb: post
+      - route: googleErr
+        verb: get
   ./rest/index.js:
     path: '/api/v1'
   ./chatWeb/index.js:
@@ -47,6 +49,11 @@ modules:
     secret: 'override this in ./app/config/unversioned.yml; see README.md'
     baseUrl: 'override this in ./app/config/unversioned.yml; see README.md'
     callback: '/auth/github/callback'
+  ./loginWithGoogle/index.js:
+    client: 'override this in ./app/config/unversioned.yml; see README.md'
+    secret: 'override this in ./app/config/unversioned.yml; see README.md'
+    baseUrl: 'override this in ./app/config/unversioned.yml; see README.md'
+    callback: '/auth/google/callback'
   ./restrictedByPermission/index.js:
     restrictedfolderpath:
       - /usr/src/app/private/restricted-by-permission/

@@ -23,6 +23,7 @@
     "mathjs": "*",
     "twilio": "*",
     "fs": "*",
-    "googleapis": "*"
+    "googleapis": "*",
+    "passport-google-oauth20": "*"
   }
 }
