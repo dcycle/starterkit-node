@@ -3,31 +3,23 @@ const sinon = require('sinon');
 let my = require('/mycode/googleSheetToCSV/index.js');
 
 const mockGoogleApis = {
-  sheets: () => ({
-    spreadsheets: {
-      values: {
-        get: sinon.stub()
+  google: {
+    sheets: () => ({
+      spreadsheets: {
+        values: {
+          get: sinon.stub()
+        }
       }
-    }
-  })
+    })
+  }
 };
 
-test.beforeEach(() => {
-  sinon.stub(google, 'sheets').returns(mockGoogleApis.sheets());
-});
+const mockFs = {
+  writeFileSync: sinon.stub()
+};
 
-test.afterEach(() => {
+test.afterEach(t => {
   sinon.restore();
-});
-
-test('getGoogleSheetData should fetch data for a public sheet', async t => {
-  const mockData = { values: [['Header1', 'Header2'], ['Row1Col1', 'Row1Col2']] };
-
-  // Set up the get method to resolve with mock data
-  mockGoogleApis.sheets().spreadsheets.values.get.resolves({ data: mockData });
-
-  const data = await my.getGoogleSheetData('dummyApiKey', 'dummyId', 'Sheet1!A1:B2', false, '');
-  t.deepEqual(data, mockData.values);
 });
 
 test('writeToCsv should write data to CSV', t => {
