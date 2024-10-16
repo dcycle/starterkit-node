@@ -74,3 +74,4 @@ modules:
   ./dashboardApi/index.js: {}
   ./webhookWhatsApp/index.js: {}
   ./whatsAppSend/index.js: {}
+  ./googleSheetToCSV/index.js: {}
