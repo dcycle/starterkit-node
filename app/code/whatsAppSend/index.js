@@ -2,13 +2,13 @@
 // The TypeScript engine will check all JavaScript in this file.
 
 /**
- * In order to send Whatsapp message ensure valid TWILIO_USER, TWILIO_PASS, WHATSAPP_FROM
- * WHATSAPP_DEV_MODE values present in .env file.
+ * In order to send Whatsapp message ensure valid TWILIO_USER, TWILIO_PASS, FROM_NUM
+ * DEV_MODE values present in .env file.
  *
- * If WHATSAPP_DEV_MODE=true then the message is saved to file ./unversioned/output/whatsapp-send.json
- * If WHATSAPP_DEV_MODE=false then the message is send to respective sendTo number.
+ * If DEV_MODE=true then the message is saved to file ./unversioned/output/whatsapp-send.json
+ * If DEV_MODE=false then the message is send to respective sendTo number.
  *
- * Ensure WHATSAPP_DEV_MODE=true in dev mode.
+ * Ensure DEV_MODE=true in dev mode.
  *
  * Test whatsapp message sending functionality in terminal.
  *
@@ -184,12 +184,12 @@ class WhatsAppSend extends require('../component/index.js') {
    async sendWhatasppMessage(messageObject) {
     try {
       /**
-       * WHATSAPP_DEV_MODE=false then message sending functionality executed.
+       * DEV_MODE=false then message sending functionality executed.
        * else messages are written to ./unversioned/output/whatsapp-send.json file.
        *
-       * Ensure WHATSAPP_DEV_MODE=true in dev mode.
+       * Ensure DEV_MODE=true in dev mode.
        */
-      const isDevMode = this.app().c('env').required('WHATSAPP_DEV_MODE') === "false";
+      const isDevMode = this.app().c('env').required('DEV_MODE') === "false";
 
       if (isDevMode) {
         return await this.sendMessage(messageObject);
@@ -226,7 +226,7 @@ class WhatsAppSend extends require('../component/index.js') {
       // Load Twilio credentials and WhatsApp sending number
       const twilioUser = this.app().c('env').required('TWILIO_USER');
       const authToken = this.app().c('env').required('TWILIO_PASS');
-      const whatsappFrom = this.app().c('env').required('WHATSAPP_FROM');
+      const whatsappFrom = this.app().c('env').required('FROM_NUM');
 
       // Authenticate with Twilio
       const client = twilio(twilioUser, authToken);

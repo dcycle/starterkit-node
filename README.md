@@ -738,13 +738,13 @@ To send a WhatsApp message, ensure the following environment variables are prese
 
 - `TWILIO_USER`
 - `TWILIO_PASS`
-- `WHATSAPP_FROM`
-- `WHATSAPP_DEV_MODE`
+- `FROM_NUM`
+- `DEV_MODE`
 
-- If `WHATSAPP_DEV_MODE=true` (development environment), the message is saved to `./unversioned/output/whatsapp-send.json`.
-- If `WHATSAPP_DEV_MODE=false` (production environment), the message is sent to the specified `sendTo` number.
+- If `DEV_MODE=true` (development environment), the message is saved to `./unversioned/output/whatsapp-send.json`.
+- If `DEV_MODE=false` (production environment), the message is sent to the specified `sendTo` number.
 
-Ensure `WHATSAPP_DEV_MODE=true` in the development environment.
+Ensure `DEV_MODE=true` in the development environment.
 
 **Testing WhatsApp Message Sending Functionality in Terminal:**
 
@@ -796,7 +796,7 @@ Ensure `WHATSAPP_DEV_MODE=true` in the development environment.
 
 **Receive WhatsApp Message:**
 
-Whenever a WhatsApp message is sent to the `WHATSAPP_FROM` number, it is saved to `./unversioned/output/whatsapp.json`. If the message's account SID equals to `TWILIO_USER`, then the message saved to the `whatsappmessages` collection in the database.
+Whenever a WhatsApp message is sent to the `FROM_NUM` number, it is saved to `./unversioned/output/whatsapp.json`. If the message's account SID equals to `TWILIO_USER`, then the message saved to the `whatsappmessages` collection in the database.
 
 You can verify whether the message is saved to the database:
 
@@ -807,7 +807,7 @@ You can verify whether the message is saved to the database:
    cd ~/whatsapp-communication
    curl "https://api.twilio.com/2010-04-01/Accounts/${TWILIO_USER}/Messages.json" -X POST \
    --data-urlencode "To=whatsapp:${WHATSAPP_TO}" \
-   --data-urlencode "From=whatsapp:${WHATSAPP_FROM}" \
+   --data-urlencode "From=whatsapp:${FROM_NUM}" \
    --data-urlencode 'Body=This is a reply' \
    -u ${TWILIO_USER}:${TWILIO_PASS}
    ```

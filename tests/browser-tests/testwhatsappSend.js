@@ -43,7 +43,7 @@ it("You shouldn't send message if WHATSAPPSENDM_API_TOKEN in url is invalid", as
 it("send whatsapp message should send to a respective sendTo number or written to file.", async function() {
   console.log('Testing ' + __filename);
   try {
-    const whatsappDev = process.env.WHATSAPP_DEV_MODE;
+    const whatsappDev = process.env.DEV_MODE;
     const whatsappsendmApiToken = process.env.WHATSAPPSENDM_API_TOKEN;
     const response = await fetch('http://node:8080/whatsappmessage/send/'+whatsappsendmApiToken, {
       method: 'POST',
@@ -78,7 +78,7 @@ it("send whatsapp message should send to a respective sendTo number or written t
 it("send whatsapp image message with caption should send to a respective sendTo number or written to file.", async function() {
   console.log('Testing ' + __filename);
   try {
-    const whatsappDev = process.env.WHATSAPP_DEV_MODE;
+    const whatsappDev = process.env.DEV_MODE;
     const whatsappsendmApiToken = process.env.WHATSAPPSENDM_API_TOKEN;
     const response = await fetch('http://node:8080/whatsappmessage/send/'+whatsappsendmApiToken, {
       method: 'POST',
@@ -116,7 +116,7 @@ it("send whatsapp image message with caption should send to a respective sendTo 
 it("send whatsapp image message without caption should send to a respective sendTo number or written to file.", async function() {
   console.log('Testing ' + __filename);
   try {
-    const whatsappDev = process.env.WHATSAPP_DEV_MODE;
+    const whatsappDev = process.env.DEV_MODE;
     const whatsappsendmApiToken = process.env.WHATSAPPSENDM_API_TOKEN;
     const response = await fetch('http://node:8080/whatsappmessage/send/'+whatsappsendmApiToken, {
       method: 'POST',
@@ -154,7 +154,7 @@ it("send whatsapp image message without caption should send to a respective send
 it("send whatsapp video message should send to a respective sendTo number or written to file.", async function() {
   console.log('Testing ' + __filename);
   try {
-    const whatsappDev = process.env.WHATSAPP_DEV_MODE;
+    const whatsappDev = process.env.DEV_MODE;
     const whatsappsendmApiToken = process.env.WHATSAPPSENDM_API_TOKEN;
     const response = await fetch('http://node:8080/whatsappmessage/send/'+whatsappsendmApiToken, {
       method: 'POST',

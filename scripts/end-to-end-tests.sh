@@ -35,7 +35,7 @@ docker run --rm \
   -e TOKEN="$TOKEN" \
   -e WHATSAPPSENDM_API_TOKEN="$WHATSAPPSENDM_API_TOKEN" \
   -e TWILIO_USER="$TWILIO_USER" \
-  -e WHATSAPP_DEV_MODE="$WHATSAPP_DEV_MODE" \
+  -e DEV_MODE="$DEV_MODE" \
   --network "$DOCKERNETWORK" \
   -v "$(pwd)"/do-not-commit/screenshots:/artifacts/screenshots \
   -v "$(pwd)"/do-not-commit/dom-captures:/artifacts/dom-captures \
