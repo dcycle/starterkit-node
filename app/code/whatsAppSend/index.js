@@ -22,11 +22,11 @@
  * Test whatsapp message sending functionality using curl.
  *
  * In dev environment:-
- * If you are a authorised user then access .env and copy WHATSAPPSENDM_API_TOKEN value and replace in below command.
- * >> curl -X POST --data '{"message": "This is a test", "sendTo":"91XXXXXXXXX"}' http://0.0.0.0:8792/whatsappmessage/send/<WHATSAPPSENDM_API_TOKEN>
+ * If you are a authorised user then access .env and copy SENDM_API_TOKEN value and replace in below command.
+ * >> curl -X POST --data '{"message": "This is a test", "sendTo":"91XXXXXXXXX"}' http://0.0.0.0:8792/whatsappmessage/send/<SENDM_API_TOKEN>
  *
  * In test environment:-
- * >> curl -X POST --data '{"message": "This is a test", "sendTo":"91XXXXXXXXXX"}' https://whatsapp-communication.dcycleproject.org/whatsappmessage/send/<WHATSAPPSENDM_API_TOKEN>
+ * >> curl -X POST --data '{"message": "This is a test", "sendTo":"91XXXXXXXXXX"}' https://whatsapp-communication.dcycleproject.org/whatsappmessage/send/<SENDM_API_TOKEN>
  *
  */
 
@@ -113,7 +113,7 @@ class WhatsAppSend extends require('../component/index.js') {
    * @returns {boolean} True if the token is valid, otherwise false.
    */
   validateToken(token) {
-    const expectedToken = String(require('../env/index.js').required('WHATSAPPSENDM_API_TOKEN'));
+    const expectedToken = String(require('../env/index.js').required('SENDM_API_TOKEN'));
     return token === expectedToken;
   }
 

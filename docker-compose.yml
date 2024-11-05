@@ -36,7 +36,7 @@ services:
       - TWILIO_PASS=${TWILIO_PASS}
       - FROM_NUM=${FROM_NUM}
       - DEV_MODE=${DEV_MODE}
-      - WHATSAPPSENDM_API_TOKEN=${WHATSAPPSENDM_API_TOKEN}
+      - SENDM_API_TOKEN=${SENDM_API_TOKEN}
     ports:
       - "${DOCKERPORT}:8080"
 
