@@ -30,6 +30,7 @@ Dcycle Node.js starterkit
 * REST API
 * Access to content by permission
 * Whatsapp Message Send/Recieve Functionality
+* Send SMS
 * Typechecking
 * The chatbot framework
 * Troubleshooting
@@ -834,6 +835,63 @@ You can verify whether the message is saved to the database:
    ```
 
     Verify your message record exist.
+
+Send SMS
+-----
+
+To send a sms ensure the following environment variables are present and valid in the `.env` file:
+
+- `TWILIO_USER`
+- `TWILIO_PASS`
+- `FROM_NUM`
+- `DEV_MODE`
+
+- If `DEV_MODE=true` (development environment), the sms is saved to `./unversioned/output/sms-send.json`.
+- If `DEV_MODE=false` (production environment), the sms is sent to the specified `sendTo` number.
+
+Ensure `DEV_MODE=true` in the development environment.
+
+**Testing SMS Sending Functionality in Terminal:**
+
+1. Access the Node.js client:
+   ```
+   ./scripts/node-cli.sh
+   ```
+
+2. Run the following code, replacing `<country code>` and `<phone number>`:
+   ```
+   >> await app.c('sendSMS').parsepropertySendSMS('{"message": "<Message content>", "sendTo":"<country code><phone number>"}');
+   ```
+   Example:
+   ```
+   >> await app.c('sendSMS').parsepropertySendSMS('{"message": "This is a test message", "sendTo":"+150XXXXXXX"}');
+   ```
+   Sending media message:
+   ```
+   >> await app.c('sendSMS').parsepropertySendSMS('{"message": "This is a test message", "sendTo":"+150XXXXXXX","mediaUrl": "<valid url of a image or video or excel or csv >"');
+   ```
+
+**Testing SMS Sending Functionality Using curl:**
+
+- **In Development Environment:**
+   ```
+    curl -X POST \
+        -H "Content-Type: application/json" \
+        --data '{"message": "This is a test message000", "sendTo": "+XXXXXXXXXX"}' \
+         http://0.0.0.0:8792/sms/send/<SENDM_API_TOKEN>
+
+   ```
+
+- **In Production Environment:**
+   ```
+        curl -X POST \
+           -H "Content-Type: application/json" \
+           --data '{"message": "This is a test message", "sendTo": "+XXXXXXXXXX"}' \
+           https://whatsapp-communication.dcycleproject.org/sms/send/<SENDM_API_TOKEN>
+   ```
+    modify message and sendTo according to your requirement.
+
+    * If you are a authorised user then access .env and copy SENDM_API_TOKEN value and replace in above command.
 
 Typechecking
 -----

@@ -56,12 +56,12 @@ class SendSMS extends require('../component/index.js') {
   async run(app) {
     app.c('express').addRoute(
       // Name of a Route.
-      'smsmessageSend',
+      'sendSMS',
       // HTTP method for this route.
       'post',
       // Route pattern.
       // http://0.0.0.0:8792/smsmessage/send
-      '/smsmessage/send/:token',
+      '/sms/send/:token',
       async (req, res) => {
         await this.handleRequest(req, res);
       }
