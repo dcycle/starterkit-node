@@ -783,7 +783,7 @@ Ensure `DEV_MODE=true` in the development environment.
         curl -X POST \
            -H "Content-Type: application/json" \
            --data '{"message": "This is a test message", "sendTo": "+XXXXXXXXXX"}' \
-           https://whatsapp-communication.dcycleproject.org/whatsappmessage/send/<SENDM_API_TOKEN>
+           https://<DOMAIN-NAME>/whatsappmessage/send/<SENDM_API_TOKEN>
    ```
     modify message and sendTo according to your requirement.
 
@@ -887,7 +887,7 @@ Ensure `DEV_MODE=true` in the development environment.
         curl -X POST \
            -H "Content-Type: application/json" \
            --data '{"message": "This is a test message", "sendTo": "+XXXXXXXXXX"}' \
-           https://whatsapp-communication.dcycleproject.org/sms/send/<SENDM_API_TOKEN>
+           https://<DOMAIN-NAME>/sms/send/<SENDM_API_TOKEN>
    ```
     modify message and sendTo according to your requirement.
 

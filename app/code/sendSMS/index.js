@@ -23,18 +23,18 @@
  *
  * In dev environment:-
  * If you are a authorised user then access .env and copy SENDM_API_TOKEN value and replace in below command.
- * >> curl -X POST --data '{"message": "This is a test", "sendTo":"91XXXXXXXXX"}' http://0.0.0.0:8792/smsmessage/send/<SENDM_API_TOKEN>
+ * >> curl -X POST --data '{"message": "This is a test", "sendTo":"91XXXXXXXXX"}' http://0.0.0.0:8792/sms/send/<SENDM_API_TOKEN>
  *
  * In test environment:-
- * >> curl -X POST --data '{"message": "This is a test", "sendTo":"91XXXXXXXXXX"}' https://smsmessage-communication.dcycleproject.org/smsmessage/send/<SENDM_API_TOKEN>
+ * >> curl -X POST --data '{"message": "This is a test", "sendTo":"91XXXXXXXXXX"}' https://<DOMAIN-NAME>/sms/send/<SENDM_API_TOKEN>
  *
  */
 
 /**
- * Sending smsmessage messages functionality.
+ * Sending sms functionality.
  *
  * ** note **
- * smsmessage messages are sent only in https enviroment.
+ * sms are sent only in https enviroment.
  * Authentication failure Errors are logged in http environment.
  */
 class SendSMS extends require('../component/index.js') {
@@ -60,7 +60,7 @@ class SendSMS extends require('../component/index.js') {
       // HTTP method for this route.
       'post',
       // Route pattern.
-      // http://0.0.0.0:8792/smsmessage/send
+      // http://0.0.0.0:8792/sms/send
       '/sms/send/:token',
       async (req, res) => {
         await this.handleRequest(req, res);
@@ -226,15 +226,15 @@ class SendSMS extends require('../component/index.js') {
       // Load Twilio credentials and SMS sending number
       const twilioUser = this.app().c('env').required('TWILIO_USER');
       const authToken = this.app().c('env').required('TWILIO_PASS');
-      const smsmessageFrom = this.app().c('env').required('FROM_NUM');
+      const smsFrom = this.app().c('env').required('FROM_NUM');
 
       // Authenticate with Twilio
       const client = twilio(twilioUser, authToken);
 
       let clientMessage = {
         body: messageObject.message,
-        from: "smsmessage:" + smsmessageFrom,
-        to: "smsmessage:" + messageObject.sendTo
+        from: smsFrom,
+        to: messageObject.sendTo
       };
 
       // Check if mediaUrl is set and add it to the clientMessage object
@@ -264,7 +264,7 @@ class SendSMS extends require('../component/index.js') {
       const fs = require('fs');
       const jsonMessage = JSON.stringify(messageObject);
 
-      await fs.writeFile('/output/smsmessage-send.json', jsonMessage, (err) => {
+      await fs.writeFile('/output/sms-send.json', jsonMessage, (err) => {
         if (err) {
           console.log("SMS send message Coudn't be Written to file. " + err);
           return false;
