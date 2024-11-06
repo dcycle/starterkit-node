@@ -92,7 +92,7 @@ class SendSMS extends require('../component/index.js') {
       let messageObject = this.parseMessageObject(req.body);
 
       if (!this.validateMessageObject(messageObject)) {
-        return res.status(500).send('Missing required parameters: sendTo and/or message or if media url is set it should be a valid url.');
+        return res.status(500).send('Missing required parameters: sendTo and/or message');
       }
 
       const result = await this.sendSMS(messageObject);
@@ -164,7 +164,7 @@ class SendSMS extends require('../component/index.js') {
 
     // Validate the parsed object
     if (!this.validateMessageObject(parsedObject)) {
-      return "May be Missing required parameters: sendTo and/or message or else if media url is set it should be valid url";
+      return "May be Missing required parameters: sendTo and/or message";
     }
     else {
       return await this.sendSMS(parsedObject);
@@ -237,15 +237,11 @@ class SendSMS extends require('../component/index.js') {
         to: messageObject.sendTo
       };
 
-      // Check if mediaUrl is set and add it to the clientMessage object
-      if (messageObject.mediaUrl) {
-        clientMessage.mediaUrl = messageObject.mediaUrl;
-      }
-
       // Send the message
-      await client.messages.create(clientMessage);
+      const message = await client.messages.create(clientMessage);
 
       console.log('SMS sent successfully');
+      console.log(message.body);
       return true;
 
     } catch (error) {
@@ -290,28 +286,12 @@ class SendSMS extends require('../component/index.js') {
       return false;
     }
 
-    // media url should be valid url.
-    if (typeof parsedObject.mediaUrl === 'string' && parsedObject.mediaUrl.trim() !== '') {
-      if (!this.isValidUrl(parsedObject.mediaUrl)) {
-        return false;
-      }
-    }
-
     // Check if 'message' and 'sendTo' are both present and sendTo non-empty string
     const hasValidMessage = typeof parsedObject.message === 'string';
     const hasValidSendTo = typeof parsedObject.sendTo === 'string' && parsedObject.sendTo.trim() !== '';
 
     // Return true only if both 'message' and 'sendTo' are valid
     return hasValidMessage && hasValidSendTo;
-  }
-
-  isValidUrl(url) {
-    try {
-      new URL(url);
-      return true;
-    } catch (error) {
-      return false;
-    }
   }
 
 }
