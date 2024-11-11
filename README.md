@@ -866,10 +866,6 @@ Ensure `DEV_MODE=true` in the development environment.
    ```
    >> await app.c('sendSMS').parsepropertySendSMS('{"message": "This is a test message", "sendTo":"+150XXXXXXX"}');
    ```
-   Sending media message:
-   ```
-   >> await app.c('sendSMS').parsepropertySendSMS('{"message": "This is a test message", "sendTo":"+150XXXXXXX","mediaUrl": "<valid url of a image or video or excel or csv >"');
-   ```
 
 **Testing SMS Sending Functionality Using curl:**
 
@@ -877,7 +873,7 @@ Ensure `DEV_MODE=true` in the development environment.
    ```
     curl -X POST \
         -H "Content-Type: application/json" \
-        --data '{"message": "This is a test message000", "sendTo": "+XXXXXXXXXX"}' \
+        --data '{"message": "This is a test message000", "sendTo": "'"+XXXXXXXXXX"'"}' \
          http://0.0.0.0:8792/sms/send/<SENDM_API_TOKEN>
 
    ```
@@ -886,7 +882,7 @@ Ensure `DEV_MODE=true` in the development environment.
    ```
         curl -X POST \
            -H "Content-Type: application/json" \
-           --data '{"message": "This is a test message", "sendTo": "+XXXXXXXXXX"}' \
+           --data '{"message": "This is a test message", "sendTo": "'"+XXXXXXXXXX"'"}' \
            https://<DOMAIN-NAME>/sms/send/<SENDM_API_TOKEN>
    ```
     modify message and sendTo according to your requirement.

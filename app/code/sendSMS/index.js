@@ -239,11 +239,14 @@ class SendSMS extends require('../component/index.js') {
 
       // Send the message
       const message = await client.messages.create(clientMessage);
-
-      console.log('SMS sent successfully');
-      console.log(message.body);
-      return true;
-
+      if (message.sid) {
+        console.log('SMS sent successfully');
+        return true;
+      }
+      else {
+        console.log("SMS hasn't sent");
+        return false;
+      }
     } catch (error) {
       console.error('Error sending SMS:', error);
       return false;
