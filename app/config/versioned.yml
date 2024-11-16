@@ -75,3 +75,4 @@ modules:
   ./webhookWhatsApp/index.js: {}
   ./whatsAppSend/index.js: {}
   ./googleSheetToCSV/index.js: {}
+  ./googleSheetManage/index.js: {}
