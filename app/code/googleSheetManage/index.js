@@ -20,7 +20,7 @@ class GoogleSheetManage extends require('../component/index.js') {
 
   // Update a cell in the Google Sheet
   async updateCell() {
-    const sheets = await authenticate();
+    const sheets = await this.authenticate();
     const RANGE = 'Sheet1!A1';  // The range you want to update
     const SPREADSHEET_ID = '108aKEJNfy5UGdBYZydE8we5hOtUMuombuZyp0CdQLso';
     const request = {
