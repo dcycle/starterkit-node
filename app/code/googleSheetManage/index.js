@@ -12,7 +12,7 @@ class GoogleSheetManage extends require('../component/index.js') {
    *
    * @param {string} serviceAccountFile - Service account file path to authenticate google cloud.
    *
-   * @returns {Promise<string>} - Returns google sheet.
+   * @returns {Promise<object>} - Returns google sheet.
    */
   async authenticate(serviceAccountFile) {
     // Load the Google APIs client library.
@@ -59,6 +59,7 @@ class GoogleSheetManage extends require('../component/index.js') {
           ],
         },
       };
+
       const response = await sheets.spreadsheets.values.update(request);
       if (response.data) {
         return true;
@@ -77,7 +78,7 @@ class GoogleSheetManage extends require('../component/index.js') {
    * @param {number} sheetNumber - The Sheet Number which needs to be updated. ex:- 0 or 1 or 2...
    * @param {string} dimension - insert 'ROWS' or 'COLUMNS'
    * @param {number} startIndex - Starting Index.
-   * @param {number} numOfRowColumn - Number of Rows or Columns to insert.
+   * @param {number} numOfRowsColumns - Number of Rows or Columns to insert.
    * @param {string} afterOrBefore - insert 'After' Or 'Before'
    *
    * @returns {Promise<boolean>} - Result indicating true or false.
