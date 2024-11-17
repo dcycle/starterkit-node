@@ -964,8 +964,10 @@ await app.c('googleSheetManage').updateCell(GOOGLE_SHEETS_API_KEY, GOOGLE_SHEETS
 
 example :-
 ```
+# This will update B8 and C8 data.
 await app.c('googleSheetManage').updateCell(GOOGLE_SHEETS_API_KEY, GOOGLE_SHEETS_SPREADSHEET_ID, 'Sheet1!B8', ["update row data", "update column data"]);
 
+# This will update B10 data.
 await app.c('googleSheetManage').updateCell(GOOGLE_SHEETS_API_KEY, GOOGLE_SHEETS_SPREADSHEET_ID, 'Sheet1!B10', ["update row data only"]);
 ```
 
@@ -983,12 +985,16 @@ await app.c('googleSheetManage').insertRowsColumns(GOOGLE_SHEETS_API_KEY, GOOGLE
 
 example :-
 ```
+# insert 10 rows before 11 
 await app.c('googleSheetManage').insertRowsColumns(GOOGLE_SHEETS_API_KEY, GOOGLE_SHEETS_SPREADSHEET_ID, 0, 'ROWS', 11, 10, 'Before');
 
+# insert 10 rows after 8
 await app.c('googleSheetManage').insertRowsColumns(GOOGLE_SHEETS_API_KEY, GOOGLE_SHEETS_SPREADSHEET_ID, 0, 'ROWS', 8, 10, 'After');
 
+# insert 10 columns before 8 
 await app.c('googleSheetManage').insertRowsColumns(GOOGLE_SHEETS_API_KEY, GOOGLE_SHEETS_SPREADSHEET_ID, 0, 'COLUMNS', 8, 10, 'Before');
 
+# insert 10 columns after 10 
 await app.c('googleSheetManage').insertRowsColumns(GOOGLE_SHEETS_API_KEY, GOOGLE_SHEETS_SPREADSHEET_ID, 0, 'COLUMNS', 8, 10, 'After');
 
 ```
