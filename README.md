@@ -956,7 +956,7 @@ Follow Step1 to Step4 of Copy Private Google Sheet Data to CSV File section to s
 ```
 ./scripts/node-cli.sh
 
-const GOOGLE_SHEETS_API_KEY = <your google service account file>;
+const GOOGLE_SHEETS_API_KEY = <your google service account file path>;
 const GOOGLE_SHEETS_SPREADSHEET_ID = <your spread sheet id>;
 
 await app.c('googleSheetManage').updateCell(GOOGLE_SHEETS_API_KEY, GOOGLE_SHEETS_SPREADSHEET_ID, <range>, <array of values>);
@@ -974,7 +974,7 @@ await app.c('googleSheetManage').updateCell(GOOGLE_SHEETS_API_KEY, GOOGLE_SHEETS
 ```
 ./scripts/node-cli.sh
 
-const GOOGLE_SHEETS_API_KEY = <your google service account file>;
+const GOOGLE_SHEETS_API_KEY = <your google service account file path>;
 const GOOGLE_SHEETS_SPREADSHEET_ID = <your spread sheet id>;
 
 await app.c('googleSheetManage').insertRowsColumns(GOOGLE_SHEETS_API_KEY, GOOGLE_SHEETS_SPREADSHEET_ID, <sheet number ex:- 0 for first sheet or 1 for second sheet or ..>, <'ROWS'/'COLUMNS'>, <start index>, <number of rows to insert>, <'Before'/'After'>);
