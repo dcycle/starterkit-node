@@ -38,7 +38,7 @@ class GoogleSheetManage extends require('../component/index.js') {
    * @param {string} values - Values to update. values which is an array of rows,
    * where each row is an array of values.
    *
-   * @returns {Promise<bool>} - Result indicating true or false.
+   * @returns {Promise<boolean>} - Result indicating true or false.
    */
   async updateCell(serviceAccountFile, spreadsheetId, range, values) {
     try {
@@ -74,13 +74,13 @@ class GoogleSheetManage extends require('../component/index.js') {
    *
    * @param {string} serviceAccountFile - Service account file path.
    * @param {string} spreadsheetId - The ID of the Google Spreadsheet.
-   * @param {int} sheetNumber - The Sheet Number which needs to be updated. ex:- 0 or 1 or 2...
+   * @param {number} sheetNumber - The Sheet Number which needs to be updated. ex:- 0 or 1 or 2...
    * @param {string} dimension - insert 'ROWS' or 'COLUMNS'
-   * @param {int} startIndex - Starting Index.
-   * @param {int} numOfRowColumn - Number of Rows or Columns to insert.
+   * @param {number} startIndex - Starting Index.
+   * @param {number} numOfRowColumn - Number of Rows or Columns to insert.
    * @param {string} afterOrBefore - insert 'After' Or 'Before'
    *
-   * @returns {Promise<bool>} - Result indicating true or false.
+   * @returns {Promise<boolean>} - Result indicating true or false.
    */
   async insertRowsColumns(
     serviceAccountFile,
