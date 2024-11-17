@@ -56,7 +56,7 @@ class GoogleSheetToCsv extends require('../component/index.js') {
    * @param {Array<Array<string>>} data - The data to write to the CSV file.
    * @param {string} csvFile - The path to the CSV file to write.
    * @returns {string} - Success or error message.
-   */  
+   */
   writeToCsv(data, csvFile) {
     let response = "";
     try {
@@ -89,7 +89,7 @@ class GoogleSheetToCsv extends require('../component/index.js') {
    * @param {boolean} isPrivate - Indicates if the sheet is private or public.
    * Private is true. Public is "".
    * @returns {Promise<string>} - Result message indicating success or failure.
-   */  
+   */
   async main(apiKeyOrServiceAccountFile, spreadsheetId, sheetId, csvFile, isPrivate) {
     const data = await this.getGoogleSheetData(
       apiKeyOrServiceAccountFile,
