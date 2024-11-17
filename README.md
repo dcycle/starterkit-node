@@ -32,6 +32,7 @@ Dcycle Node.js starterkit
 * Whatsapp Message Send/Recieve Functionality
 * Copy Public Google Sheet Data to CSV File
 * Copy Private Google Sheet Data to CSV File
+* Manage Google Sheet Data
 * Typechecking
 * The chatbot framework
 * Troubleshooting
@@ -945,6 +946,58 @@ await app.c('googleSheetToCSV').main("<GOOGLE_SERVICE_ACCOUNT_FILE>","<GOOGLE_SH
 
 Upon sucessfully running the script, you can find the Google Sheet data in ./unversioned/output/todaydata-private.csv.
 
+Manage Googel Sheet Data
+-----
+
+Follow Step1 to Step4 of Copy Private Google Sheet Data to CSV File section to setup a service account file. ** Instead of viewer permission set Editor permission at Step3 and Step4 ** then only data can be updated.
+
+* Update Cell data :-
+
+```
+./scripts/node-cli.sh
+
+const GOOGLE_SHEETS_API_KEY = <your google service account file path>;
+const GOOGLE_SHEETS_SPREADSHEET_ID = <your spread sheet id>;
+
+await app.c('googleSheetManage').updateCell(GOOGLE_SHEETS_API_KEY, GOOGLE_SHEETS_SPREADSHEET_ID, <range>, <array of values>);
+```
+
+example :-
+```
+# This will update B8 and C8 data.
+await app.c('googleSheetManage').updateCell(GOOGLE_SHEETS_API_KEY, GOOGLE_SHEETS_SPREADSHEET_ID, 'Sheet1!B8', ["update row data", "update column data"]);
+
+# This will update B10 data.
+await app.c('googleSheetManage').updateCell(GOOGLE_SHEETS_API_KEY, GOOGLE_SHEETS_SPREADSHEET_ID, 'Sheet1!B10', ["update row data only"]);
+```
+
+* Insert Rows Or Column :-
+
+```
+./scripts/node-cli.sh
+
+const GOOGLE_SHEETS_API_KEY = <your google service account file path>;
+const GOOGLE_SHEETS_SPREADSHEET_ID = <your spread sheet id>;
+
+await app.c('googleSheetManage').insertRowsColumns(GOOGLE_SHEETS_API_KEY, GOOGLE_SHEETS_SPREADSHEET_ID, <sheet number ex:- 0 for first sheet or 1 for second sheet or ..>, <'ROWS'/'COLUMNS'>, <start index>, <number of rows to insert>, <'Before'/'After'>);
+
+```
+
+example :-
+```
+# insert 10 rows before 11 
+await app.c('googleSheetManage').insertRowsColumns(GOOGLE_SHEETS_API_KEY, GOOGLE_SHEETS_SPREADSHEET_ID, 0, 'ROWS', 11, 10, 'Before');
+
+# insert 10 rows after 8
+await app.c('googleSheetManage').insertRowsColumns(GOOGLE_SHEETS_API_KEY, GOOGLE_SHEETS_SPREADSHEET_ID, 0, 'ROWS', 8, 10, 'After');
+
+# insert 10 columns before 8 
+await app.c('googleSheetManage').insertRowsColumns(GOOGLE_SHEETS_API_KEY, GOOGLE_SHEETS_SPREADSHEET_ID, 0, 'COLUMNS', 8, 10, 'Before');
+
+# insert 10 columns after 10 
+await app.c('googleSheetManage').insertRowsColumns(GOOGLE_SHEETS_API_KEY, GOOGLE_SHEETS_SPREADSHEET_ID, 0, 'COLUMNS', 8, 10, 'After');
+
+```
 
 Typechecking
 -----
