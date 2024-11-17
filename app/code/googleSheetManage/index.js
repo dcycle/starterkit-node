@@ -74,22 +74,22 @@ class GoogleSheetManage extends require('../component/index.js') {
    *
    * @param {string} serviceAccountFile - Service account file path.
    * @param {string} spreadsheetId - The ID of the Google Spreadsheet.
-   * @param {string} sheetId - The Sheet Id which needs to be updated.
+   * @param {int} sheetNumber - The Sheet Number which needs to be updated. ex:- 0 or 1 or 2...
    * @param {string} dimension - insert 'ROWS' or 'COLUMNS'
-   * @param {string} afterOrBefore - insert 'After' Or 'Before'
    * @param {int} startIndex - Starting Index.
    * @param {int} numOfRowColumn - Number of Rows or Columns to insert.
+   * @param {string} afterOrBefore - insert 'After' Or 'Before'
    *
    * @returns {Promise<bool>} - Result indicating true or false.
    */
   async insertRowsColumns(
     serviceAccountFile,
     spreadsheetId,
-    sheetId,
+    sheetNumber,
     dimension,
-    afterOrBefore,
-    startIndex = 'After',
-    numOfRowsColumns) {
+    startIndex,
+    numOfRowsColumns,
+    afterOrBefore = 'After') {
     try {
       const sheets = await this.authenticate(serviceAccountFile);
       if (afterOrBefore == 'Before') {
@@ -104,7 +104,8 @@ class GoogleSheetManage extends require('../component/index.js') {
             {
               insertDimension: {
                 range: {
-                  sheetId: sheetId,
+                  // 0 for first sheet, 1 for second sheet and so on.
+                  sheetId: sheetNumber,
                   dimension: dimension,
                   startIndex: startIndex,
                   endIndex: endIndex,
