@@ -22,6 +22,8 @@
     "uuid": "*",
     "mathjs": "*",
     "twilio": "*",
+    "fs": "*",
+    "googleapis": "*",
     "passport-google-oauth20": "*"
   }
 }
