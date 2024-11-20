@@ -41,8 +41,8 @@ grep EXPRESS_SESSION_SECRET "$ENVLOC" > /dev/null || echo "export EXPRESS_SESSIO
 grep SALT "$ENVLOC" > /dev/null || echo "export SALT=$(./scripts/lib/generate-uuid.sh)" >> "$ENVLOC"
 grep ENVIRONMENT_USAGE "$ENVLOC" > /dev/null || echo "export ENVIRONMENT_USAGE=$TARGET_ENV" >> "$ENVLOC"
 grep CRASHTEST_TOKEN "$ENVLOC" > /dev/null ||  echo "export CRASHTEST_TOKEN=$(./scripts/lib/generate-uuid.sh)" >> "$ENVLOC"
-grep WHATSAPP_DEV_MODE "$ENVLOC" > /dev/null || echo "export WHATSAPP_DEV_MODE=true" >> "$ENVLOC"
-grep WHATSAPPSENDM_API_TOKEN "$ENVLOC" > /dev/null ||  echo "export WHATSAPPSENDM_API_TOKEN=$(./scripts/lib/generate-uuid.sh)" >> "$ENVLOC"
-grep WHATSAPP_FROM "$ENVLOC" > /dev/null ||  echo "export WHATSAPP_FROM=$(./scripts/lib/generate-uuid.sh)" >> "$ENVLOC"
+grep DEV_MODE "$ENVLOC" > /dev/null || echo "export DEV_MODE=true" >> "$ENVLOC"
+grep SENDM_API_TOKEN "$ENVLOC" > /dev/null ||  echo "export SENDM_API_TOKEN=$(./scripts/lib/generate-uuid.sh)" >> "$ENVLOC"
+grep FROM_NUM "$ENVLOC" > /dev/null ||  echo "export FROM_NUM=$(./scripts/lib/generate-uuid.sh)" >> "$ENVLOC"
 
 source "$ENVLOC"

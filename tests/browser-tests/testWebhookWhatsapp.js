@@ -51,7 +51,7 @@ it("If account ssid different then message should get saved to a file but should
 
 it("If account ssid same as message then message should get saved to a file and also should get stored in database", async function() {
   const twilioUser = process.env.TWILIO_USER;
-  const whatsappDev = process.env.WHATSAPP_DEV_MODE;
+  const whatsappDev = process.env.DEV_MODE;
 
   console.log('Testing ' + __filename);
   try {
