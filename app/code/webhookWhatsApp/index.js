@@ -135,18 +135,22 @@ class WebhookWhatsApp extends require('../component/index.js') {
           try {
             let messageObject = req.body;
             if (this.validateAuthenticatedMessage(messageObject)) {
-              app.c ('observers').addObserver({
+              const FromNumber = req.bodyWaId;
+              const observers = this.app().c('observers').observers({
+                // only return observers for this module.
                 "module": "webhookWhatsApp",
+                // only return observers for this verb
                 "verb": "receiveMessage",
-                // * for all phone numbers, or else specify a phone number.
-                "applyTo": "*",
-                "callback": async function(details) {
-                await this.storeInMessageDetail(details.messageObject);
-                // Send Confirmation message.
-                await app.c('whatsAppSend').parsepropertySendMessage('{"message": "!!! Well received !!!", "sendTo":"' + details.number + '"}');
-                },
-                // or never, or a date...
-                "expire": "+1 hour",
+                "applyTo": FromNumber
+              });
+              observers.forEach((o) => {
+                // If '*' match anything
+                const applyToPattern = o.applyTo === "*" ? ".*" : o.applyTo;
+                const regex = new RegExp(applyToPattern);
+                if (regex.test(FromNumber)) {
+                  // see of "*" matches ex:- +15551234567 and returns observers which do.
+                  o.callback({"messageObject": messageObject, "number": req.bodyWaId });
+                }
               });
               // https://stackoverflow.com/questions/68508372
               const resp = '<?xml version="1.0" encoding="UTF-8"?><Response>' + jsonMessage + '</Response>';

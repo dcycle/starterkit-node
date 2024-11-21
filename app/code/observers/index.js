@@ -93,8 +93,10 @@
       const observer = await this.observers()(observerObject);
       observer.save().then(async (value)=> {
         console.log("!! observer saved to database !!");
+        return value.uuid;
       }).catch((err)=>{
         console.log(err);
+        return false;
       });
     } catch (error) {
       // Handle Mongoose validation errors
@@ -120,6 +122,21 @@
     }, {
       $set: obj,
     });
+  }
+
+  // Function to delete a observer by UUID
+  async deleteByUuid(uuid) {
+    try {
+      const result = await this.observers().deleteOne({ uuid });
+
+      if (result.deletedCount === 0) {
+        console.log("No observer found with that UUID.");
+      } else {
+        console.log(`Observer with UUID: ${uuid} has been deleted.`);
+      }
+    } catch (error) {
+      console.error("Error deleting observer:", error);
+    }
   }
 
   /**
