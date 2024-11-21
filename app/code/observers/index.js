@@ -29,11 +29,10 @@
         type: String,
         required: true
       },
+      // '*' for all numbers or a specific phone number
       applyTo: {
         type: String,
-        required: true,
-        // '*' for all numbers or a specific phone number
-        enum: ['*', String]
+        required: true
       },
       callback: {
         // Store callback as a string (e.g., name of the function)
@@ -126,18 +125,31 @@
     });
   }
 
+  // Function to find a observer by UUID
+  async findByUuid(uuid) {
+    try {
+      // Get observer by UUID exists in the database.
+      let observer = await this.observers().findOne({ uuid: uuid });
+      return observer;
+    } catch (error) {
+      console.error("Error getting observer:", error);
+      return false;
+    }
+  }
+
   // Function to delete a observer by UUID
   async deleteByUuid(uuid) {
     try {
       const result = await this.observers().deleteOne({ uuid });
-
       if (result.deletedCount === 0) {
         console.log("No observer found with that UUID.");
       } else {
         console.log(`Observer with UUID: ${uuid} has been deleted.`);
       }
+      return true;
     } catch (error) {
       console.error("Error deleting observer:", error);
+      return false;
     }
   }
 
@@ -166,12 +178,12 @@
     let newUuid = uuidv4();
 
     // Check if the UUID already exists in the database
-    let existingObserver = await this.observers().findOne({ uuid: newUuid });
+    let existingObserver = await this.findByUuid({ uuid: newUuid });
 
     // If the UUID already exists, generate a new one
     while (existingObserver) {
       newUuid = uuidv4();
-      existingObserver = await this.observers().findOne({ uuid: newUuid });
+      existingObserver = await this.findByUuid({ uuid: newUuid });
     }
 
     return newUuid;
