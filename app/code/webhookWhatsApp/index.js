@@ -118,65 +118,96 @@ class WebhookWhatsApp extends require('../component/index.js') {
       'post',
       // Route pattern with dynamic permissionId and file path
       '/webhook/whatsapp',
-      (req, res) => {
-        // @ts-expect-error
-        const fs = require('fs');
-        const jsonMessage = JSON.stringify(req.body);
-
-        // Write to file first
-        fs.writeFile('/output/whatsapp.json', jsonMessage, async (err) => {
-          if (err) {
-            console.error('Error writing to file:', err);
-            const errorResp = '<?xml version="1.0" encoding="UTF-8"?><Response>Error writing to file: Internal Server Error</Response>';
-            res.status(500).send(errorResp);            
-          }
-
-          // Save to MongoDB after writing to file.
-          try {
-            let messageObject = req.body;
-            if (this.validateAuthenticatedMessage(messageObject)) {
-              const FromNumber = req.bodyWaId;
-              const observers = await this.app().c('observers').observers({
-                // only return observers for this module.
-                "module": "webhookWhatsApp",
-                // only return observers for this verb
-                "verb": "receiveMessage",
-                "applyTo": FromNumber
-              });
-              observers.forEach((o) => {
-                // If '*' match anything
-                const applyToPattern = o.applyTo === "*" ? ".*" : o.applyTo;
-                const regex = new RegExp(applyToPattern);
-                if (regex.test(FromNumber)) {
-                  // see of "*" matches ex:- +15551234567 and returns observers which do.
-                  o.callback({
-                    "messageObject": messageObject,
-                    "number": req.bodyWaId,
-                    "message": "!!! Well received !!!"
-                  });
-                }
-              });
-              // https://stackoverflow.com/questions/68508372
-              const resp = '<?xml version="1.0" encoding="UTF-8"?><Response>' + jsonMessage + '</Response>';
-              res.status(200).send(resp);
-            }
-            else {
-              console.log("Message is not from allowed ssid " + messageObject.AccountSid);
-              let resp = '<?xml version="1.0" encoding="UTF-8"?>';
-              resp += '<Response> Message is not from allowed to save from this account ssid ' + messageObject.AccountSid  + '</Response>';
-              res.status(403).send(resp);
-            }
-          } catch (error) {
-            console.error('Error saving message:', error);
-            const errorResp = '<?xml version="1.0" encoding="UTF-8"?><Response>Internal Server Error</Response>';
-            res.status(500).send(errorResp);
-          }
-        });
-      }
-    );
-
+      async (req, res) => {
+        await this.handleIncomingMessage(req, res);
+    });
     // Return the instance of the class
     return this;
+  }
+
+  async handleIncomingMessage(req, res) {
+    try {
+      const jsonMessage = JSON.stringify(req.body);
+
+      // Write the incoming message to file
+      await this.writeToFile(jsonMessage);
+
+      // Save to MongoDB after writing to file
+      const messageObject = req.body;
+      if (this.validateAuthenticatedMessage(messageObject)) {
+        const FromNumber = req.bodyWaId;
+        const observers = await this.getObservers(FromNumber);
+
+        if (Array.isArray(observers)) {
+          await this.handleObservers(observers, messageObject, FromNumber);
+        } else {
+          console.error('Observers is not an array:', observers);
+        }
+
+        // Respond with the original message
+        const resp = this.generateXmlResponse(jsonMessage);
+        res.status(200).send(resp);
+      } else {
+        console.log("Message is not from allowed ssid " + messageObject.AccountSid);
+        const resp = this.generateErrorXmlResponse("Message is not from allowed to save from this account ssid " + messageObject.AccountSid);
+        res.status(403).send(resp);
+      }
+    } catch (error) {
+      console.error('Error processing message:', error);
+      const errorResp = this.generateErrorXmlResponse("Internal Server Error");
+      res.status(500).send(errorResp);
+    }
+  };
+
+  // Write the message to a file
+  writeToFile(jsonMessage) {
+    return /** @type {Promise<void>} */(new Promise((resolve, reject) => {
+      // @ts-expect-error
+      const fs = require('fs');
+      fs.writeFile('/output/whatsapp.json', jsonMessage, (err) => {
+        if (err) {
+          console.error('Error writing to file:', err);
+          reject(new Error('Error writing to file'));
+        } else {
+          resolve();
+        }
+      });
+    }));
+  }
+
+  // Get the observers based on the `FromNumber`
+  async getObservers(FromNumber) {
+    return await this.app().c('observers').observers({
+      "module": "webhookWhatsApp",
+      "verb": "receiveMessage",
+      "applyTo": FromNumber
+    });
+  }
+
+  // Handle each observer callback
+  async handleObservers(observers, messageObject, FromNumber) {
+    for (const observer of observers) {
+      const applyToPattern = observer.applyTo === "*" ? ".*" : observer.applyTo;
+      const regex = new RegExp(applyToPattern);
+
+      if (regex.test(FromNumber)) {
+        observer.callback({
+          "messageObject": messageObject,
+          "number": FromNumber,
+          "message": "!!! Well received !!!"
+        });
+      }
+    }
+  }
+
+  // Generate XML response
+  generateXmlResponse(jsonMessage) {
+    return '<?xml version="1.0" encoding="UTF-8"?>' + '<Response>' + jsonMessage + '</Response>';
+  }
+
+  // Generate error XML response
+  generateErrorXmlResponse(errorMessage) {
+    return '<?xml version="1.0" encoding="UTF-8"?>' + `<Response>${errorMessage}</Response>`;
   }
 
 }
