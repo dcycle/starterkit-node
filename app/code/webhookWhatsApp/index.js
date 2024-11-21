@@ -135,9 +135,19 @@ class WebhookWhatsApp extends require('../component/index.js') {
           try {
             let messageObject = req.body;
             if (this.validateAuthenticatedMessage(messageObject)) {
-              await this.storeInMessageDetail(messageObject);
-              // Send Confirmation message.
-              await app.c('whatsAppSend').parsepropertySendMessage('{"message": "!!! Well received !!!", "sendTo":"' + req.body.WaId + '"}');
+              app.c ('observers').addObserver({
+                "module": "webhookWhatsApp",
+                "verb": "receiveMessage",
+                // * for all phone numbers, or else specify a phone number.
+                "applyTo": "*",
+                "callback": async function(details) {
+                await this.storeInMessageDetail(details.messageObject);
+                // Send Confirmation message.
+                await app.c('whatsAppSend').parsepropertySendMessage('{"message": "!!! Well received !!!", "sendTo":"' + details.number + '"}');
+                },
+                // or never, or a date...
+                "expire": "+1 hour",
+              });
               // https://stackoverflow.com/questions/68508372
               const resp = '<?xml version="1.0" encoding="UTF-8"?><Response>' + jsonMessage + '</Response>';
               res.status(200).send(resp);
