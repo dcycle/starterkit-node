@@ -136,7 +136,7 @@ class WebhookWhatsApp extends require('../component/index.js') {
             let messageObject = req.body;
             if (this.validateAuthenticatedMessage(messageObject)) {
               const FromNumber = req.bodyWaId;
-              const observers = this.app().c('observers').observers({
+              const observers = await this.app().c('observers').observers({
                 // only return observers for this module.
                 "module": "webhookWhatsApp",
                 // only return observers for this verb
