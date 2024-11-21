@@ -91,7 +91,7 @@
   ) {
     try {
       const observer = await this.observers()(observerObject);
-      observer.save().then(async (value)=> {
+      return observer.save().then(async (value)=> {
         console.log("!! observer saved to database !!");
         return value.uuid;
       }).catch((err)=>{
