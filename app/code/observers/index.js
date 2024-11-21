@@ -17,7 +17,7 @@
       uuid: {
         type: String,
         // Generate a new UUID by default when a new document is created
-        default: this.uuid(),
+        // default: this.uuid(),
         // Ensure UUID is unique
         unique: true
       },
@@ -90,6 +90,8 @@
     observerObject /*:: : Object */
   ) {
     try {
+      const uniqueUuid = await this.generateUniqueUuid();
+      observerObject.uuid = uniqueUuid;
       const observer = await this.observers()(observerObject);
       return observer.save().then(async (value)=> {
         console.log("!! observer saved to database !!");
@@ -145,11 +147,22 @@
    * @returns string
    *   A UUID.
    */
-   uuid() {
+  async generateUniqueUuid() {
     // Import UUID for generating unique conversation IDs.
     // @ts-ignore
     const { v4: uuidv4 } = require('uuid');
-    return uuidv4();
+    let newUuid = uuidv4();
+
+    // Check if the UUID already exists in the database
+    let existingObserver = await this.observers().findOne({ uuid: newUuid });
+
+    // If the UUID already exists, generate a new one
+    while (existingObserver) {
+      newUuid = uuidv4();
+      existingObserver = await this.observers().findOne({ uuid: newUuid });
+    }
+
+    return newUuid;
   }
 }
 
