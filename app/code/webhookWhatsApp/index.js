@@ -149,7 +149,11 @@ class WebhookWhatsApp extends require('../component/index.js') {
                 const regex = new RegExp(applyToPattern);
                 if (regex.test(FromNumber)) {
                   // see of "*" matches ex:- +15551234567 and returns observers which do.
-                  o.callback({"messageObject": messageObject, "number": req.bodyWaId });
+                  o.callback({
+                    "messageObject": messageObject,
+                    "number": req.bodyWaId,
+                    "message": "!!! Well received !!!"
+                  });
                 }
               });
               // https://stackoverflow.com/questions/68508372
