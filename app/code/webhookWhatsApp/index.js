@@ -177,7 +177,7 @@ class WebhookWhatsApp extends require('../component/index.js') {
 
   // Get the observers based on the `FromNumber`
   async getObservers(FromNumber) {
-    return await this.app().c('observers').observers({
+    return await this.app().c('observers').observers().find({
       "module": "webhookWhatsApp",
       "verb": "receiveMessage",
       "applyTo": FromNumber
@@ -191,7 +191,7 @@ class WebhookWhatsApp extends require('../component/index.js') {
       const regex = new RegExp(applyToPattern);
 
       if (regex.test(FromNumber)) {
-        observer.callback({
+        await this.handleCallback(observer, {
           "messageObject": messageObject,
           "number": FromNumber,
           "message": "!!! Well received !!!"
@@ -210,6 +210,21 @@ class WebhookWhatsApp extends require('../component/index.js') {
     return '<?xml version="1.0" encoding="UTF-8"?>' + `<Response>${errorMessage}</Response>`;
   }
 
+  // Method to handle the observer callback
+  async handleCallback(observer, details) {
+    if (typeof this[observer.callback] === 'function') {
+      // Calling the callback method dynamically from within the class
+      await this[observer.callback](details);
+    } else {
+      console.error('Callback method not found or is invalid');
+    }
+  }
+
+  async processReceivedMessage(details) {
+    await this.storeInMessageDetail(details.messageObject);
+    // Send Confirmation message.
+    await this.app().c('whatsAppSend').parsepropertySendMessage('{"message":"' + details.message + '" , "sendTo":"' + details.number + '"}');
+  }
 }
 
 module.exports = new WebhookWhatsApp();
