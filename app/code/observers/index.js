@@ -141,6 +141,18 @@
     }
   }
 
+  async observersGetAll() {
+    try {
+      const observers = await this.observers().find({});
+      // Return the fetched observers
+      return observers;
+    } catch (err) {
+      console.error("Error fetching observers:", err);
+      // Return an empty array or handle error as needed
+      return [];
+    }
+  }
+
   /**
    * Get a UUID.
    *
