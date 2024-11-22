@@ -87,16 +87,34 @@ class WebhookWhatsApp extends require('../component/index.js') {
     }
   }
 
-  /** Store a message */
+  /**
+   * Stores a WhatsApp message object in the whatsappMessages collection database.
+   *
+   * This method takes a message object, processes it, and stores it in the database.
+   * It uses the `whatsappMessages` function to prepare the message before saving it.
+   * If the save operation is successful, the ID of the saved message is returned.
+   * If there is an error during the process, it is handled appropriately
+   * and an error is thrown.
+   *
+   * @param {Object} messageObject - The message object containing the details
+   * to be stored in the database.
+   * @returns {Promise<string | boolean>} A promise that resolves to the ID of the
+   *  saved message (string) or `false` if there was an error.
+   * @throws {Error} Throws an error if there is a validation error or a general
+   *  error during the saving process.
+   */
   async storeInMessageDetail(
-    messageObject /*:: : Object */
+   /*:: : Object */
+    messageObject
   ) {
     try {
       const message = await this.whatsappMessages()(messageObject);
-      message.save().then(async (value)=> {
+      return message.save().then(async (value)=> {
         console.log("!! whatsapp message saved to database !!");
+        return value.id;
       }).catch((err)=>{
         console.log(err);
+        return false;
       });
     } catch (error) {
       // Handle Mongoose validation errors
@@ -125,25 +143,55 @@ class WebhookWhatsApp extends require('../component/index.js') {
     return this;
   }
 
+  /**
+   * Handles incoming webhook messages, processes them, and saves them
+   * to the database if valid.
+   *
+   * This method is typically used as a webhook handler for incoming messages
+   *  from services such as Twilio or WhatsApp.
+   *
+   * It performs the following actions:
+   *
+   * 1. Converts the incoming message to a JSON string.
+   * 2. Writes the message to a file for logging or future reference.
+   * 3. Validates the authenticity of the message based on the `AccountSid`.
+   * 4. If valid, retrieves observers for the given message and triggers the
+   * `handleObservers` method.
+   * 5. Responds to the sender with a success or error XML response.
+   *
+   * The method ensures that only authenticated messages
+   *  (with a valid `AccountSid`) are processed and saved to the database.
+   *  It also handles various errors gracefully, returning appropriate HTTP status
+   *  codes and error messages when necessary.
+   *
+   * @param {Object} req - The incoming request object containing the message
+   *   data in the body.
+   * @param {Object} res - The response object used to send an HTTP response
+   *   back to the sender.
+   * @returns Promise<void>
+   *
+   * @throws {Error} Throws an error if the message cannot be processed or
+   * saved, triggering a 500 response.
+   */
   async handleIncomingMessage(req, res) {
     try {
       const jsonMessage = JSON.stringify(req.body);
 
-      // Write the incoming message to file
+      // Write the incoming message to file.
       await this.writeToFile(jsonMessage);
 
-      // Save to MongoDB after writing to file
       const messageObject = req.body;
+      // if account sid is eqaul to twillio user then only store in db.
       if (this.validateAuthenticatedMessage(messageObject)) {
-        const FromNumber = req.body.WaId;
-        const observers = await this.getObservers("webhookWhatsApp", "receiveMessage", FromNumber);
-
-        if (Array.isArray(observers)) {
-          await this.handleObservers(observers, messageObject, FromNumber);
-        } else {
-          console.error('Observers is not an array:', observers);
-        }
-
+        const toNumber = req.body.WaId;
+        // Fetch and Run observers related to webhookWhatsApp.
+        await this.app().c('observers').runObservers(
+          "webhookWhatsApp",
+          "receiveMessage",
+          toNumber,
+          messageObject,
+          "!! WELL RECIEVED !!"
+        );
         // Respond with the original message
         const resp = this.generateXmlResponse(jsonMessage);
         res.status(200).send(resp);
@@ -157,73 +205,122 @@ class WebhookWhatsApp extends require('../component/index.js') {
       const errorResp = this.generateErrorXmlResponse("Internal Server Error");
       res.status(500).send(errorResp);
     }
-  };
+  }
 
-  // Write the message to a file
-  writeToFile(jsonMessage) {
+  /**
+   * Writes a given message to a file, prepending it to the beginning of the file content.
+   *
+   * This method reads the current contents of the file, prepends the new `jsonMessage`
+   * to the beginning,
+   * and then writes the updated content back to the file. If the file does not exist,
+   * it will be created.
+   *
+   * @param {string} jsonMessage - The message to be written to the file.
+   * @returns {Promise<void>} A promise that resolves when the file has been updated
+   * successfully or rejects if there is an error.
+   */
+  async writeToFile(jsonMessage) {
     return /** @type {Promise<void>} */(new Promise((resolve, reject) => {
       // @ts-expect-error
       const fs = require('fs');
-      fs.writeFile('/output/whatsapp.json', jsonMessage, (err) => {
-        if (err) {
-          console.error('Error writing to file:', err);
-          reject(new Error('Error writing to file'));
-        } else {
-          resolve();
+      const filePath = '/output/whatsapp.json';
+
+      // Read the current contents of the file
+      fs.readFile(filePath, 'utf8', (readErr, data) => {
+        if (readErr && readErr.code !== 'ENOENT') {
+          // If the file exists and there's an error reading it, reject with an error
+          console.error('Error reading from file:', readErr);
+          return reject(new Error('Error reading from file'));
         }
+
+        // Prepend the new jsonMessage to the existing data (or use empty string
+        // if the file doesn't exist yet)
+        const newData = jsonMessage + (data || '');
+
+        // Write the new data to the file
+        fs.writeFile(filePath, newData, (writeErr) => {
+          if (writeErr) {
+            console.error('Error writing to file:', writeErr);
+            reject(new Error('Error writing to file'));
+          } else {
+            resolve();
+          }
+        });
       });
     }));
   }
 
-  // Get the observers based on the `FromNumber`
-  async getObservers(module, verb, FromNumber) {
-    return await this.app().c('observers').observers().find({
-      "module": module,
-      "verb": verb,
-      $or: [
-        // Match all observers if applyTo is "*"
-        { applyTo: '*' },
-        // Match if FromNumber is in the comma-separated list in applyTo
-        { applyTo: { $in: FromNumber.split(',') } }
-      ]
-    });
-  }
-
-  // Handle each observer callback
-  async handleObservers(observers, messageObject, FromNumber) {
-    for (const observer of observers) {
-      await this.handleCallback(observer, {
-        "messageObject": messageObject,
-        "number": FromNumber,
-        "message": "!!! Well received !!!"
-      });
-    }
-  }
-
-  // Generate XML response
+  /**
+   * Generates an XML response wrapper around the given message.
+   *
+   * This method takes a `jsonMessage` (or any string message) and wraps
+   *  it in a standard XML format.
+   * The resulting XML string includes an XML declaration and a root
+   *  `<Response>` element that
+   * contains the provided `jsonMessage`. This is typically used for
+   *  returning XML responses from webhooks or APIs that expect
+   *  XML-formatted data.
+   *
+   *
+   * @param {string} jsonMessage - The message content to be wrapped in XML.
+   * @returns {string} The XML string with the given message wrapped in a `<Response>` element.
+   */
   generateXmlResponse(jsonMessage) {
     return '<?xml version="1.0" encoding="UTF-8"?>' + '<Response>' + jsonMessage + '</Response>';
   }
 
-  // Generate error XML response
+  /**
+   * Generates an XML error response wrapper around the given error message.
+   *
+   * This method takes an `errorMessage` (or any string) and wraps it in a standard
+   *  XML error format.
+   * The resulting XML string includes an XML declaration and a root `<Response>`
+   *  element that
+   * contains the provided `errorMessage`. This is typically used to return error
+   *  messages in XML format from webhooks or APIs that expect XML-formatted
+   *  error responses.
+   *
+   *
+   * @param {string} errorMessage - The error message to be wrapped in XML.
+   * @returns {string} The XML string with the given error message wrapped in a
+   *  `<Response>` element.
+   */
   generateErrorXmlResponse(errorMessage) {
     return '<?xml version="1.0" encoding="UTF-8"?>' + `<Response>${errorMessage}</Response>`;
   }
 
-  // Method to handle the observer callback
-  async handleCallback(observer, details) {
-    if (typeof this[observer.callback] === 'function') {
-      // Calling the callback method dynamically from within the class
-      await this[observer.callback](details);
-    } else {
-      console.error('Callback method not found or is invalid');
-    }
-  }
-
-  async processReceivedMessage(details) {
-    await this.storeInMessageDetail(details.messageObject);
+  /**
+   * Processes a received message by storing it in the database and sending a
+   * confirmation message.
+   *
+   * This method takes the data of a received message, stores it in the database,
+   *  and then sends a confirmation message back to the sender. The confirmation message
+   *  is sent using the `whatsAppSend` service, which is accessed via the
+   *  app's configuration.
+   *
+   * The process is as follows:
+   * 1. The message details are passed to the `storeInMessageDetail` method
+   *  for persistence.
+   * 2. A confirmation message is then sent to the specified recipient using
+   *  the `whatsAppSend` service.
+   *
+   * @param {Object} data - The data object containing the messageObject, message
+   *  and number of the received message.
+   * @param {Object} data.messageObject - The received message.
+   * @param {string} data.message - The content of the message to be sent as
+   *  a confirmation.
+   * @param {string} data.number - The phone number to which the confirmation message
+   *  should be sent.
+   *
+   * @returns {Promise<void>} A promise that resolves once both the message has been
+   *  stored and the confirmation has been sent.
+   */
+  async processReceivedMessage(data) {
+    await this.storeInMessageDetail(data.messageObject);
     // Send Confirmation message.
-    await this.app().c('whatsAppSend').parsepropertySendMessage('{"message":"' + details.message + '" , "sendTo":"' + details.number + '"}');
+    await this.app().c('whatsAppSend').parsepropertySendMessage(
+      '{"message":"' + data.message + '" , "sendTo":"' + data.number + '"}'
+    );
   }
 }
 

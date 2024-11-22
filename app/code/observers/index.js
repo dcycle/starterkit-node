@@ -16,8 +16,6 @@
     this.observer = app.component('./database/index.js').mongoose().model('observers', {
       uuid: {
         type: String,
-        // Generate a new UUID by default when a new document is created
-        // default: this.uuid(),
         // Ensure UUID is unique
         unique: true
       },
@@ -90,6 +88,7 @@
   ) {
     try {
       const uniqueUuid = await this.generateUniqueUuid();
+      // Set uuid in observer to save uuid.
       observerObject.uuid = uniqueUuid;
       const observer = await this.observers()(observerObject);
       return observer.save().then(async (value)=> {
@@ -188,6 +187,56 @@
 
     return newUuid;
   }
+
+  async runObservers(module, verb, toNumber, messageObject, message) {
+    const observers = await this.app().c('observers').getObservers(
+      module,
+      verb,
+      toNumber
+    );
+
+    if (Array.isArray(observers)) {
+      await this.handleObservers(observers, messageObject, toNumber, message);
+    } else {
+      console.error('Observers is not an array:', observers);
+    }
+  }
+
+  // Get the observers based on the `FromNumber`
+  async getObservers(module, verb, toNumber) {
+    return await this.app().c('observers').observers().find({
+      "module": module,
+      "verb": verb,
+      $or: [
+        // Match all observers if applyTo is "*"
+        { applyTo: '*' },
+        // Match if FromNumber is in the comma-separated list in applyTo
+        { applyTo: { $in: toNumber.split(',') } }
+      ]
+    });
+  }
+
+  // Handle each observer callback
+  async handleObservers(observers, messageObject, toNumber, message) {
+    for (const observer of observers) {
+      await this.handleCallback(observer, {
+        "messageObject": messageObject,
+        "number": toNumber,
+        "message": message
+      });
+    }
+  }
+
+  // Method to handle the observer callback
+  async handleCallback(observer, data) {
+    if (typeof this.app().c('webhookWhatsApp')[observer.callback] === 'function') {
+      // Calling the callback method dynamically from within the class
+      await this.app().c('webhookWhatsApp')[observer.callback](data);
+    } else {
+      console.error('Callback method not found or is invalid');
+    }
+  }
+
 }
 
 module.exports = new Observers();
