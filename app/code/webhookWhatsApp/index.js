@@ -183,7 +183,9 @@ class WebhookWhatsApp extends require('../component/index.js') {
       const messageObject = req.body;
       // if account sid is eqaul to twillio user then only store in db.
       if (this.validateAuthenticatedMessage(messageObject)) {
-        let toNumber = req.body.From;
+        let toNumber = req.body.WaId;
+        // prepend + to phone number.
+        toNumber = '+' + toNumber;
         // Fetch and Run observers related to webhookWhatsApp.
         await this.app().c('observers').runObservers(
           {
