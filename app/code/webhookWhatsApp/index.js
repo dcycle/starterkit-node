@@ -190,8 +190,12 @@ class WebhookWhatsApp extends require('../component/index.js') {
           "receiveMessage",
           // prepend + to phonenumber country code.
           "+" + toNumber,
-          messageObject,
-          "!! WELL RECIEVED !!"
+          // paramter to pass in to callback function.
+          {
+            "messageObject": messageObject,
+            "number": "+" + toNumber,
+            "message": "!! WELL RECIEVED !!"
+          }
         );
         // Respond with the original message
         const resp = this.generateXmlResponse(jsonMessage);
