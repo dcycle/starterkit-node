@@ -350,6 +350,11 @@ Objects of these classes can be created by calling a very primitive autoloader:
     // 100
 
 ### Observers
+Observer are like event handling. When event occured we need to call respective observer which 
+are depedent on those events. Example:- when we recieve whatsapp message we need to
+run all functions which are to be executed after recieving whatsapp message like sending
+confirmation message...
+
 - Execute below functions In scripts/node-cli.sh console 
 
 * List all Observers
