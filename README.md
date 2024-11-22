@@ -358,12 +358,12 @@ Objects of these classes can be created by calling a very primitive autoloader:
     ```
 * Find Observer by UUID
     ```
-    await app.c('observers').findByUuid('7102bce6-514a-450a-9683-9efe99411bd6');
+    await app.c('observers').findByUuid('<UUID>');
     ```
 
 * Delete Observer by UUID
     ```
-    await app.c('observers').deleteByUuid('60ab39c3-2ca7-4bd2-a6d6-9c3fd2976a12');
+    await app.c('observers').deleteByUuid('<UUID>');
     ```
 
 * Create new observer.
