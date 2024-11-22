@@ -135,8 +135,8 @@ class WebhookWhatsApp extends require('../component/index.js') {
       // Save to MongoDB after writing to file
       const messageObject = req.body;
       if (this.validateAuthenticatedMessage(messageObject)) {
-        const FromNumber = req.bodyWaId;
-        const observers = await this.getObservers(FromNumber);
+        const FromNumber = req.body.WaId;
+        const observers = await this.getObservers("webhookWhatsApp", "receiveMessage", FromNumber);
 
         if (Array.isArray(observers)) {
           await this.handleObservers(observers, messageObject, FromNumber);
@@ -176,27 +176,27 @@ class WebhookWhatsApp extends require('../component/index.js') {
   }
 
   // Get the observers based on the `FromNumber`
-  async getObservers(FromNumber) {
+  async getObservers(module, verb, FromNumber) {
     return await this.app().c('observers').observers().find({
-      "module": "webhookWhatsApp",
-      "verb": "receiveMessage",
-      "applyTo": FromNumber
+      "module": module,
+      "verb": verb,
+      $or: [
+        // Match all observers if applyTo is "*"
+        { applyTo: '*' },
+        // Match if FromNumber is in the comma-separated list in applyTo
+        { applyTo: { $in: FromNumber.split(',') } }
+      ]
     });
   }
 
   // Handle each observer callback
   async handleObservers(observers, messageObject, FromNumber) {
     for (const observer of observers) {
-      const applyToPattern = observer.applyTo === "*" ? ".*" : observer.applyTo;
-      const regex = new RegExp(applyToPattern);
-
-      if (regex.test(FromNumber)) {
-        await this.handleCallback(observer, {
-          "messageObject": messageObject,
-          "number": FromNumber,
-          "message": "!!! Well received !!!"
-        });
-      }
+      await this.handleCallback(observer, {
+        "messageObject": messageObject,
+        "number": FromNumber,
+        "message": "!!! Well received !!!"
+      });
     }
   }
 

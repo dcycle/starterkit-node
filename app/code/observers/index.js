@@ -178,12 +178,12 @@
     let newUuid = uuidv4();
 
     // Check if the UUID already exists in the database
-    let existingObserver = await this.findByUuid({ uuid: newUuid });
+    let existingObserver = await this.findByUuid(newUuid);
 
     // If the UUID already exists, generate a new one
     while (existingObserver) {
       newUuid = uuidv4();
-      existingObserver = await this.findByUuid({ uuid: newUuid });
+      existingObserver = await this.findByUuid(newUuid);
     }
 
     return newUuid;
