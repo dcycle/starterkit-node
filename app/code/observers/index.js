@@ -292,10 +292,7 @@
    *  `handleObservers` with the fetched observers
    * and additional `data`. If the observers are not an array, an error is logged.
    *
-   * @param {string} module - The module name used to filter the relevant observers.
-   * @param {string} verb - The action or event type that triggers the observers.
-   * @param {number} toNumber - A number that may be used to limit or define the
-   *  scope of the observers to be retrieved.
+   * @param {object} filters - The filter the relevant observers.
    * @param {Object} data - The data to be passed to the observers for further handling.
    *
    * @returns {Promise<void>} A promise that resolves when all observer
@@ -304,12 +301,8 @@
    * @throws {Error} Will throw an error if the `getObservers` method fails
    *  to retrieve observers.
    */
-  async runObservers(module, verb, toNumber, data) {
-    const observers = await this.app().c('observers').getObservers(
-      module,
-      verb,
-      toNumber
-    );
+  async runObservers(filters, data) {
+    const observers = await this.app().c('observers').getObservers(filters);
 
     if (Array.isArray(observers)) {
       await this.handleObservers(observers, data);
@@ -328,10 +321,7 @@
    * - The `applyTo` field is either a wildcard (`*`), or
    * - The `applyTo` field contains the provided `toNumber`.
    *
-   * @param {string} module - The module to filter observers by.
-   * @param {string} verb - The verb (action or event) to filter observers by.
-   * @param {number|string} toNumber - The number or identifier used to filter
-   *  observers based on the `applyTo` field.
+   * @param {object} filters - The filters to select respective observers.
    *
    * @returns {Promise<Array>} A promise that resolves to an array of observer
    *  documents that match the query.
@@ -339,17 +329,8 @@
    *
    * @throws {Error} Will throw an error if the database query fails.
    */
-  async getObservers(module, verb, toNumber) {
-    return await this.app().c('observers').observers().find({
-      "module": module,
-      "verb": verb,
-      $or: [
-        // Match all observers if applyTo is "*"
-        { applyTo: '*' },
-        // Match if toNumber is in the comma-separated list in applyTo
-        { applyTo: toNumber}
-      ]
-    });
+  async getObservers(filters) {
+    return await this.app().c('observers').observers().find(filters);
   }
 
   /**

@@ -186,10 +186,16 @@ class WebhookWhatsApp extends require('../component/index.js') {
         const toNumber = req.body.WaId;
         // Fetch and Run observers related to webhookWhatsApp.
         await this.app().c('observers').runObservers(
-          "webhookWhatsApp",
-          "receiveMessage",
-          // prepend + to phonenumber country code.
-          "+" + toNumber,
+          {
+            "module": "webhookWhatsApp",
+            "verb": "receiveMessage",
+            $or: [
+              // Match all observers if applyTo is "*"
+              { applyTo: '*' },
+              // prepend + to phonenumber country code.
+              { applyTo: "+" + toNumber,}
+            ]
+          },
           // paramter to pass in to callback function.
           {
             "messageObject": messageObject,
