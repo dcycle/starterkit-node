@@ -19,6 +19,7 @@ Dcycle Node.js starterkit
   * Components's class names are the same as their directory names but start with an uppercase letter
   * Plugins: how modules can share information with each other
   * Components can define classes
+  * Observers
 * The Node.js command line interface (CLI)
 * MongoDB crud (create - read - update - delete)
 * Mongoose vs MongoDB
@@ -347,6 +348,107 @@ Objects of these classes can be created by calling a very primitive autoloader:
     // hello
     myObject.getNumber();
     // 100
+
+### Observers
+- Execute below functions In scripts/node-cli.sh console 
+
+* List all Observers
+    ```
+    await app.c('observers').observersGetAll();
+    ```
+* Find Observer by UUID
+    ```
+    await app.c('observers').findByUuid('7102bce6-514a-450a-9683-9efe99411bd6');
+    ```
+
+* Delete Observer by UUID
+    ```
+    await app.c('observers').deleteByUuid('60ab39c3-2ca7-4bd2-a6d6-9c3fd2976a12');
+    ```
+
+* Create new observer.
+    ```
+    await app.c('observers').addObserver({
+    "module": "webhookWhatsApp",
+    "verb": "receiveMessage",
+    "applyTo": "<phone number with country code>",   // * for all phone numbers, or else specify a phone number.
+    "callback": "<name of a callback function>",
+    "expire": "+1 hour", // or never, or a date...
+    });
+    ```
+example:- 
+    ```
+    await app.c('observers').addObserver({
+    "module": "webhookWhatsApp",
+    "verb": "receiveMessage",
+    "applyTo": "+919632324012",   // * for all phone numbers, or else specify a phone number.
+    "callback": "processReceivedMessage",
+    "expire": "+1 hour", // or never, or a date...
+    });
+
+    await app.c('observers').addObserver({
+    "module": "webhookWhatsApp",
+    "verb": "receiveMessage",
+    "applyTo": "*",   // * for all phone numbers, or else specify a phone number.
+    "callback": "processReceivedMessage",
+    "expire": "+1 hour", // or never, or a date...
+    });
+
+    ```
+
+* Update existing field or add a new field to observer.
+    ```
+    await app.c('observers').updateOne(
+    '<UUID>',
+    '<field name>',
+    '<field value>'
+    )
+    ```
+example:-
+    ```
+    await app.c('observers').updateOne(
+    '8e6006ab-fa84-4a99-adb6-dc5b0ce24b48',
+    'callback2',
+    'abcd'
+    )
+
+    await app.c('observers').updateOne(
+    '8e6006ab-fa84-4a99-adb6-dc5b0ce24b48',
+    'callback',
+    'processReceivedMessage'
+    )
+    ```
+
+- Consuming Observers
+
+    ```
+    await this.app().c('observers').runObservers(filters, data);
+    ```
+    example:-
+    ```
+        // Fetch and Run observers related to webhookWhatsApp.
+        await this.app().c('observers').runObservers(
+          {
+            "module": "webhookWhatsApp",
+            "verb": "receiveMessage",
+            $or: [
+              // Match all observers if applyTo is "*"
+              { applyTo: '*' },
+              // prepend + to phonenumber country code.
+              { applyTo: { $in: toNumber.split(',') } }
+            ]
+          },
+          // argument value to pass in to callback function.
+          {
+            "messageObject": messageObject,
+            "number": "+" + toNumber,
+            "message": "!! WELL RECIEVED !!"
+          }
+        );
+    ```
+
+note:- *** call back function definition to be defined in observers class *** 
+
 
 The Node.js command line interface (CLI)
 -----
