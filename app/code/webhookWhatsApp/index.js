@@ -193,7 +193,7 @@ class WebhookWhatsApp extends require('../component/index.js') {
               // Match all observers if applyTo is "*"
               { applyTo: '*' },
               // prepend + to phonenumber country code.
-              { applyTo: "+" + toNumber,}
+              { applyTo: { $in: toNumber.split(',') } }
             ]
           },
           // paramter to pass in to callback function.
