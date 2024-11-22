@@ -211,7 +211,7 @@
         // Match all observers if applyTo is "*"
         { applyTo: '*' },
         // Match if FromNumber is in the comma-separated list in applyTo
-        { applyTo: { $in: toNumber.split(',') } }
+        { applyTo: toNumber}
       ]
     });
   }

@@ -188,7 +188,8 @@ class WebhookWhatsApp extends require('../component/index.js') {
         await this.app().c('observers').runObservers(
           "webhookWhatsApp",
           "receiveMessage",
-          toNumber,
+          // prepend + to phonenumber country code.
+          "+" + toNumber,
           messageObject,
           "!! WELL RECIEVED !!"
         );
