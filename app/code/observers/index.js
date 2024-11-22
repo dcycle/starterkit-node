@@ -229,12 +229,46 @@
 
   // Method to handle the observer callback
   async handleCallback(observer, data) {
-    if (typeof this.app().c('webhookWhatsApp')[observer.callback] === 'function') {
+    if (typeof this[observer.callback] === 'function') {
       // Calling the callback method dynamically from within the class
-      await this.app().c('webhookWhatsApp')[observer.callback](data);
+      await this[observer.callback](data);
     } else {
       console.error('Callback method not found or is invalid');
     }
+  }
+
+  /**
+   * Processes a received message by storing it in the database and sending a
+   * confirmation message.
+   *
+   * This method takes the data of a received message, stores it in the database,
+   *  and then sends a confirmation message back to the sender. The confirmation message
+   *  is sent using the `whatsAppSend` service, which is accessed via the
+   *  app's configuration.
+   *
+   * The process is as follows:
+   * 1. The message details are passed to the `storeInMessageDetail` method
+   *  for persistence.
+   * 2. A confirmation message is then sent to the specified recipient using
+   *  the `whatsAppSend` service.
+   *
+   * @param {Object} data - The data object containing the messageObject, message
+   *  and number of the received message.
+   * @param {Object} data.messageObject - The received message.
+   * @param {string} data.message - The content of the message to be sent as
+   *  a confirmation.
+   * @param {string} data.number - The phone number to which the confirmation message
+   *  should be sent.
+   *
+   * @returns {Promise<void>} A promise that resolves once both the message has been
+   *  stored and the confirmation has been sent.
+   */
+   async processReceivedMessage(data) {
+    await this.app().c('webhookWhatsApp').storeInMessageDetail(data.messageObject);
+    // Send Confirmation message.
+    await this.app().c('whatsAppSend').parsepropertySendMessage(
+      '{"message":"' + data.message + '" , "sendTo":"' + data.number + '"}'
+    );
   }
 
 }
