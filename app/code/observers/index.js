@@ -403,22 +403,16 @@
    * 2. A confirmation message is then sent to the specified recipient using
    *  the `whatsAppSend` service.
    *
-   * @param {Object} data - The data object containing the messageObject, message
-   *  and number of the received message.
-   * @param {Object} data.messageObject - The received message.
-   * @param {string} data.message - The content of the message to be sent as
-   *  a confirmation.
-   * @param {string} data.number - The phone number to which the confirmation message
-   *  should be sent.
+   * @param {Object} data - The data object containing the message object.
    *
    * @returns {Promise<void>} A promise that resolves once both the message has been
    *  stored and the confirmation has been sent.
    */
    async processReceivedMessage(data) {
-    await this.app().c('webhookWhatsApp').storeInMessageDetail(data.messageObject);
+    await this.app().c('webhookWhatsApp').storeInMessageDetail(data);
     // Send Confirmation message.
     await this.app().c('whatsAppSend').parsepropertySendMessage(
-      '{"message":"' + data.message + '" , "sendTo":"' + data.number + '"}'
+      '{"message":"!! WELL RECIEVED !!" , "sendTo":"+' + data.WaId + '"}'
     );
   }
 

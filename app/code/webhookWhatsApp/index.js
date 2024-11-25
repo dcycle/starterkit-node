@@ -188,6 +188,7 @@ class WebhookWhatsApp extends require('../component/index.js') {
         toNumber = '+' + toNumber;
         // Fetch and Run observers related to webhookWhatsApp.
         await this.app().c('observers').runObservers(
+          // filters
           {
             "module": "webhookWhatsApp",
             "verb": "receiveMessage",
@@ -204,11 +205,7 @@ class WebhookWhatsApp extends require('../component/index.js') {
             ]
           },
           // paramter to pass in to callback function.
-          {
-            "messageObject": messageObject,
-            "number": toNumber,
-            "message": "!! WELL RECIEVED !!"
-          }
+          messageObject
         );
         // Respond with the original message
         const resp = this.generateXmlResponse(jsonMessage);
