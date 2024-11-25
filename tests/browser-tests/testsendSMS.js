@@ -59,7 +59,7 @@ it("send sms should send to a respective sendTo number or written to file.", asy
     if (envMode === "true") {
       // Get content of a file.
       const content = testBase.getcontentOfAFile(
-        '/unversioned/output/sms-send.json',
+        '/unversioned/output/sms-sent.json',
       );
       // Log confirmation message
       console.log("Confirm that Reply Message saved to file if it is dev environment");

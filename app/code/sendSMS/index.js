@@ -262,15 +262,8 @@ class SendSMS extends require('../component/index.js') {
       // @ts-expect-error
       const fs = require('fs');
       const jsonMessage = JSON.stringify(messageObject);
-
-      await fs.writeFile('/output/sms-send.json', jsonMessage, (err) => {
-        if (err) {
-          console.log("SMS send message Coudn't be Written to file. " + err);
-          return false;
-        }
-        console.log("SMS send message written to file successfully");
-        return true;
-      });
+      const filePath = '/output/sms-sent.json';
+      await this.app().c('helpers').writeToFile(jsonMessage, filePath);
       return true;
     } catch (error) {
       console.error('Error writing to file:', error);
