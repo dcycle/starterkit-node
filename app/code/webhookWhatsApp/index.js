@@ -201,7 +201,7 @@ class WebhookWhatsApp extends require('../component/index.js') {
           // paramter to pass in to callback function.
           {
             "messageObject": messageObject,
-            "number": "+" + toNumber,
+            "number": toNumber,
             "message": "!! WELL RECIEVED !!"
           }
         );
