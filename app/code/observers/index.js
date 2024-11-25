@@ -103,17 +103,30 @@
     observerObject /*:: : Object */
   ) {
     try {
-      const uniqueUuid = await this.generateUniqueUuid();
-      // Set uuid in observer to save uuid.
-      observerObject.uuid = uniqueUuid;
-      const observer = await this.observers()(observerObject);
-      return observer.save().then(async (value)=> {
-        console.log("!! observer saved to database !!");
-        return value.uuid;
-      }).catch((err)=>{
-        console.log(err);
-        return false;
+      // Check if the observerObject already exists in the database based on a unique identifier (e.g., uuid or other field)
+      const existingObserver = await this.observers().findOne({
+        // Assuming the observerObject has a unique field like 'applyTo', or any other unique identifier.
+        applyTo: observerObject.applyTo // or another field that uniquely identifies the observer
       });
+
+      if (existingObserver) {
+        // If the observer already exists, return the existing UUID or other appropriate response
+        console.log("Observer already exists in the database.");
+        // Or return other relevant information from existingObserver
+        return existingObserver.uuid;
+      } else {
+        const uniqueUuid = await this.generateUniqueUuid();
+        // Set uuid in observer to save uuid.
+        observerObject.uuid = uniqueUuid;
+        const observer = await this.observers()(observerObject);
+        return observer.save().then(async (value)=> {
+          console.log("!! observer saved to database !!");
+          return value.uuid;
+        }).catch((err)=>{
+          console.log(err);
+          return false;
+        });
+      }
     } catch (error) {
       // Handle Mongoose validation errors
       if (error.name === 'ValidationError') {
