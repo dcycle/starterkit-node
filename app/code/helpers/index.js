@@ -11,7 +11,7 @@ class Helpers extends require('../component/index.js') {
   async init(app)  {
     super.init(app);
   }
-   
+
   dependencies() {
     return [
       './express/index.js',
