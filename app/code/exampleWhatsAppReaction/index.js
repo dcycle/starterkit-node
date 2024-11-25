@@ -21,7 +21,7 @@
   }
 
   async run(app) {
-    app.c('observers').addObserver({
+    await app.c('observers').addObserver({
       "module": "webhookWhatsApp",
       "verb": "receiveMessage",
       // * for all phone numbers, or else specify a phone number.
