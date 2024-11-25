@@ -162,6 +162,7 @@ class SendSMS extends require('../component/index.js') {
    */
   async parsepropertySendSMS(messageObject) {
 
+    // If messageObject is a string, convert it to the desired object pattern.
     if (typeof messageObject === 'string') {
       // Create the new object with the JSON string as the key and an empty string as the value.
       messageObject = { [messageObject]: '' };
