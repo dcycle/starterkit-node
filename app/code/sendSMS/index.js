@@ -67,23 +67,6 @@ class SendSMS extends require('../component/index.js') {
       }
     );
 
-    app.c('express').addRoute(
-      // Name of a Route.
-      'webhookSMS',
-      // HTTP method for this route.
-      'post',
-      // Route pattern.
-      // http://0.0.0.0:8792/webhook/twilio-sms
-      '/webhook/twilio-sms',
-      async (req, res) => {
-        console.log("************* req sms *************");
-        console.log(req);
-        console.log("************* res sms *************");
-        console.log(res);
-        // await this.handleIncomingSMS(req, res);
-      }
-    );
-
     // Return the instance of the class.
     return this;
   }
