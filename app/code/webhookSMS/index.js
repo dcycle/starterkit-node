@@ -110,8 +110,8 @@ class WebhookSMS extends require('../component/index.js') {
         // @ts-expect-error
         const fs = require('fs');
         const jsonMessage = JSON.stringify(req.body);
-        
-        const filePath = '/output/sms.json';
+
+        const filePath = '/output/sms-received.json';
         try {
           await this.app().c('helpers').writeToFile(jsonMessage, filePath);
 
