@@ -4,11 +4,20 @@
 
 class Helpers extends require('../component/index.js') {
 
+  /**
+   * @property {Function} init Initializes this object.
+   * @returns WebhookSMS
+   */
+  async init(app)  {
+    super.init(app);
+  }
+   
   dependencies() {
     return [
       './express/index.js',
       './authentication/index.js',
-      './database/index.js'
+      './database/index.js',
+      './env/index.js'
     ];
   }
 
