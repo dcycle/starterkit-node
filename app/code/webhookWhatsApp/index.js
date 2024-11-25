@@ -192,9 +192,15 @@ class WebhookWhatsApp extends require('../component/index.js') {
             "module": "webhookWhatsApp",
             "verb": "receiveMessage",
             $or: [
-              // Match all observers if applyTo is "*"
+              // Match when applyTo is '*' (wildcard)
               { applyTo: '*' },
-              { applyTo: { $regex: `(^|,)${toNumber}($|,)`, $options: 'g' } }
+              // Match when applyTo contains toNumber as a substring
+              { applyTo: {
+                  $regex: this.escapeRegExp(toNumber),
+                  // case insensitive
+                  $options: 'i'
+                }
+              }
             ]
           },
           // paramter to pass in to callback function.
@@ -217,6 +223,11 @@ class WebhookWhatsApp extends require('../component/index.js') {
       const errorResp = this.generateErrorXmlResponse("Internal Server Error");
       res.status(500).send(errorResp);
     }
+  }
+
+  // Escape special regex characters in the phone number
+  escapeRegExp(string) {
+    return string.replace(/[.*+?^=!:${}()|\[\]\/\\]/g, '\\$&');
   }
 
   /**
