@@ -78,3 +78,4 @@ modules:
   ./webhookWhatsApp/index.js: {}
   ./whatsAppSend/index.js: {}
   ./sendSMS/index.js: {}
+  ./exampleWhatsAppReaction/index.js: {}
