@@ -5,11 +5,11 @@
 
   subscriber1(data) {
     console.log('hello' + data); 
-  };
+  }
 
   subscriber2(data) { 
     console.log('world' + data); 
-  };
+  }
 
   async run(app)  {
     // subscriber1 listens to 'helloWorld-publisher'.
