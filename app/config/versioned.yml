@@ -77,3 +77,6 @@ modules:
   ./webhookWhatsApp/index.js: {}
   ./whatsAppSend/index.js: {}
   ./sendSMS/index.js: {}
+  ./observer/index.js: {}
+  ./observerExamplePublisher/index.js: {}
+  ./observerExampleSubscriber/index.js: {}
