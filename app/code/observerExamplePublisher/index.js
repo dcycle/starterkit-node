@@ -2,7 +2,7 @@
   it will publish a event, and it will say something like:
   hookManagerExamplePublisher is performing an action, and will trigger a hook.
   hookManagerExamplePublisher has just triggered hooks.
-  When you do 
+  When you do
   app.component('hookManagerExamplePublisher').helloWorld();
  *
  */
@@ -12,7 +12,11 @@ class ObserverExamplePublisher extends require('../component/index.js') {
   async helloWorld() {
     console.log("ObserverExamplePublisher is performing an action, and will trigger a publish.");
     // trigger 'helloWorld-publisher' so that listeners respond to it.
-    await this.app().c('observer').publish('helloWorld-publisher', '');
+    await this.app().c('observer').publish(
+      'observerExamplePublisher',
+      'helloWorld',
+      '',
+    );
     console.log("ObserverExamplePublisher has published.");
   }
 

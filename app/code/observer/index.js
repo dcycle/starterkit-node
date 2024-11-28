@@ -9,38 +9,108 @@
 
   // https://github.com/jshint/jshint/issues/3361
   /* jshint ignore:start */
-  events = {};
+  subscribers = {};
   /* jshint ignore:end */
 
   // subscribe a event handler
-  subscribe(event, handler, moduleName) {
-    if (this.isModuleEnabled(moduleName)) {
-      if (!this.events[event]) {
-        this.events[event] = [];
-      }
-      this.events[event].push({ handler, moduleName });
+  /**
+   * @param {string} publisherModule
+   *   A publisher module such as 'observerExamplePublisher'.
+   * @param {string} publishedEvent
+   *   A published event of which our subscriber should be notified, such
+   *   as 'helloWorld'.
+   * @param {string} subscriberModule
+   *   A subscriber module such as 'observerExampleSubscriber'.
+   * @param {string} subscriberMethod
+   *   A method such as 'subscriber1' which should exist on
+   *   'observerExampleSubscriber'.
+   * @param {string} subscriptionId
+   *   If an ID is passed here, the system will only add the subscriber if
+   *   another subscriber with the same ID does not exist.
+   */
+  subscribe(
+    publisherModule,
+    publishedEvent,
+    subscriberModule,
+    subscriberMethod,
+    subscriptionId = '',
+  ) {
+    if (!this.isModuleEnabled(publisherModule)) {
+      return;
     }
+    if (!this.isModuleEnabled(subscriberModule)) {
+      return;
+    }
+    if (!subscriptionId) {
+      subscriptionId = this.uuid();
+    }
+    this.ensureStructureValid(
+      publisherModule,
+      publishedEvent,
+    );
+
+    this.subscribers[publisherModule][publishedEvent][subscriptionId] = {
+      subscriberModule: subscriberModule,
+      subscriberMethod: subscriberMethod,
+    };
   }
 
-  // Check if the module is enabled
-  isModuleEnabled(moduleName) {
-    return this.app().config().modules['./' + moduleName + '/index.js'];
+  ensureStructureValid(
+    publisherModule,
+    publishedEvent,
+  ) {
+    if (!this.subscribers[publisherModule]) {
+      this.subscribers[publisherModule] = {};
+    }
+    if (!this.subscribers[publisherModule][publishedEvent]) {
+      this.subscribers[publisherModule][publishedEvent] = {};
+    }
   }
 
   // publish the event for a specific event
-  publish(event, data) {
-    if (this.events[event]) {
-      this.events[event].forEach(({ handler, moduleName }) => {
-        if (this.isModuleEnabled(moduleName)) {
-          console.log("____________handler___________________");
-          console.log(handler);
-          // Execute handler if module is enabled
-          // subscribeToPublisher1
-          this.app().c(moduleName)[handler](data);
-        }
-      });
+  publish(publisherModule, publishedEvent, data) {
+    if (!this.isModuleEnabled(publisherModule)) {
+      return;
+    }
+    this.ensureStructureValid(
+      publisherModule,
+      publishedEvent,
+    );
+
+    // https://stackoverflow.com/a/7241901
+    const subscribers = this.subscribers[publisherModule][publishedEvent];
+    for (const subscriberId in subscribers) {
+      if (subscribers.hasOwnProperty(subscriberId)) {
+        const module = subscribers[subscriberId].subscriberModule;
+        const method = subscribers[subscriberId].subscriberMethod;
+        this.app().c(module)[method](data);
+      }
     }
   }
+
+  /**
+   * Get a UUID.
+   *
+   * @returns string
+   *   A UUID.
+   */
+  uuid() {
+    // Import UUID for generating unique conversation IDs.
+    // @ts-ignore
+    const { v4: uuidv4 } = require('uuid');
+    return uuidv4();
+  }
+
+  /**
+   * Returns the dependencies required by the chatbot.
+   * @returns {String[]} Array of dependency paths.
+   */
+    dependencies() {
+      return [
+        // UUID library dependency
+        'uuid'
+      ];
+    }
 
   async run(app)  {
     return this;
