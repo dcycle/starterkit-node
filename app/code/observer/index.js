@@ -1,16 +1,89 @@
 /**
- * "Observer" that will allow you to subscribe, enable, and disable events
- * dynamically. The Observer will act like a registry for events, and you
- * can trigger them when the relevant event occurs
- * (e.g., receiving a Twilio webhook).
+ * "Observer" manages publish and subscribe functionality.
+ * The Observer will act like a registry for subscribers, and
+ * trigger a publish from any where in the modules then subscribers
+ * executed which are waiting for the respective publishedEvent.
  *
+ * (e.g., receiving a Twilio webhook).
+ * Refer observerExamplePublisher, observerExampleSubscriber for implimenting
+ *  publish and subscribers.
  */
  class Observer extends require('../component/index.js') {
+
+  /**
+   * Returns the dependencies.
+   * @returns {String[]}
+   */
+   dependencies() {
+    return [
+      // Dependency on express module
+      './express/index.js',
+      './database/index.js',
+      // UUID library dependency
+      'uuid'
+    ];
+  }
+
+  /**
+   * @property {Function} init Initializes this object.
+   * @returns Observers
+   */
+   async init(app) {
+    super.init(app);
+
+    this.subscribersModel = app.component('./database/index.js')
+      .mongoose().model('subscribers', {
+        publisherModule: {
+          type: String,
+          required: true
+        },
+        publishedEvent: {
+          type: String,
+          required: true
+        },
+        subscriberModule: {
+          type: String,
+          required: true
+        },
+        subscriberMethod: {
+          type: String,
+          required: true
+        },
+        subscriptionId: {
+          type: String,
+          required: true
+        },
+        createdAt: {
+          type: Date,
+          default: Date.now
+        }
+      });
+
+    return this;
+  }
 
   // https://github.com/jshint/jshint/issues/3361
   /* jshint ignore:start */
   subscribers = {};
   /* jshint ignore:end */
+
+  collection() {
+    return this.app().c('database').client()
+      .db('login')
+      .collection('subscribers');
+  }
+
+  /**
+   * Fetch the "subscribers" model.
+   */
+   getSubscribersModel() {
+    // Sample usage:
+    // this.subscribers().find({},(err, observers)=> {
+    //   return observers;
+    // });
+
+    return this.subscribersModel;
+  }
 
   // subscribe a event handler
   /**
@@ -53,6 +126,14 @@
       subscriberModule: subscriberModule,
       subscriberMethod: subscriberMethod,
     };
+
+    this.storeSubscriber({
+      "publisherModule": publisherModule,
+      "publishedEvent": publishedEvent,
+      "subscriberModule": subscriberModule,
+      "subscriberMethod": subscriberMethod,
+      "subscriptionId": subscriptionId
+    });
   }
 
   ensureStructureValid(
@@ -67,7 +148,7 @@
     }
   }
 
-  // publish the event for a specific event
+  // publish the event for a specific event.
   publish(publisherModule, publishedEvent, data) {
     if (!this.isModuleEnabled(publisherModule)) {
       return;
@@ -102,15 +183,49 @@
   }
 
   /**
-   * Returns the dependencies required by the chatbot.
-   * @returns {String[]} Array of dependency paths.
+   * Adds a new subscriber to the database.
+   *
+   * @param {Object} subscriberObject - The subscriber object to be added to the database.
+   *
+   * @returns {Promise<string|boolean>} A promise that resolves to the ID of the
+   * saved subscriber if successful, or `false` if there was an error during saving.
+   *
+   * @throws {Error} Will throw an error if there is a validation error or any other
+   * type of error during the process of storing the subscriber.
    */
-    dependencies() {
-      return [
-        // UUID library dependency
-        'uuid'
-      ];
+   async storeSubscriber(
+    subscriberObject /*:: : Object */
+  ) {
+    try {
+      // Check if the subscriberObject already exists in the database.
+      const existingSubscriber = await this.getSubscribersModel().findOne(subscriberObject);
+
+      if (existingSubscriber) {
+        // If the subscriber already exists, return the existing ID
+        // or other appropriate response.
+        console.log("subscriber already exists in the database.");
+        return existingSubscriber.id;
+      } else {
+        const subscriber = await this.getSubscribersModel()(subscriberObject);
+        return subscriber.save().then(async (value)=> {
+          console.log("!! subscriber saved to database !!");
+          return value.id;
+        }).catch((err)=>{
+          console.log(err);
+          return false;
+        });
+      }
+    } catch (error) {
+      // Handle Mongoose validation errors
+      if (error.name === 'ValidationError') {
+        console.error('Validation Error:', error.message);
+        throw new Error('Validation error occurred while storing subscriber.');
+      }
+      // Handle other types of errors
+      console.error('Error storing observer:', error);
+      throw new Error('An error occurred while storing subscriber.');
     }
+  }
 
   async run(app)  {
     return this;
