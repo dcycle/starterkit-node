@@ -227,6 +227,37 @@
     }
   }
 
+  async getAllSubscribers(filter = {}) {
+    try {
+      // Find all subscribers
+      const subscribers = await this.getSubscribersModel().find(filter);
+      return subscribers;
+    } catch (err) {
+      console.error('Error fetching subscribers:', err);
+      return false;
+    }
+  }
+
+  // Delete subscriber By ID
+  async deleteSubscriberByID(subscriberId) {
+    try {
+      // Delete the subscriber by ID
+      const deletedSubscriber = await this.getSubscribersModel()
+        .findByIdAndDelete(subscriberId);
+
+      if (deletedSubscriber) {
+        console.log('Deleted Subscriber:', deletedSubscriber);
+        return true;
+      } else {
+        console.log('Subscriber not found.');
+        return false;
+      }
+    } catch (err) {
+      console.error('Error deleting subscriber:', err);
+      return false;
+    }
+  }
+
   async run(app)  {
     return this;
   }

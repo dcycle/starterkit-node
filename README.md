@@ -19,6 +19,7 @@ Dcycle Node.js starterkit
   * Components's class names are the same as their directory names but start with an uppercase letter
   * Plugins: how modules can share information with each other
   * Components can define classes
+  * Observers
 * The Node.js command line interface (CLI)
 * MongoDB crud (create - read - update - delete)
 * Mongoose vs MongoDB
@@ -347,6 +348,53 @@ Objects of these classes can be created by calling a very primitive autoloader:
     // hello
     myObject.getNumber();
     // 100
+
+### Observers
+    Observers are like event handlers. When events are published, subscribers that are listening for that specific event should be triggered.
+    Example:
+
+    When we receive a WhatsApp message, we publish the messageHasBeenReceived event. The webhookWhatsAppSubscriber handles the event via the processReceivedMessage method to save the received message and send a reply.
+    Publish
+
+    To publish an event:
+    ```
+    // Publish the event for a specific event type.
+    await this.app().c('observer').publish(
+        'publisherModule',        // The publisher module
+        'publishedEvent',         // The event being published
+        data                      // The event data (preferably an object instead of an empty string)
+    );
+    ```
+
+    Subscribe
+
+    To subscribe to an event:
+    ```
+    // Subscribe to an event handler
+    await this.app().c('observer').subscribe(
+        '<publisherModule>',       // The publisher module
+        '<publishedEvent>',        // The event to listen for
+        '<subscriberModule>',      // The subscriber module
+        '<subscriberMethod>',      // The method to handle the event
+        subscriptionId = ''        // Optional: Subscription ID (if provided, it ensures only one subscriber with that ID can be added)
+    );
+    ```
+        Note: Refer to app/code/observerExamplePublisher and app/code/observerExampleSubscriber for examples of how to use the publisher and subscriber.
+
+Operations in scripts/node-cli.sh Console
+
+1. List all subscribers:
+```
+// Get all subscribers
+await app.c('observers').getAllSubscribers();
+```
+2. Delete an observer by ID:
+```
+// Delete an observer by its ID
+await app.c('observers').deleteSubscriberById();
+```
+    Note: When deleting an existing subscriber, make sure to also remove it from the database. This allows new subscribers with the same event and subscriber ID to be inserted without conflict.
+
 
 The Node.js command line interface (CLI)
 -----
