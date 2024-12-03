@@ -381,17 +381,18 @@ Objects of these classes can be created by calling a very primitive autoloader:
     ```
         Note: Refer to app/code/observerExamplePublisher and app/code/observerExampleSubscriber for examples of how to use the publisher and subscriber.
 
+
 Operations in scripts/node-cli.sh Console
 
 1. List all subscribers:
 ```
 // Get all subscribers
-await app.c('observers').getAllSubscribers();
+await app.c('observer').getAllSubscribers();
 ```
 2. Delete an observer by ID:
 ```
 // Delete an observer by its ID
-await app.c('observers').deleteSubscriberById();
+await app.c('observer').deleteSubscriberByID(subscriberId);
 ```
     Note: When deleting an existing subscriber, make sure to also remove it from the database. This allows new subscribers with the same event and subscriber ID to be inserted without conflict.
 
