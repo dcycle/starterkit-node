@@ -31,33 +31,43 @@
    async init(app) {
     super.init(app);
 
-    this.subscribersModel = app.component('./database/index.js')
-      .mongoose().model('subscribers', {
-        publisherModule: {
-          type: String,
-          required: true
-        },
-        publishedEvent: {
-          type: String,
-          required: true
-        },
-        subscriberModule: {
-          type: String,
-          required: true
-        },
-        subscriberMethod: {
-          type: String,
-          required: true
-        },
-        subscriptionId: {
-          type: String,
-          required: true
-        },
-        createdAt: {
-          type: Date,
-          default: Date.now
-        }
-      });
+    const Schema = app.component('./database/index.js').mongoose().Schema;
+
+    // Subscription schema to hold the subscriptionModule
+    // and subscriptionMethod
+    const SubscriptionSchema = new Schema({
+      subscriptionModule: { type: String, required: true },
+      subscriptionMethod: { type: String, required: true },
+    });
+
+    // PublisherMethod schema to hold multiple subscriptions
+    // with their respective IDs
+    const publishedEventSchema = new Schema({
+      // Dynamic keys to represent subscriptionId as a key-value pair
+      subscriptionsId: {
+        type: Map,
+        of: SubscriptionSchema,
+      },
+    });
+
+    // PublisherModule schema that holds multiple publisher methods
+    const PublisherModuleSchema = new Schema({
+      publishedEvent: {
+        type: Map,
+        of: publishedEventSchema,
+      },
+    });
+
+    // Root schema to hold multiple publisher modules
+    const ObserverSchema = new Schema({
+      publisherModules: {
+        type: Map,
+        of: PublisherModuleSchema,
+      },
+    });
+
+    this.observersModel = app.component('./database/index.js')
+      .mongoose().model('observers', ObserverSchema);
 
     return this;
   }
@@ -65,24 +75,25 @@
   // https://github.com/jshint/jshint/issues/3361
   /* jshint ignore:start */
   subscribers = {};
+  observersModel = {};
   /* jshint ignore:end */
 
   collection() {
     return this.app().c('database').client()
       .db('login')
-      .collection('subscribers');
+      .collection('observers');
   }
 
   /**
-   * Fetch the "subscribers" model.
+   * Fetch the "observers" model.
    */
-   getSubscribersModel() {
+   getObserversModel() {
     // Sample usage:
-    // this.subscribers().find({},(err, observers)=> {
+    // this.observersModel().find({},(err, observers)=> {
     //   return observers;
     // });
 
-    return this.subscribersModel;
+    return this.observersModel;
   }
 
   // subscribe a event handler
@@ -127,12 +138,13 @@
       subscriberMethod: subscriberMethod,
     };
 
-    this.storeSubscriber({
-      "publisherModule": publisherModule,
-      "publishedEvent": publishedEvent,
-      "subscriberModule": subscriberModule,
-      "subscriberMethod": subscriberMethod,
-      "subscriptionId": subscriptionId
+    this.storeObserver({
+      publisherModule: {
+        publishedEvent:
+        { subscriptionId: {
+          subscriberModule: subscriberModule,
+          subscriberMethod: subscriberMethod
+        }}}
     });
   }
 
@@ -183,32 +195,32 @@
   }
 
   /**
-   * Adds a new subscriber to the database.
+   * Adds a new observer to the database.
    *
-   * @param {Object} subscriberObject - The subscriber object to be added to the database.
+   * @param {Object} observerObject - The observer object to be added to the database.
    *
    * @returns {Promise<string|boolean>} A promise that resolves to the ID of the
-   * saved subscriber if successful, or `false` if there was an error during saving.
+   * saved observer if successful, or `false` if there was an error during saving.
    *
    * @throws {Error} Will throw an error if there is a validation error or any other
-   * type of error during the process of storing the subscriber.
+   * type of error during the process of storing the observer.
    */
-   async storeSubscriber(
-    subscriberObject /*:: : Object */
+   async storeObserver(
+    observerObject /*:: : Object */
   ) {
     try {
-      // Check if the subscriberObject already exists in the database.
-      const existingSubscriber = await this.getSubscribersModel().findOne(subscriberObject);
+      // Check if the observerObject already exists in the database.
+      const existingObserver = await this.getObserversModel().findOne(observerObject);
 
-      if (existingSubscriber) {
-        // If the subscriber already exists, return the existing ID
+      if (existingObserver) {
+        // If the observer already exists, return the existing ID
         // or other appropriate response.
-        console.log("subscriber already exists in the database.");
-        return existingSubscriber.id;
+        console.log("observer already exists in the database.");
+        return existingObserver.id;
       } else {
-        const subscriber = await this.getSubscribersModel()(subscriberObject);
-        return subscriber.save().then(async (value)=> {
-          console.log("!! subscriber saved to database !!");
+        const observer = await this.getObserversModel()(observerObject);
+        return observer.save().then(async (value)=> {
+          console.log("!! observer saved to database !!");
           return value.id;
         }).catch((err)=>{
           console.log(err);
@@ -219,41 +231,41 @@
       // Handle Mongoose validation errors
       if (error.name === 'ValidationError') {
         console.error('Validation Error:', error.message);
-        throw new Error('Validation error occurred while storing subscriber.');
+        throw new Error('Validation error occurred while storing observer.');
       }
       // Handle other types of errors
       console.error('Error storing observer:', error);
-      throw new Error('An error occurred while storing subscriber.');
+      throw new Error('An error occurred while storing observer.');
     }
   }
 
-  async getAllSubscribers(filter = {}) {
+  async getAllObserverrs(filter = {}) {
     try {
-      // Find all subscribers
-      const subscribers = await this.getSubscribersModel().find(filter);
-      return subscribers;
+      // Find all observers
+      const observers = await this.getObserversModel().find(filter);
+      return observers;
     } catch (err) {
-      console.error('Error fetching subscribers:', err);
+      console.error('Error fetching observers:', err);
       return false;
     }
   }
 
-  // Delete subscriber By ID
-  async deleteSubscriberByID(subscriberId) {
+  // Delete observer By ID
+  async deleteObserverByID(observerId) {
     try {
-      // Delete the subscriber by ID
-      const deletedSubscriber = await this.getSubscribersModel()
-        .findByIdAndDelete(subscriberId);
+      // Delete the observer by ID
+      const deletedObserver = await this.getSubscribersModel()
+        .findByIdAndDelete(observerId);
 
-      if (deletedSubscriber) {
-        console.log('Deleted Subscriber:', deletedSubscriber);
+      if (deletedObserver) {
+        console.log('Deleted observer:', deletedObserver);
         return true;
       } else {
-        console.log('Subscriber not found.');
+        console.log('observer not found.');
         return false;
       }
     } catch (err) {
-      console.error('Error deleting subscriber:', err);
+      console.error('Error deleting observer:', err);
       return false;
     }
   }
