@@ -74,6 +74,10 @@ modules:
         plugin: chatbotCalculator
   ./chatbotCalculator/index.js: {}
   ./dashboardApi/index.js: {}
-  ./webhookWhatsApp/index.js: {}
+  ./observer/index.js: {}
+  ./observerExamplePublisher/index.js: {}
+  ./observerExampleSubscriber/index.js: {}
   ./whatsAppSend/index.js: {}
+  ./webhookWhatsApp/index.js: {}
+  ./webhookWhatsAppSubscriber/index.js: {}
   ./sendSMS/index.js: {}
