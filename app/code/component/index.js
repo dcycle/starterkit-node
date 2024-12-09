@@ -51,6 +51,11 @@ const module_exports /*:: : Object */ = class {
     return this;
   }
 
+  // Check if the module is enabled
+  isModuleEnabled(moduleName) {
+    return this.app().config().modules['./' + moduleName + '/index.js'];
+  }
+
   assertFlag(
     flagName /*:: : string */,
     value
