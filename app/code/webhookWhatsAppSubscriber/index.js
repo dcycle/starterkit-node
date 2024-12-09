@@ -33,7 +33,7 @@
 
   async run(app)  {
     // processReceivedMessage listens to 'messageHasBeenReceived'.
-    app.c('observer').subscribe(
+    await app.c('observer').subscribe(
       'webhookWhatsApp',
       'messageHasBeenReceived',
       'webhookWhatsAppSubscriber',

@@ -13,7 +13,7 @@
 
   async run(app)  {
     // subscriber1 listens to 'helloWorld-publisher'.
-    app.c('observer').subscribe(
+    await app.c('observer').subscribe(
       'observerExamplePublisher',
       'helloWorld',
       'observerExampleSubscriber',
@@ -23,7 +23,7 @@
     );
 
     // subscriber1 listens to 'helloWorld-publisher'.
-    app.c('observer').subscribe(
+    await app.c('observer').subscribe(
       'observerExamplePublisher',
       'helloWorld',
       'observerExampleSubscriber',
@@ -33,7 +33,7 @@
     );
 
     // subscriber2 listens to 'helloWorld-publisher'.
-    app.c('observer').subscribe(
+    await app.c('observer').subscribe(
       'observerExamplePublisher',
       'helloWorld',
       'observerExampleSubscriber',
@@ -42,7 +42,7 @@
     );
 
     // subscriber2 listens to 'helloWorld-publisher'.
-    app.c('observer').subscribe(
+    await app.c('observer').subscribe(
       'observerExamplePublisher',
       'helloWorld',
       'observerExampleSubscriber',
