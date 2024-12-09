@@ -33,20 +33,28 @@
 
     const Schema = app.component('./database/index.js').mongoose().Schema;
 
-    // Define the Subscription Info schema for each subscriptionId
-    const subscriptionInfoSchema = new Schema({
+    // Define the Subscriber Info schema for each subscribes
+    const subscribeInfoSchema = new Schema({
       subscriberModule: { type: String, required: true },
       subscriberMethod: { type: String, required: true },
     }, { _id: false });
 
     // Define the main Publisher schema
     const ObserverSchema = new Schema({
+      // 'publisherModule' is a string that represents the module where the event is published
+      // It is required to specify which module is responsible for publishing the event
       publisherModule: { type: String, required: true },
+      // 'publishedEvent' is a string that identifies the specific event
+      // that has been published
+      // It is required to track which event is being published by the module
       publishedEvent: { type: String, required: true },
-      subscriptionId: {
+      // 'subscribeId' stores a mapping of subscriber keys (subscribeId) to an array of subscriber information
+      // Each subscriber key is associated with an array of 'subscribeInfoSchema' (each representing a subscriber's info)
+      // This is required to track all the subscribers for a given published event
+      subscribeId: {
         type: Map,
-        // Use array of subscriptionInfoSchema for each subscriptionKey
-        of: [subscriptionInfoSchema],
+        // Use array of subscribeInfoSchema for each subscribeKey
+        of: [subscribeInfoSchema],
         required: true
       },
     });
@@ -93,7 +101,7 @@
    * @param {string} subscriberMethod
    *   A method such as 'subscriber1' which should exist on
    *   'observerExampleSubscriber'.
-   * @param {string} subscriptionId
+   * @param {string} subscribeId
    *   If an ID is passed here, the system will only add the subscriber if
    *   another subscriber with the same ID does not exist.
    */
@@ -102,7 +110,7 @@
     publishedEvent,
     subscriberModule,
     subscriberMethod,
-    subscriptionId = '',
+    subscribeId = ''
   ) {
     if (!this.isModuleEnabled(publisherModule)) {
       return;
@@ -110,15 +118,15 @@
     if (!this.isModuleEnabled(subscriberModule)) {
       return;
     }
-    if (!subscriptionId) {
-      subscriptionId = this.uuid();
+    if (!subscribeId) {
+      subscribeId = this.uuid();
     }
     this.ensureStructureValid(
       publisherModule,
       publishedEvent,
     );
 
-    this.subscribers[publisherModule][publishedEvent][subscriptionId] = {
+    this.subscribers[publisherModule][publishedEvent][subscribeId] = {
       subscriberModule: subscriberModule,
       subscriberMethod: subscriberMethod,
     };
@@ -126,7 +134,7 @@
     await this.addSubscribe(
       publisherModule,
       publishedEvent,
-      subscriptionId,
+      subscribeId,
       {
         subscriberModule: subscriberModule,
         subscriberMethod: subscriberMethod
@@ -156,10 +164,21 @@
       publishedEvent,
     );
 
-    await this.runSubscriptions(publisherModule, publishedEvent, data);
+    await this.runSubscribers(publisherModule, publishedEvent, data);
   }
 
-  async runSubscriptions(publisherModule, publishedEvent, data) {
+  /**
+   * Executes the subscribers for a given publisher module and published event.
+   * It retrieves the relevant subscribers information from the database and calls the
+   * appropriate methods on the subscriber modules for each published event.
+   *
+   * @param {String} publisherModule - The name of the publisher module that triggered the event.
+   * @param {String} publishedEvent - The name of the event that is being published.
+   * @param {Object} data - The event data to be passed to each subscriber's method.
+   *
+   * @returns {void} - No return value. The function asynchronously calls subscriber methods.
+   */
+  async runSubscribers(publisherModule, publishedEvent, data) {
     try {
       const publisher = await this.getObserversModel().findOne({
         "publisherModule": publisherModule,
@@ -171,11 +190,12 @@
         return;
       }
 
-      // Traverse all subscriptionId entries
-      publisher.subscriptionId.forEach((subscription) => {
-        subscription.forEach(async (value) => {
+      // Traverse all subscribeId entries
+      publisher.subscribeId.forEach((subscribe) => {
+        subscribe.forEach(async (value) => {
           const module = value.subscriberModule;
           const method = value.subscriberMethod;
+          // Execute subscribers
           await this.app().c(module)[method](data);
         });
       });
@@ -197,52 +217,75 @@
     return uuidv4();
   }
 
+  /**
+   * Adds a new subscriber to a publisher's event or appends the subscriber
+   * to an existing publisher's event if it already exists. If the subscriber already
+   * exists, no new subscriber is added.
+   *
+   * RUN db.observers.find().pretty(); in mongo db console to see the observers
+   *  collection schema design.
+   *
+   * The method handles both the case where the publisher already exists and where
+   * a new publisher needs to be created.
+   *
+   * @param {String} publisherModule - The name of the publisher module that is publishing the event.
+   * @param {String} publishedEvent - The name of the event being published.
+   * @param {String} subscribeKey - A unique identifier for the subscriber key (e.g., 'userService').
+   * @param {Object} subscribeData - The subscriber data containing the subscriber module and method.
+   *                               It should include:
+   *                               - subscriberModule (String): The subscriber module (e.g., 'emailService').
+   *                               - subscriberMethod (String): The method within the subscriber module (e.g., 'sendEmail').
+   *
+   * @returns {Promise<String|undefined>} - If a new observer is created, it returns the ID of the new observer.
+   *                                         If the subscriber is appended to an existing observer, it returns `undefined`.
+   */
   async addSubscribe(
     publisherModule,
     publishedEvent,
-    subscriptionKey,
-    subscriptionData) {
+    subscribeKey,
+    subscribeData) {
     try {
       // Step 1: Find if the publisher already exists.
       let existingObserver = await this.getObserversModel().findOne(
         { publisherModule, publishedEvent }
       );
       if (existingObserver) {
-        // Step 2: Publisher exists, check if the subscriptionKey exists
-        if (existingObserver.subscriptionId.has(subscriptionKey)) {
-          // If subscriptionKey exists, check if the subscription already exists
-          const subscriptionArray = existingObserver.subscriptionId.get(subscriptionKey);
+        // Step 2: Publisher exists, check if the subscribeKey exists
+        if (existingObserver.subscribeId.has(subscribeKey)) {
+          // If subscribeKey exists, check if the subscribe already exists
+          const subscribeArray = existingObserver.subscribeId.get(subscribeKey);
 
-          // Check if the subscriptionData already exists
-          const alreadyExists = subscriptionArray.some(
-            (sub) => sub.subscriberModule === subscriptionData.subscriberModule &&
-                    sub.subscriberMethod === subscriptionData.subscriberMethod
+          // Check if the subscribeData already exists
+          const alreadyExists = subscribeArray.some(
+            (sub) => sub.subscriberModule === subscribeData.subscriberModule &&
+                    sub.subscriberMethod === subscribeData.subscriberMethod
           );
 
           if (alreadyExists) {
-            console.log("Subscription already exists, not pushing new data.");
+            console.log("Subscriber already exists, not pushing new data.");
           } else {
-            // If subscription does not exist, push the new subscription data
-            subscriptionArray.push(subscriptionData);
+            // If subscribe does not exist, push the new subscribe data
+            subscribeArray.push(subscribeData);
             await existingObserver.save();
-            console.log('Subscription appended to existing key!');
+            console.log('Subscriber appended to existing key!');
           }
         } else {
-          // If subscriptionKey doesn't exist, create a new key with the subscription data
-          existingObserver.subscriptionId.set(subscriptionKey, [subscriptionData]);
+          // If subscribeKey doesn't exist, create a new key with the
+          // subscribe data
+          existingObserver.subscribeId.set(subscribeKey, [subscribeData]);
           await existingObserver.save();
-          console.log(subscriptionKey);
-          console.log('New subscription key added!');
+          console.log(subscribeKey);
+          console.log('New subscribe key added!');
         }
       } else {
         // observer does not exist, create a new document with
-        // the subscription key and data
+        // the subscribe key and data
         const observer = await this.getObserversModel()({
           publisherModule,
           publishedEvent,
-          subscriptionId: {
-            // Create an array for multiple subscriptions
-            [subscriptionKey]: [subscriptionData]
+          subscribeId: {
+            // Create an array for multiple subscribes
+            [subscribeKey]: [subscribeData]
           }
         });
         return observer.save().then(async (value)=> {
@@ -251,7 +294,7 @@
         });
       }
     } catch (error) {
-      console.error('Error adding subscription:', error);
+      console.error('Error adding subscribe:', error);
     }
   }
 
@@ -262,26 +305,6 @@
       return observers;
     } catch (err) {
       console.error('Error fetching observers:', err);
-      return false;
-    }
-  }
-
-  // Delete observer By ID
-  async deleteObserverByID(observerId) {
-    try {
-      // Delete the observer by ID
-      const deletedObserver = await this.getObserversModel()
-        .findByIdAndDelete(observerId);
-
-      if (deletedObserver) {
-        console.log('Deleted observer:', deletedObserver);
-        return true;
-      } else {
-        console.log('observer not found.');
-        return false;
-      }
-    } catch (err) {
-      console.error('Error deleting observer:', err);
       return false;
     }
   }
