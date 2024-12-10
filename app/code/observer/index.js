@@ -49,7 +49,7 @@
         type: String,
         required: true
       },
-      subscriptionId: {
+      subscriberId: {
         type: String,
         required: true
       },
@@ -184,11 +184,11 @@
           }
         },
 
-        // Step 2: Group by subscriptionId
+        // Step 2: Group by subscriberId
         {
           $group: {
-            // Group by subscriptionId
-            _id: "$subscriptionId",
+            // Group by subscriberId
+            _id: "$subscriberId",
             subscriberModules: { $addToSet: "$subscriberModule" },   // Collect unique subscriberModule values for each group
             subscriberMethods: { $addToSet: "$subscriberMethod" }    // Collect unique subscriberMethod values for each group
           }
