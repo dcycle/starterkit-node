@@ -19,6 +19,7 @@ Dcycle Node.js starterkit
   * Components's class names are the same as their directory names but start with an uppercase letter
   * Plugins: how modules can share information with each other
   * Components can define classes
+  * Observers
 * The Node.js command line interface (CLI)
 * MongoDB crud (create - read - update - delete)
 * Mongoose vs MongoDB
@@ -347,6 +348,141 @@ Objects of these classes can be created by calling a very primitive autoloader:
     // hello
     myObject.getNumber();
     // 100
+
+### Observers
+    Observers are like event handlers. When events are published, subscribers that are listening for that specific event should be triggered.
+    Example:
+
+    When we receive a WhatsApp message, we publish the messageHasBeenReceived event. The webhookWhatsAppSubscriber handles the event via the processReceivedMessage method to save the received message and send a reply.
+
+    To publish an event:
+    ```
+    // Publish the event for a specific event type.
+    // Call this in a event handler method of a specific class.
+    // Ex:- helloWorld method of observerExamplePublisher/index.js .
+    await this.app().c('observer').publish(
+        // The publisher module
+        'publisherModule',
+        // The event being published
+        'publishedEvent',
+        // The event data (preferably an object instead of an empty string)
+        data
+    );
+    ```
+
+    To subscribe to an event:
+    ```
+    // Subscribe to an event handler
+    await this.app().c('observer').subscribe(
+        // The publisher module
+        '<publisherModule>',
+        // The event to listen for
+        '<publishedEvent>',
+        // The subscriber module
+        '<subscriberModule>',
+        // The method to handle the event
+        '<subscriberMethod>',
+        // Optional: Subscription ID (if provided, it ensures only one
+        // subscriber with that ID can be added)
+        subscriptionId = ''
+    );
+    ```
+        Note: Refer to app/code/observerExamplePublisher and app/code/observerExampleSubscriber for examples of how to use the publisher and subscriber.
+
+
+Operations in scripts/node-cli.sh Console
+
+1. List all subscribers:
+```
+// Get all subscribers
+await app.c('observer').getAllObservers();
+```
+2. Delete an observer by ID:
+```
+// Delete an observer by its ID
+await app.c('observer').deleteObserverByID(observerId);
+```
+
+Steps for Testing Observers:
+--------
+1. **Open Node CLI**:
+   First, you need to access the Node CLI by running the following command:
+   ```
+   ./scripts/node-cli.sh
+   ```
+
+2. **Subscribe to the Event**:
+   You are subscribing to the `helloWorld` event from the `observerExamplePublisher` by calling `app.c('observer').subscribe()` multiple times.
+
+   Here's the code for subscribing to the event:
+   ```
+   // subscriber3 subscribing to helloWorld publishedEvent
+   app.c('observer').subscribe(
+         'observerExamplePublisher',
+         'helloWorld',
+         'observerExampleSubscriber',
+         'subscriber3',
+         // We are not passing any id here, so if we subscribe several times,
+         // subscriber1() will be called several times.
+   );
+
+   // subscriber3 subscribing to helloWorld publishedEvent
+   app.c('observer').subscribe(
+         'observerExamplePublisher',
+         'helloWorld',
+         'observerExampleSubscriber',
+         'subscriber3',
+         // We are not passing any id here, so if we subscribe several times,
+         // subscriber1() will be called several times.
+   );
+
+   // subscriber3 subscribing to helloWorld publishedEvent
+   app.c('observer').subscribe(
+         'observerExamplePublisher',
+         'helloWorld',
+         'observerExampleSubscriber',
+         'subscriber3',
+         // We are not passing any id here, so if we subscribe several times,
+         // subscriber1() will be called several times.
+   );
+   ```
+
+   In this case, you are subscribing `subscriber3` three times to the `helloWorld` event, which will result in `subscriber3`'s handler being called only once when the event is published. That is because we are creating unique
+   subscriptionId for each subscribe with respect to subscriptionMethod, if you aren't provided any subscriptionId and we are not storing duplicate subscriptionId to db.
+
+3. **Publish the Event**:
+   After subscribing, you need to trigger the event using the `helloWorld` method from the `observerExamplePublisher`:
+   ```javascript
+   await app.c('observerExamplePublisher').helloWorld();
+   ```
+
+   This will cause the event to be published, triggering the subscribers' handlers.
+
+4. **Exit the CLI**:
+   After publishing the event, you can exit the CLI.
+
+5. **Verify the Logs**:
+   To ensure that the event was correctly published and received, check the logs by running:
+   ```bash
+   docker compose logs node
+   ```
+
+   You should see the following output in the logs:
+   ```
+   hello
+   world
+   ```
+
+### Explanation:
+- **Subscribing multiple times**: Since `subscriber3` subscribes three times, its callback will be invoked once when the event is triggered if subscri Id is .
+- **Event Flow**: The flow goes like this:
+   1. The publisher (`observerExamplePublisher`) triggers the `helloWorld` event.
+   2. The subscriber (`observerExampleSubscriber`, `subscriber3`) listens for the event.
+   3.  Subscription to the event triggers a corresponding callback, so you should see `"hello"` printed once times.
+   4. Finally, `"world"` is printed, indicating the final event handling logic.
+
+This approach helps test how multiple subscriptions work with the observer pattern in your application.
+
 
 The Node.js command line interface (CLI)
 -----
