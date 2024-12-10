@@ -181,8 +181,8 @@
         publishedEvent: publishedEvent
       };
 
-      // Define the fields to select (subscriberModules and subscriberMethods)
-      const fieldsToSelect = 'subscriberModules subscriberMethods';
+      // Define the fields to select (subscriberModule and subscriberMethod)
+      const fieldsToSelect = 'subscriberModule subscriberMethod';
 
       const subscribers = await this.getObserversModel().find(filter).select(fieldsToSelect);
 
