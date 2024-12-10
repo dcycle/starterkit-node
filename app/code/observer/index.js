@@ -268,7 +268,7 @@
   async deleteObserverByID(observerId) {
     try {
       // Delete the observer by ID
-      const deletedObserver = await this.getSubscribersModel()
+      const deletedObserver = await this.getObserversModel()
         .findByIdAndDelete(observerId);
 
       if (deletedObserver) {
