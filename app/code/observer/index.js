@@ -117,7 +117,10 @@
     }
     if (!subscriberId) {
       // subscriberId = this.uuid();
-      subscriberId = publisherModule + '-' + publishedEvent + '-' + subscriberModule + subscriberMethod;
+      subscriberId = publisherModule + '-' +
+        publishedEvent + '-' + 
+        subscriberModule + '-' + 
+        subscriberMethod;
     }
     this.ensureStructureValid(
       publisherModule,
