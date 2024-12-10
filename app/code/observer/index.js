@@ -129,11 +129,11 @@
     };
 
     await this.addSubscriber({
-      publisherModule,
-      publishedEvent,
-      subscriberModule,
-      subscriberMethod,
-      subscribeId
+      "publisherModule": publisherModule,
+      "publishedEvent": publishedEvent,
+      "subscriberModule": subscriberModule,
+      "subscriberMethod": subscriberMethod,
+      "subscribeId": subscribeId
     });
   }
 
@@ -240,7 +240,7 @@
   /**
    * Adds a new subscriber to the database.
    *
-   * @param {Object} subscriberObject - The observer object to be added to the database.
+   * @param {Object} observerObject - The observer object to be added to the database.
    * The object should not contain a `uuid` property as it will be automatically generated.
    *
    * @returns {Promise<string|boolean>} A promise that resolves to the ID of the
@@ -250,11 +250,11 @@
    * type of error during the process of storing the observer.
    */
    async addSubscriber(
-    subscriberObject /*:: : Object */
+    observerObject /*:: : Object */
   ) {
     try {
       // Check if the observerObject already exists in the database based on a unique identifier (e.g., uuid or other field)
-      const existingObserver = await this.getObserversModel().find(subscriberObject);
+      const existingObserver = await this.getObserversModel().findOne(observerObject);
       console.log("******** Existing Subscriber2 *******");
       console.log(existingObserver);
 
@@ -264,7 +264,7 @@
         // Or return other relevant information from existingObserver
         return existingObserver.id;
       } else {
-        const subscriber = await this.getObserversModel()(subscriberObject);
+        const subscriber = await this.getObserversModel()(observerObject);
         return subscriber.save().then(async (value)=> {
           console.log("!! subscriber saved to database !!");
           return value.id;
