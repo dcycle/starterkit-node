@@ -79,7 +79,7 @@
    */
    getObserversModel() {
     // Sample usage:
-    // this.observersModel().find({},(err, observers)=> {
+    // this.getObserversModel().find({},(err, observers)=> {
     //   return observers;
     // });
 
@@ -116,7 +116,8 @@
       return;
     }
     if (!subscriberId) {
-      // subscriberId = this.uuid();
+      // Creating unique subscriberId. if it is UUID they are chances that
+      // ./scripts/deploy.sh can create duplicates hence we are creating unique subscriberId.
       subscriberId = publisherModule + '-' +
         publishedEvent + '-' + 
         subscriberModule + '-' + 
@@ -194,8 +195,7 @@
         console.log('Subscribers not found');
         return;
       }
-      console.log('----Subscribers  found----');
-      console.log(subscribers);
+
       subscribers.forEach(async subscriber => {
         const module = subscriber.subscriberModule;
         const method = subscriber.subscriberMethod;
@@ -204,19 +204,6 @@
     } catch (error) {
       console.error('Error querying publisher data:', error);
     }
-  }
-
-  /**
-   * Get a UUID.
-   *
-   * @returns string
-   *   A UUID.
-   */
-  uuid() {
-    // Import UUID for generating unique conversation IDs.
-    // @ts-ignore
-    const { v4: uuidv4 } = require('uuid');
-    return uuidv4();
   }
 
   /**
@@ -235,13 +222,12 @@
     observerObject /*:: : Object */
   ) {
     try {
-      // Check if the observerObject already exists in the database based on a unique identifier (e.g., uuid or other field)
+      // Check if the observerObject already exists in the database based
+      // on a unique identifier (e.g., uuid or other field)
       const existingObserver = await this.getObserversModel().findOne(observerObject);
-      console.log("******** Existing Subscriber2 *******");
-      console.log(existingObserver);
-
       if (existingObserver) {
-        // If the subscriber already exists, return the existing UUID or other appropriate response
+        // If the subscriber already exists, return the existing UUID
+        // or other appropriate response
         console.log("subscriber already exists in the database.");
         // Or return other relevant information from existingObserver
         return existingObserver.id;
@@ -274,6 +260,26 @@
       return observers;
     } catch (err) {
       console.error('Error fetching observers:', err);
+      return false;
+    }
+  }
+
+  // Delete observer By ID.
+  async deleteObserverByID(observerId) {
+    try {
+      // Delete the observer by ID
+      const deletedObserver = await this.getSubscribersModel()
+        .findByIdAndDelete(observerId);
+
+      if (deletedObserver) {
+        console.log('Deleted observer:', deletedObserver);
+        return true;
+      } else {
+        console.log('observer not found.');
+        return false;
+      }
+    } catch (err) {
+      console.error('Error deleting observer:', err);
       return false;
     }
   }

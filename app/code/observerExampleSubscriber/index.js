@@ -1,5 +1,13 @@
 /**
  * Respond to triggered publish.
+ *
+ * Though we have 2 subscriber
+ * 'observerExamplePublisher' 'helloWorld' 'observerExampleSubscriber' 'subscriber1'
+ * it will be executed only once.
+ *
+ * ./scripts/deploy.sh can create duplicates hence we are creating unique subscriberId
+ * before saving to db and duplicate subscriberId is not stored to observer collection.
+ *
  */
  class ObserverExampleSubscriber extends require('../component/index.js') {
 
