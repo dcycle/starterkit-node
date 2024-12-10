@@ -86,7 +86,7 @@
     return this.observersModel;
   }
 
-  // subscribe a event handler
+  // subscriber a event handler
   /**
    * @param {string} publisherModule
    *   A publisher module such as 'observerExamplePublisher'.
@@ -98,7 +98,7 @@
    * @param {string} subscriberMethod
    *   A method such as 'subscriber1' which should exist on
    *   'observerExampleSubscriber'.
-   * @param {string} subscribeId
+   * @param {string} subscriberId
    *   If an ID is passed here, the system will only add the subscriber if
    *   another subscriber with the same ID does not exist.
    */
@@ -107,7 +107,7 @@
     publishedEvent,
     subscriberModule,
     subscriberMethod,
-    subscribeId = ''
+    subscriberId = ''
   ) {
     if (!this.isModuleEnabled(publisherModule)) {
       return;
@@ -115,15 +115,15 @@
     if (!this.isModuleEnabled(subscriberModule)) {
       return;
     }
-    if (!subscribeId) {
-      subscribeId = this.uuid();
+    if (!subscriberId) {
+      subscriberId = this.uuid();
     }
     this.ensureStructureValid(
       publisherModule,
       publishedEvent,
     );
 
-    this.subscribers[publisherModule][publishedEvent][subscribeId] = {
+    this.subscribers[publisherModule][publishedEvent][subscriberId] = {
       subscriberModule: subscriberModule,
       subscriberMethod: subscriberMethod,
     };
@@ -189,8 +189,10 @@
           $group: {
             // Group by subscriberId
             _id: "$subscriberId",
-            subscriberModules: { $addToSet: "$subscriberModule" },   // Collect unique subscriberModule values for each group
-            subscriberMethods: { $addToSet: "$subscriberMethod" }    // Collect unique subscriberMethod values for each group
+            // Collect unique subscriberModule values for each group
+            subscriberModules: { $addToSet: "$subscriberModule" },
+            // Collect unique subscriberMethod values for each group
+            subscriberMethods: { $addToSet: "$subscriberMethod" }
           }
         },
 
@@ -198,9 +200,10 @@
         {
           $project: {
             _id: 0,  // Exclude _id from the result
-            subscriberModule: { $first: "$subscriberModules" },  // Get the first subscriberModule in each group
-
-            subscriberMethod: { $first: "$subscriberMethods" }          }
+            subscriberModule: { $first: "$subscriberModules" },
+           // Get the first subscriberModule in each group
+            subscriberMethod: { $first: "$subscriberMethods" }
+          }
         }
       ]);
 
