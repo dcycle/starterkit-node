@@ -226,15 +226,15 @@
       // on a unique identifier (e.g., uuid or other field)
       const existingObserver = await this.getObserversModel().findOne(observerObject);
       if (existingObserver) {
-        // If the subscriber already exists, return the existing UUID
+        // If the observer already exists, return the existing UUID
         // or other appropriate response
-        console.log("subscriber already exists in the database.");
+        console.log("observer already exists in the database.");
         // Or return other relevant information from existingObserver
         return existingObserver.id;
       } else {
-        const subscriber = await this.getObserversModel()(observerObject);
-        return subscriber.save().then(async (value)=> {
-          console.log("!! subscriber saved to database !!");
+        const observer = await this.getObserversModel()(observerObject);
+        return observer.save().then(async (value)=> {
+          console.log("!! observer saved to database !!");
           return value.id;
         }).catch((err)=>{
           console.log(err);
