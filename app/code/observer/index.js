@@ -116,7 +116,8 @@
       return;
     }
     if (!subscriberId) {
-      subscriberId = this.uuid();
+      // subscriberId = this.uuid();
+      subscriberId = publisherModule + '-' + publishedEvent + '-' + subscriberModule + subscriberMethod;
     }
     this.ensureStructureValid(
       publisherModule,
