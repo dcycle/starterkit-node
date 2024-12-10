@@ -31,8 +31,7 @@
    async init(app) {
     super.init(app);
 
-    this.observersModel = app.component('./database/index.js')
-    .mongoose().model('observers', {
+    this.observersModel = app.component('./database/index.js').mongoose().model('observers', {
       publisherModule: {
         type: String,
         required: true
@@ -176,7 +175,7 @@
    * @param {String} publishedEvent - The name of the event that is being published.
    * @param {Object} data - The event data to be passed to each subscriber's method.
    *
-   * @returns {void} - No return value. The function asynchronously calls subscriber methods.
+   * @returns {Promise<void>} - No return value. The function asynchronously calls subscriber methods.
    */
   async runSubscribers(publisherModule, publishedEvent, data) {
     try {
@@ -232,9 +231,9 @@
         // Or return other relevant information from existingObserver
         return existingObserver.id;
       } else {
-        const observer = await this.getObserversModel()(observerObject);
+        const observer = await this.getObserversModel().create(observerObject);
         return observer.save().then(async (value)=> {
-          console.log("!! observer saved to database !!");
+          console.log("!! new observer saved to database !!");
           return value.id;
         }).catch((err)=>{
           console.log(err);
@@ -248,7 +247,7 @@
         throw new Error('Validation error occurred while storing subscriber.');
       }
       // Handle other types of errors
-      // console.error('Error storing observer:', error);
+      console.error('Error storing observer:', error);
       throw new Error('An error occurred while storing subscriber.');
     }
   }
