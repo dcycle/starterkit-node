@@ -133,7 +133,7 @@
       "publishedEvent": publishedEvent,
       "subscriberModule": subscriberModule,
       "subscriberMethod": subscriberMethod,
-      "subscribeId": subscribeId
+      "subscriberId": subscriberId
     });
   }
 
