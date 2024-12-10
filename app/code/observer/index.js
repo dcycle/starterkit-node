@@ -31,36 +31,33 @@
    async init(app) {
     super.init(app);
 
-    const Schema = app.component('./database/index.js').mongoose().Schema;
-
-    // Define the Subscriber Info schema for each subscribes
-    const subscribeInfoSchema = new Schema({
-      subscriberModule: { type: String, required: true },
-      subscriberMethod: { type: String, required: true },
-    }, { _id: false });
-
-    // Define the main Publisher schema
-    const ObserverSchema = new Schema({
-      // 'publisherModule' is a string that represents the module where the event is published
-      // It is required to specify which module is responsible for publishing the event
-      publisherModule: { type: String, required: true },
-      // 'publishedEvent' is a string that identifies the specific event
-      // that has been published
-      // It is required to track which event is being published by the module
-      publishedEvent: { type: String, required: true },
-      // 'subscribeId' stores a mapping of subscriber keys (subscribeId) to an array of subscriber information
-      // Each subscriber key is associated with an array of 'subscribeInfoSchema' (each representing a subscriber's info)
-      // This is required to track all the subscribers for a given published event
-      subscribeId: {
-        type: Map,
-        // Use array of subscribeInfoSchema for each subscribeKey
-        of: [subscribeInfoSchema],
+    this.observersModel = app.component('./database/index.js')
+    .mongoose().model('observers', {
+      publisherModule: {
+        type: String,
         required: true
       },
+      publishedEvent: {
+        type: String,
+        required: true
+      },
+      subscriberModule: {
+        type: String,
+        required: true
+      },
+      subscriberMethod: {
+        type: String,
+        required: true
+      },
+      subscriptionId: {
+        type: String,
+        required: true
+      },
+      createdAt: {
+        type: Date,
+        default: Date.now
+      }
     });
-
-    this.observersModel = app.component('./database/index.js').mongoose()
-    .model('observers', ObserverSchema);
 
     return this;
   }
@@ -131,15 +128,13 @@
       subscriberMethod: subscriberMethod,
     };
 
-    await this.addSubscribe(
+    await this.addSubscriber({
       publisherModule,
       publishedEvent,
-      subscribeId,
-      {
-        subscriberModule: subscriberModule,
-        subscriberMethod: subscriberMethod
-      }
-    );
+      subscriberModule,
+      subscriberMethod,
+      subscribeId
+    });
   }
 
   ensureStructureValid(
@@ -180,25 +175,50 @@
    */
   async runSubscribers(publisherModule, publishedEvent, data) {
     try {
-      const publisher = await this.getObserversModel().findOne({
-        "publisherModule": publisherModule,
-        "publishedEvent": publishedEvent
-      });
+      const publisher = await this.getObserversModel().aggregate([
+        // Step 1: Filter by publisherModule and publishedEvent
+        {
+          $match: {
+            publisherModule: publisherModule,
+            publishedEvent: publishedEvent
+          }
+        },
+
+        // Step 2: Group by subscriptionId
+        {
+          $group: {
+            // Group by subscriptionId
+            _id: "$subscriptionId",
+            subscriberModules: { $addToSet: "$subscriberModule" },   // Collect unique subscriberModule values for each group
+            subscriberMethods: { $addToSet: "$subscriberMethod" }    // Collect unique subscriberMethod values for each group
+          }
+        },
+
+        // Step 3: Project to select only the subscriberModule and subscriberMethod
+        {
+          $project: {
+            _id: 0,  // Exclude _id from the result
+            subscriberModule: { $first: "$subscriberModules" },  // Get the first subscriberModule in each group
+
+            subscriberMethod: { $first: "$subscriberMethods" }          }
+        }
+      ]);
 
       if (!publisher) {
         console.log('Publisher not found');
         return;
       }
+      console.log('----Publisher  found----');
+      console.log(publisher);
 
-      // Traverse all subscribeId entries
-      publisher.subscribeId.forEach((subscribe) => {
-        subscribe.forEach(async (value) => {
-          const module = value.subscriberModule;
-          const method = value.subscriberMethod;
-          // Execute subscribers
-          await this.app().c(module)[method](data);
-        });
-      });
+      // for (const subscriberId in subscribers) {
+      //   // if (subscribers.hasOwnProperty(subscriberId)) {
+      //     const module = subscribers[subscriberId].subscriberModule;
+      //     const method = subscribers[subscriberId].subscriberMethod;
+      //     this.app().c(module)[method](data);
+      //   // }
+      // }
+
     } catch (error) {
       console.error('Error querying publisher data:', error);
     }
@@ -218,83 +238,50 @@
   }
 
   /**
-   * Adds a new subscriber to a publisher's event or appends the subscriber
-   * to an existing publisher's event if it already exists. If the subscriber already
-   * exists, no new subscriber is added.
+   * Adds a new subscriber to the database.
    *
-   * RUN db.observers.find().pretty(); in mongo db console to see the observers
-   *  collection schema design.
+   * @param {Object} subscriberObject - The observer object to be added to the database.
+   * The object should not contain a `uuid` property as it will be automatically generated.
    *
-   * The method handles both the case where the publisher already exists and where
-   * a new publisher needs to be created.
+   * @returns {Promise<string|boolean>} A promise that resolves to the ID of the
+   * saved observer if successful, or `false` if there was an error during saving.
    *
-   * @param {String} publisherModule - The name of the publisher module that is publishing the event.
-   * @param {String} publishedEvent - The name of the event being published.
-   * @param {String} subscribeKey - A unique identifier for the subscriber key (e.g., 'userService').
-   * @param {Object} subscribeData - The subscriber data containing the subscriber module and method.
-   *                               It should include:
-   *                               - subscriberModule (String): The subscriber module (e.g., 'emailService').
-   *                               - subscriberMethod (String): The method within the subscriber module (e.g., 'sendEmail').
-   *
-   * @returns {Promise<String|undefined>} - If a new observer is created, it returns the ID of the new observer.
-   *                                         If the subscriber is appended to an existing observer, it returns `undefined`.
+   * @throws {Error} Will throw an error if there is a validation error or any other
+   * type of error during the process of storing the observer.
    */
-  async addSubscribe(
-    publisherModule,
-    publishedEvent,
-    subscribeKey,
-    subscribeData) {
+   async addSubscriber(
+    subscriberObject /*:: : Object */
+  ) {
     try {
-      // Step 1: Find if the publisher already exists.
-      let existingObserver = await this.getObserversModel().findOne(
-        { publisherModule, publishedEvent }
-      );
+      // Check if the observerObject already exists in the database based on a unique identifier (e.g., uuid or other field)
+      const existingObserver = await this.getObserversModel().find(subscriberObject);
+      console.log("******** Existing Subscriber2 *******");
+      console.log(existingObserver);
+
       if (existingObserver) {
-        // Step 2: Publisher exists, check if the subscribeKey exists
-        if (existingObserver.subscribeId.has(subscribeKey)) {
-          // If subscribeKey exists, check if the subscribe already exists
-          const subscribeArray = existingObserver.subscribeId.get(subscribeKey);
-
-          // Check if the subscribeData already exists
-          const alreadyExists = subscribeArray.some(
-            (sub) => sub.subscriberModule === subscribeData.subscriberModule &&
-                    sub.subscriberMethod === subscribeData.subscriberMethod
-          );
-
-          if (alreadyExists) {
-            console.log("Subscriber already exists, not pushing new data.");
-          } else {
-            // If subscribe does not exist, push the new subscribe data
-            subscribeArray.push(subscribeData);
-            await existingObserver.save();
-            console.log('Subscriber appended to existing key!');
-          }
-        } else {
-          // If subscribeKey doesn't exist, create a new key with the
-          // subscribe data
-          existingObserver.subscribeId.set(subscribeKey, [subscribeData]);
-          await existingObserver.save();
-          console.log(subscribeKey);
-          console.log('New subscribe key added!');
-        }
+        // If the subscriber already exists, return the existing UUID or other appropriate response
+        console.log("subscriber already exists in the database.");
+        // Or return other relevant information from existingObserver
+        return existingObserver.id;
       } else {
-        // observer does not exist, create a new document with
-        // the subscribe key and data
-        const observer = await this.getObserversModel()({
-          publisherModule,
-          publishedEvent,
-          subscribeId: {
-            // Create an array for multiple subscribes
-            [subscribeKey]: [subscribeData]
-          }
-        });
-        return observer.save().then(async (value)=> {
-          console.log("!! new observer saved to database !!");
+        const subscriber = await this.getObserversModel()(subscriberObject);
+        return subscriber.save().then(async (value)=> {
+          console.log("!! subscriber saved to database !!");
           return value.id;
+        }).catch((err)=>{
+          console.log(err);
+          return false;
         });
       }
     } catch (error) {
-      console.error('Error adding subscribe:', error);
+      // Handle Mongoose validation errors
+      if (error.name === 'ValidationError') {
+        console.error('Validation Error:', error.message);
+        throw new Error('Validation error occurred while storing subscriber.');
+      }
+      // Handle other types of errors
+      // console.error('Error storing observer:', error);
+      throw new Error('An error occurred while storing subscriber.');
     }
   }
 
