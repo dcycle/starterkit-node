@@ -175,53 +175,28 @@
    */
   async runSubscribers(publisherModule, publishedEvent, data) {
     try {
-      const publisher = await this.getObserversModel().aggregate([
-        // Step 1: Filter by publisherModule and publishedEvent
-        {
-          $match: {
-            publisherModule: publisherModule,
-            publishedEvent: publishedEvent
-          }
-        },
+      // Define the filter conditions
+      const filter = {
+        publisherModule: publisherModule,
+        publishedEvent: publishedEvent
+      };
 
-        // Step 2: Group by subscriberId
-        {
-          $group: {
-            // Group by subscriberId
-            _id: "$subscriberId",
-            // Collect unique subscriberModule values for each group
-            subscriberModules: { $addToSet: "$subscriberModule" },
-            // Collect unique subscriberMethod values for each group
-            subscriberMethods: { $addToSet: "$subscriberMethod" }
-          }
-        },
+      // Define the fields to select (subscriberModules and subscriberMethods)
+      const fieldsToSelect = 'subscriberModules subscriberMethods';
 
-        // Step 3: Project to select only the subscriberModule and subscriberMethod
-        {
-          $project: {
-            _id: 0,  // Exclude _id from the result
-            subscriberModule: { $first: "$subscriberModules" },
-           // Get the first subscriberModule in each group
-            subscriberMethod: { $first: "$subscriberMethods" }
-          }
-        }
-      ]);
+      const subscribers = await this.getObserversModel().find(filter).select(fieldsToSelect);
 
-      if (!publisher) {
-        console.log('Publisher not found');
+      if (!subscribers) {
+        console.log('Subscribers not found');
         return;
       }
-      console.log('----Publisher  found----');
-      console.log(publisher);
-
-      // for (const subscriberId in subscribers) {
-      //   // if (subscribers.hasOwnProperty(subscriberId)) {
-      //     const module = subscribers[subscriberId].subscriberModule;
-      //     const method = subscribers[subscriberId].subscriberMethod;
-      //     this.app().c(module)[method](data);
-      //   // }
-      // }
-
+      console.log('----Subscribers  found----');
+      console.log(subscribers);
+      subscribers.forEach(async subscriber => {
+        const module = subscriber.subscriberModule;
+        const method = subscriber.subscriberMethod;
+        await this.app().c(module)[method](data);
+      });
     } catch (error) {
       console.error('Error querying publisher data:', error);
     }
