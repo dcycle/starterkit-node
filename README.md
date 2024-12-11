@@ -412,43 +412,37 @@ Steps for Testing Observers:
    ```
 
 2. **Subscribe to the Event**:
-   You are subscribing to the `helloWorld` event from the `observerExamplePublisher` by calling `app.c('observer').subscribe()` multiple times.
+   You are subscribing to the `helloWorld` event from the `observerExamplePublisher` by calling `app.c('observer').subscriber()` multiple times.
 
    Here's the code for subscribing to the event:
    ```
-   // subscriber3 subscribing to helloWorld publishedEvent
+   // subscriber1 subscribing to helloWorld publishedEvent
    app.c('observer').subscribe(
          'observerExamplePublisher',
          'helloWorld',
          'observerExampleSubscriber',
-         'subscriber3',
-         // We are not passing any id here, so if we subscribe several times,
-         // subscriber1() will be called several times.
+         'subscriber1'
    );
 
-   // subscriber3 subscribing to helloWorld publishedEvent
+   // subscriber1 subscribing to helloWorld publishedEvent
    app.c('observer').subscribe(
          'observerExamplePublisher',
          'helloWorld',
          'observerExampleSubscriber',
-         'subscriber3',
-         // We are not passing any id here, so if we subscribe several times,
-         // subscriber1() will be called several times.
+         'subscriber1'
    );
 
-   // subscriber3 subscribing to helloWorld publishedEvent
+   // subscriber1 subscribing to helloWorld publishedEvent
    app.c('observer').subscribe(
          'observerExamplePublisher',
          'helloWorld',
          'observerExampleSubscriber',
-         'subscriber3',
-         // We are not passing any id here, so if we subscribe several times,
-         // subscriber1() will be called several times.
+         'subscriber1'
    );
    ```
 
-   In this case, you are subscribing `subscriber3` three times to the `helloWorld` event, which will result in `subscriber3`'s handler being called only once when the event is published. That is because we are creating unique
-   subscriptionId for each subscribe with respect to subscriptionMethod, if you aren't provided any subscriptionId and we are not storing duplicate subscriptionId to db.
+   In this case, you are trying to subscribe `subscriber1` three times to the `helloWorld` event, which will result in `subscriber1` handler being called only once when the event is published. That is because if you aren't provided any unique subscriptionId we are creating unique
+   subscriptionId for each subscriber with using  publisherModule publisherEvent subscriberModule subscriberMethod values and we are not storing duplicate subscriberId to db.
 
 3. **Publish the Event**:
    After subscribing, you need to trigger the event using the `helloWorld` method from the `observerExamplePublisher`:
@@ -474,12 +468,12 @@ Steps for Testing Observers:
    ```
 
 ### Explanation:
-- **Subscribing multiple times**: Since `subscriber3` subscribes three times, its callback will be invoked once when the event is triggered if subscri Id is .
+- **Subscribing multiple times**: Since `subscriber1` subscribes three times, its callback will be invoked once when the event is triggered.
 - **Event Flow**: The flow goes like this:
    1. The publisher (`observerExamplePublisher`) triggers the `helloWorld` event.
-   2. The subscriber (`observerExampleSubscriber`, `subscriber3`) listens for the event.
-   3.  Subscription to the event triggers a corresponding callback, so you should see `"hello"` printed once times.
-   4. Finally, `"world"` is printed, indicating the final event handling logic.
+   2. The subscriber (`observerExampleSubscriber`, `subscriber1`) listens for the event.
+   3.  Subscriber to the event triggers a corresponding callback, so you should see `"hello"` printed one time.
+   4. `"world"` printed once from suscriber2 which is already insert to observer collection from observer observerExampleSubscriber module.
 
 This approach helps test how multiple subscriptions work with the observer pattern in your application.
 
