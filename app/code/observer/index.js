@@ -117,7 +117,7 @@
    *  the subscription data to the database.
    *
    * @example
-   * await app.c('observers').subscribe(
+   * await app.c('observer').subscribe(
    * 'userModule',
    * 'userRegistered',
    * 'emailService',
@@ -125,7 +125,7 @@
    * );
    *
    * @example
-   * await app.c('observers').subscribe(
+   * await app.c('observer').subscribe(
    * 'orderModule',
    * 'orderShipped',
    * 'notificationService',
@@ -235,7 +235,7 @@
    * const publisher = 'userModule';
    * const event = 'userRegistered';
    * const data = { username: 'johndoe', email: 'johndoe@example.com' };
-   * await app.c('observers').publish(publisher, event, data);
+   * await app.c('observer').publish(publisher, event, data);
    */
   async publish(publisherModule, publishedEvent, data) {
     if (!this.isModuleEnabled(publisherModule)) {
@@ -283,7 +283,7 @@
    * const publisherModule = 'UserModule';
    * const publishedEvent = 'UserCreated';
    * const eventData = { userId: 123, userName: 'John Doe' };
-   * await app.c('observers').runSubscribers(
+   * await app.c('observer').runSubscribers(
    *   publisherModule,
    *   publishedEvent,
    *   eventData
@@ -348,7 +348,7 @@
    *   'subscriberEvent' : 'subscriber2',
    *   'subscriberId' : 'we-are-creating-two-observers-with-this-id-so-only-one-is-called',
    * };
-   * const observerId = await app.c('observers').addSubscriber(newObserver);
+   * const observerId = await app.c('observer').addSubscriber(newObserver);
    * If observer exist then it will display
    * `observer already exists in the database.`
    *  and returns observer ID.
@@ -414,7 +414,7 @@
    *  observer objects if the query is successful, or `false` if an error occurs.
    *
    * @example
-   * const allObservers = await app.c('observers').getAllObservers();
+   * const allObservers = await app.c('observer').getAllObservers();
    * if (allObservers) {
    *   console.log('Fetched observers:', allObservers);
    * } else {
@@ -422,7 +422,7 @@
    * }
    *
    * @example
-   * const filteredObservers = await app.c('observers').getAllObservers(
+   * const filteredObservers = await app.c('observer').getAllObservers(
    *   { publisherModule: 'observerExamplePublisher' }
    * );
    * console.log('Filtered observers:', filteredObservers);
@@ -463,7 +463,7 @@
    * // Replace with actual ObjectId
    * const observerIdToDelete = '5fdb97b44a5c2c55c7e63e23';
    *
-   * await app.c('observers').deleteObserverByID(observerIdToDelete);
+   * await app.c('observer').deleteObserverByID(observerIdToDelete);
    * returns true if document deleted successfully
    * else it will display error.
    *
