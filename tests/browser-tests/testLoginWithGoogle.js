@@ -1,10 +1,9 @@
 const { expect } = require('chai');
 const testBase = require('./testBase.js');
+const puppeteer = require('puppeteer');
 
 it('should redirect to Google for authentication', async function () {
   try {
-    this.timeout(25000);
-    const puppeteer = require('puppeteer');
     const browser = await puppeteer.launch({
         headless: true,
         args: ['--no-sandbox', '--disable-setuid-sandbox']
@@ -30,8 +29,6 @@ it('should redirect to Google for authentication', async function () {
 
 it('should handle Google authentication callback', async function () {
   try {
-    this.timeout(25000);
-    const puppeteer = require('puppeteer');
     const browser = await puppeteer.launch({
         headless: true,
         args: ['--no-sandbox', '--disable-setuid-sandbox']
@@ -62,8 +59,6 @@ it('should handle Google authentication callback', async function () {
 
 it('should handle errors during authentication', async function () {
   try {
-    this.timeout(25000);
-    const puppeteer = require('puppeteer');
     const browser = await puppeteer.launch({
         headless: true,
         args: ['--no-sandbox', '--disable-setuid-sandbox']
