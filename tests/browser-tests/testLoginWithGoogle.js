@@ -6,6 +6,7 @@ describe('Google Authentication', function () {
   let page;
 
   before(async function () {
+    const puppeteer = require('puppeteer');
     // Set to true for headless mode
     browser = await puppeteer.launch({ headless: false });
     page = await browser.newPage();
