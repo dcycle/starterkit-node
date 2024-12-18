@@ -24,6 +24,8 @@ modules:
         verb: post
       - route: sendSMS
         verb: post
+      - route: webhookSMS
+        verb: post
       - route: googleErr
         verb: get
   ./rest/index.js:
@@ -81,3 +83,5 @@ modules:
   ./webhookWhatsApp/index.js: {}
   ./webhookWhatsAppSubscriber/index.js: {}
   ./sendSMS/index.js: {}
+  ./webhookSMS/index.js: {}
+  ./helpers/index.js: {}
