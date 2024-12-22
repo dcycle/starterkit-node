@@ -2,11 +2,8 @@
 const test = require('ava');
 const sinon = require('sinon');
 
-// Adjust the path accordingly
-// const textFramework  = require('/mycode/textFramework/index.js');
-
 // Assuming the actual sendText function is being tested here
-const sendText = require('./mycode/textFramework/index.js');
+const sendText = require('/mycode/textFramework/index.js');
 
 // Assuming the original sendText method is available and we have access to app.
 const app = {
