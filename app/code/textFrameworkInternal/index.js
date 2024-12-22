@@ -19,6 +19,18 @@ class TextFrameworkInternal extends require('../component/index.js') {
     return this;
   }
 
+  /**
+   * Sends a text message to the chat service.
+   * 
+   * This asynchronous method sends the provided message data to the chat system
+   * using the `addMessage` method from the chat service.
+   *
+   * @async
+   * @param {Object} data - The message data to be sent. This typically contains the message content, sender, etc.
+   * @returns {Promise<void>} A promise that resolves when the message is successfully added.
+   * 
+   * @throws {Error} If the message cannot be sent due to any failure in the chat service.
+   */
   async sendText(data) {
     await this._app.c('chat').addMessage(data);
   }

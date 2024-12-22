@@ -19,6 +19,20 @@ class TextFrameworkSMS extends require('../component/index.js') {
     return this;
   }
 
+  /**
+   * Sends a text message by parsing the provided data using the `parsepropertySendSMS` method.
+   * 
+   * This asynchronous method passes the provided data to the `sendSMS` service for processing 
+   * and sending the SMS. The data is expected to be in a format that can be parsed by 
+   * `parsepropertySendSMS`.
+   *
+   * @async
+   * @param {Object} data - The data required for sending the SMS. This object may include
+   *                         details such as the recipient's phone number, message content, etc.
+   * @returns {Promise<void>} A promise that resolves when the SMS has been processed successfully.
+   * 
+   * @throws {Error} If the SMS cannot be sent or if there is an error while parsing the data.
+   */
   async sendText(data) {
     await this._app.c('sendSMS').parsepropertySendSMS(data);
   }
