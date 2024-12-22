@@ -125,9 +125,9 @@ class TextFramework extends require('../component/index.js') {
    */
   validateParameters(plugin, data) {
     const requiredParams = {
-      whatsapp: ['sendTo'],
-      sms: ['sendTo'],
-      internal: ['name']
+      whatsapp: ['sendTo', 'message'],
+      sms: ['sendTo', 'message'],
+      internal: ['name', 'message']
     };
 
     const required = requiredParams[plugin];
