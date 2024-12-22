@@ -1,4 +1,4 @@
-// // test/chatbot.test.js
+// test/textFramework.test.js
 const test = require('ava');
 const sinon = require('sinon');
 
