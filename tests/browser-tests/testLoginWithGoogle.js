@@ -15,8 +15,6 @@ it('should redirect to Google for authentication', async function () {
     await page.setViewport({ width: 1280, height: 800 });
 
     await page.goto('http://node:8080/auth/google');
-    await testBase.sleep(1000);
-
     // Wait for the URL to change and check if it includes Google login
     await page.waitForNavigation();
     const url = page.url();
@@ -44,8 +42,6 @@ it('should handle Google authentication callback', async function () {
 
     // Simulate a successful login by visiting the callback URL
     await page.goto('http://node:8080/auth/google/callback?code=mockCode');
-    await testBase.sleep(1000);
-
     // Check if redirected to the homepage
     await page.waitForNavigation();
     const url = page.url();
@@ -72,8 +68,6 @@ it('should handle errors during authentication', async function () {
     const page = await browser.newPage();
     console.log('set viewport');
     await page.setViewport({ width: 1280, height: 800 });
-    await testBase.sleep(1000);
-
     // Simulate an error during authentication
     await page.goto('http://node:8080/auth/google-error');
     // Wait for the URL to change and check if it includes /login
