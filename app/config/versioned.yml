@@ -85,7 +85,7 @@ modules:
         plugin: textFrameworkSMS
       internal:
         name: internal
-        plugin: textFrameworkSMS
+        plugin: textFrameworkInternal
   ./textFrameworkWhatsApp/index.js: {}
   ./textFrameworkSMS/index.js: {}
   ./textFrameworkInternal/index.js: {}
