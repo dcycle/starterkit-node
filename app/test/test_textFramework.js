@@ -5,13 +5,32 @@ const sinon = require('sinon');
 // Adjust the path to your class
 const TextFramework = require('/mycode/textFramework/index.js');
 
-let textFramework;
 let appMock;
 
 test.beforeEach(async () => {
   // Create a new instance of the TextFramework and mock app
   appMock = {
     config: sinon.stub(),
+    config: sinon.stub().returns({
+      modules: {
+        './textFramework/index.js': {
+          plugins: {
+            'examplePlugin': {
+              plugin: 'examplePlugin'
+            },
+            'whatsapp': {
+              plugin: 'textFrameworkWhatsApp'
+            },
+            'sms': {
+              plugin: 'textFrameworkSMS'
+            },
+            'internal': {
+              plugin: 'textFrameworkInternal'
+            },
+          }
+        }
+      }
+    }),  
     c: sinon.stub()
   };
 
