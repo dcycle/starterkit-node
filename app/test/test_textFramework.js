@@ -10,7 +10,7 @@ let appMock;
 test.beforeEach(async () => {
   // Create a new instance of the TextFramework and mock app
   appMock = {
-    config: sinon.stub(),
+    component: sinon.stub(),
     config: sinon.stub().returns({
       modules: {
         './textFramework/index.js': {
