@@ -16,7 +16,7 @@ test.beforeEach(async () => {
   };
 
   await TextFramework.init(appMock);
-  textFramework._app = appMock;
+
 });
 
 test('sendText with sms plugin and valid parameters', async t => {
@@ -127,7 +127,7 @@ test('sendText with whatsapp plugin and missing sendTo', async t => {
 });
 
 test('sendText with internal plugin and missing name', async t => {
-  const result = await textFramework.sendText({
+  const result = await TextFramework.sendText({
     plugin: 'internal',
     message: 'hello'
   });
@@ -162,7 +162,7 @@ test('sendText with internal plugin and empty message', async t => {
 });
 
 test('sendText with sms plugin and empty sendTo', async t => {
-  const result = await textFramework.sendText({
+  const result = await TextFramework.sendText({
     plugin: 'sms',
     message: 'hello',
     sendTo: ''
