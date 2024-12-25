@@ -58,7 +58,7 @@ it("send sms should send to a respective sendTo number or written to file.", asy
     // developement environment.
     if (envMode === "true") {
       // Get content of a file.
-      const content = testBase.getcontentOfAFile(
+      const content = await testBase.getcontentOfAFile(
         '/unversioned/output/sms-sent.json',
       );
       // Log confirmation message
