@@ -26,12 +26,13 @@ class TextFrameworkInternal extends require('../component/index.js') {
    * using the `addMessage` method from the chat service.
    *
    * @async
-   * @param {Object} data - The message data to be sent. This typically contains the message content, sender, etc.
+   * @param {String} dataString - The message data to be sent. This typically contains the message content, sender, etc.
    * @returns {Promise<void>} A promise that resolves when the message is successfully added.
    * 
    * @throws {Error} If the message cannot be sent due to any failure in the chat service.
    */
-  async sendText(data) {
+  async sendText(dataString) {
+    const data = JSON.parse(dataString);
     await this._app.c('chat').addMessage(data);
   }
 
