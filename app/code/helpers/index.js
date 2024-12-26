@@ -72,7 +72,7 @@ class Helpers extends require('../component/index.js') {
    * }
    */
   async writeToFile(jsonMessage, filePath) {
-    return /** @type {Promise<void>} */(new Promise((resolve, reject) => {
+    return /** @type {Promise<boolean>} */(new Promise((resolve, reject) => {
       // @ts-expect-error
       const fs = require('fs');
 
