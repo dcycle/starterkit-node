@@ -34,6 +34,7 @@ Dcycle Node.js starterkit
 * Send SMS
 * Typechecking
 * The chatbot framework
+* The textFramework
 * Troubleshooting
 * Resources
 
@@ -1092,6 +1093,48 @@ This should return:
         'Specify either a plugin or a conversationId',
       ],
     }
+
+The textFramework
+-----
+
+We have four (4) text new modules:
+
+textFramework
+textFrameworkWhatsApp
+textFrameworkSMS
+textFrameworkInternal
+
+textFrameworkWhatsApp, textFrameworkSMS, textFrameworkInternal are GLUE between the textFramework modules and the existing whatsAppSend, sendSms, and chat modules.
+
+In our ./app/config/versioned.yml file, we have enabled all 4 modules
+
+./textFramework/index.js:
+  plugins:
+    whatsapp:
+      name: whatsapp
+      plugin: textFrameworkWhatsApp
+    sms:
+      name: sms
+      plugin: textFrameworkSMS
+    internal:
+      name: internal
+      plugin: textFrameworkInternal
+./textFrameworkWhatsApp/index.js:
+./textFrameworkSMS/index.js:
+./textFrameworkInternal/index.js:
+
+Now we can send messages through textFramework by specifying respective plugins in node cli.
+
+./scripts/node-cli.sh
+
+```
+    await app.c('textFramework').sendText({plugin: 'sms', message: 'hello', sendTo: '+<your phone number>' })
+
+    await app.c('textFramework').sendText({plugin: 'whatsapp', message: 'hello', sendTo: '+<your phone number>' })
+
+    await app.c('textFramework').sendText({plugin: 'internal', message: 'hello', name: 'my name' })
+```
+
 
 Troubleshooting
 -----

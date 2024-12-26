@@ -58,7 +58,7 @@ it("send whatsapp message should send to a respective sendTo number or written t
     // developement environment.
     if (whatsappDev === "true") {
       // Get content of a file.
-      const content = testBase.getcontentOfAFile(
+      const content = await testBase.getcontentOfAFile(
         '/unversioned/output/whatsapp-send.json',
       );
       // Log confirmation message
@@ -97,11 +97,12 @@ it("send whatsapp image message with caption should send to a respective sendTo 
     // developement environment.
     if (whatsappDev === "true") {
       // Get content of a file.
-      const content = testBase.getcontentOfAFile(
+      const content = await testBase.getcontentOfAFile(
         '/unversioned/output/whatsapp-send.json',
       );
       // Log confirmation message
       console.log("Confirm that Reply Message saved to file if it is dev environment");
+
       // Assert that the file contains the expected message
       expect(content).to.include("I am caption");
       console.log("Confirm that Message sent successfully");
@@ -135,11 +136,12 @@ it("send whatsapp image message without caption should send to a respective send
     // developement environment.
     if (whatsappDev === "true") {
       // Get content of a file.
-      const content = testBase.getcontentOfAFile(
+      const content = await testBase.getcontentOfAFile(
         '/unversioned/output/whatsapp-send.json',
       );
       // Log confirmation message
       console.log("Confirm that Reply Message saved to file if it is dev environment");
+
       // Assert that the file contains the expected message
       expect(content).to.include('https://raw.githubusercontent.com/dianephan/flask_upload_photos/main/UPLOADS/DRAW_THE_OWL_MEME.png');
       console.log("Confirm that Message sent successfully");
@@ -173,7 +175,7 @@ it("send whatsapp video message should send to a respective sendTo number or wri
     // developement environment.
     if (whatsappDev === "true") {
       // Get content of a file.
-      const content = testBase.getcontentOfAFile(
+      const content = await testBase.getcontentOfAFile(
         '/unversioned/output/whatsapp-send.json',
       );
       // Log confirmation message

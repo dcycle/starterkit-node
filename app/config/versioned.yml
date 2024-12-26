@@ -75,6 +75,20 @@ modules:
         name: calculator
         plugin: chatbotCalculator
   ./chatbotCalculator/index.js: {}
+  ./textFramework/index.js:
+    plugins:
+      whatsapp:
+        name: whatsapp
+        plugin: textFrameworkWhatsApp
+      sms:
+        name: sms
+        plugin: textFrameworkSMS
+      internal:
+        name: internal
+        plugin: textFrameworkInternal
+  ./textFrameworkWhatsApp/index.js: {}
+  ./textFrameworkSMS/index.js: {}
+  ./textFrameworkInternal/index.js: {}
   ./dashboardApi/index.js: {}
   ./observer/index.js: {}
   ./observerExamplePublisher/index.js: {}

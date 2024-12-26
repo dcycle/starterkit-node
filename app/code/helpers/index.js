@@ -13,7 +13,28 @@ class Helpers extends require('../component/index.js') {
     ];
   }
 
-  /** Return true if the AccountSid is equivalent to the TWILIO_USER in .env */
+  /**
+   * Validates whether the provided message object contains a valid authentication 
+   * based on the AccountSid and compares it with the expected Twilio user.
+   *
+   * This method checks if the `AccountSid` field is present in the provided message object, 
+   * and if it matches the expected `TWILIO_USER` from the environment variables.
+   *
+   * @param {Object} messageObject - The message object to validate. It should have an `AccountSid` property 
+   *                                 (e.g., from Twilio webhook payload).
+   * 
+   * @returns {boolean} - Returns `true` if the `AccountSid` in the `messageObject` matches the expected `TWILIO_USER`, 
+   *                      otherwise returns `false`.
+   * 
+   * @example
+   * const messageObject = { AccountSid: 'ACXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX' };
+   * const isAuthenticated = validateAuthenticatedMessage(messageObject);
+   * if (isAuthenticated) {
+   *   console.log('The message is authenticated.');
+   * } else {
+   *   console.log('The message is not authenticated.');
+   * }
+   */
   validateAuthenticatedMessage(
     messageObject /*:: : Object */
   ) {
@@ -25,9 +46,33 @@ class Helpers extends require('../component/index.js') {
       return false;
     }
   }
-  
+
+  /**
+   * Writes a JSON message to a specified file. If the file doesn't exist, it is created. 
+   * If the file already exists, the message is prepended to the existing content.
+   *
+   * @param {string} jsonMessage - The JSON string to write to the file. It will be written as-is (you may want to stringify the message if it's a JavaScript object).
+   * @param {string} filePath - The path to the file where the message should be written.
+   * 
+   * @returns {Promise<boolean>} - A Promise that resolves with `true` if the file was successfully updated, 
+   *                                or `false` if an error occurred during the read/write operation.
+   * 
+   * @throws {Error} - If an unexpected error occurs while reading or writing the file.
+   * 
+   * @example
+   * const filePath = 'path/to/file.txt';
+   * const jsonMessage = '{"message": "Test message"}';
+   * 
+   * // Usage example:
+   * const success = await writeToFile(jsonMessage, filePath);
+   * if (success) {
+   *   console.log('Message successfully written to file!');
+   * } else {
+   *   console.log('Failed to write message to file.');
+   * }
+   */
   async writeToFile(jsonMessage, filePath) {
-    return /** @type {Promise<void>} */(new Promise((resolve, reject) => {
+    return /** @type {Promise<boolean>} */(new Promise((resolve, reject) => {
       // @ts-expect-error
       const fs = require('fs');
 
@@ -36,20 +81,20 @@ class Helpers extends require('../component/index.js') {
         if (readErr && readErr.code !== 'ENOENT') {
           // If the file exists and there's an error reading it, reject with an error
           console.error('Error reading from file:', readErr);
-          return reject(new Error('Error reading from file'));
+          return reject(false);
         }
 
         // Prepend the new jsonMessage to the existing data (or use empty string
         // if the file doesn't exist yet)
-        const newData = jsonMessage + (data || '');
+        const newData = jsonMessage + "\n" + (data || '');
 
         // Write the new data to the file
         fs.writeFile(filePath, newData, (writeErr) => {
           if (writeErr) {
             console.error('Error writing to file:', writeErr);
-            reject(new Error('Error writing to file'));
+            reject(false);
           } else {
-            resolve();
+            resolve(true);
           }
         });
       });

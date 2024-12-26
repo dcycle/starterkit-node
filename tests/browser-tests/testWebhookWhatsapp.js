@@ -31,7 +31,7 @@ it("If account ssid different then message should get saved to a file but should
 
 
     // Get content of a file.
-    const content = testBase.getcontentOfAFile(
+    const content = await testBase.getcontentOfAFile(
       '/unversioned/output/whatsapp.json',
     );
 
@@ -81,7 +81,7 @@ it("If account ssid same as message then message should get saved to a file and 
     });
 
     // Get content of a file.
-    const content = testBase.getcontentOfAFile(
+    const content = await testBase.getcontentOfAFile(
       '/unversioned/output/whatsapp.json',
     );
 

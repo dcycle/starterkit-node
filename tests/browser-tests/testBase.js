@@ -58,10 +58,10 @@ exports.showError = async function (error, browser) {
   console.log(error);
 };
 
-exports.getcontentOfAFile = (filePath) => {
+exports.getcontentOfAFile = async (filePath) => {
   try {
     // Read the file's content synchronously
-    const fileContent = fs.readFileSync(filePath, 'utf8');
+    const fileContent = await fs.readFileSync(filePath, 'utf8');
     return fileContent;
   } catch (error) {
     // Handle errors

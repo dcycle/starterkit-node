@@ -172,14 +172,36 @@ class WhatsAppSend extends require('../component/index.js') {
   }
 
   /**
-   * Using Send Message We are sending messages.
-   *
-   * @param messageObject
-   *   Object should have message and sendTo number to send message to respective number.
-   *   '{"message": "This is a test", "sendTo":"+91000000000"}'
-   *
-   * @return
-   *   returns true if message sent successfully else false.
+   * Sends a WhatsApp message. The behavior differs based on the `DEV_MODE` environment variable.
+   * 
+   * - If `DEV_MODE` is set to `"false"`, the message is sent using the `sendMessage` function.
+   * - If `DEV_MODE` is set to any other value (e.g., `"true"`), the message is written to a JSON file (`./unversioned/output/whatsapp-send.json`) for later processing, without sending the message.
+   * 
+   * @param {Object} messageObject - The message object containing the details of the WhatsApp message to send. 
+   *                                It typically includes properties such as `to`, `body`, and potentially `mediaUrl`.
+   * 
+   * @returns {Promise<boolean>} - A Promise that resolves with:
+   *   - `true` if the message was successfully sent (or saved to a file if in dev mode).
+   *   - `false` if an error occurred or the message could not be sent or saved.
+   * 
+   * @throws {Error} - If there is an unexpected error in the process, the function will log the error and return `false`.
+   * 
+   * @example
+   * const messageObject = {
+   *   to: "+1234567890", 
+   *   body: "Hello, this is a test message!"
+   * };
+   * 
+   * async function sendMessage() {
+   *   const success = await sendWhatsappMessage(messageObject);
+   *   if (success) {
+   *     console.log('Message successfully sent!');
+   *   } else {
+   *     console.log('Failed to send message.');
+   *   }
+   * }
+   * 
+   * sendMessage();
    */
    async sendWhatasppMessage(messageObject) {
     try {
@@ -194,18 +216,15 @@ class WhatsAppSend extends require('../component/index.js') {
       if (isDevMode) {
         return await this.sendMessage(messageObject);
       } else {
-        return this.writeMessageToFile(messageObject).then((data) => {
-          if (data) {
-            return true;
-          }
-          else {
-            return false;
-          }
-        })
-        .catch((error) => {
-          console.error('Something bad happened:', error.toString());
+        const filePath = '/output/whatsapp-send.json';
+        const jsonMessage = JSON.stringify(messageObject);
+        const response = await this.app().c('helpers').writeToFile(jsonMessage, filePath);
+        if (response) {
+          return true;
+        }
+        else {
           return false;
-        });
+        }
       }
     } catch (error) {
       console.error('Unexpected error:', error);
@@ -250,31 +269,6 @@ class WhatsAppSend extends require('../component/index.js') {
 
     } catch (error) {
       console.error('Error sending WhatsApp message:', error);
-      return false;
-    }
-  }
-
-  /**
-   * Writes the message object to a file.
-   * @param {Object} messageObject - The message object to write to a file.
-   */
-  async writeMessageToFile(messageObject) {
-    try {
-      // @ts-expect-error
-      const fs = require('fs');
-      const jsonMessage = JSON.stringify(messageObject);
-
-      await fs.writeFile('/output/whatsapp-send.json', jsonMessage, (err) => {
-        if (err) {
-          console.log("WhatsApp send message Coudn't be Written to file. " + err);
-          return false;
-        }
-        console.log("WhatsApp send message written to file successfully");
-        return true;
-      });
-      return true;
-    } catch (error) {
-      console.error('Error writing to file:', error);
       return false;
     }
   }
