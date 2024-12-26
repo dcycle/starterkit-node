@@ -194,18 +194,16 @@ class SendSMS extends require('../component/index.js') {
       if (isDevMode) {
         return await this.sendMessage(messageObject);
       } else {
-        return this.writeMessageToFile(messageObject).then((data) => {
-          if (data) {
-            return true;
-          }
-          else {
-            return false;
-          }
-        })
-        .catch((error) => {
-          console.error('Something bad happened:', error.toString());
+        // messages are written to ./unversioned/output/sms-send.json file.
+        const filePath = '/output/sms-sent.json';
+        const jsonMessage = JSON.stringify(messageObject);
+        const response = await this.app().c('helpers').writeToFile(jsonMessage, filePath);
+        if (response) {
+          return true;
+        }
+        else {
           return false;
-        });
+        }
       }
     } catch (error) {
       console.error('Unexpected error:', error);
@@ -249,24 +247,6 @@ class SendSMS extends require('../component/index.js') {
       }
     } catch (error) {
       console.error('Error sending SMS:', error);
-      return false;
-    }
-  }
-
-  /**
-   * Writes the message object to a file.
-   * @param {Object} messageObject - The message object to write to a file.
-   */
-  async writeMessageToFile(messageObject) {
-    try {
-      // @ts-expect-error
-      const fs = require('fs');
-      const jsonMessage = JSON.stringify(messageObject);
-      const filePath = '/output/sms-sent.json';
-      await this.app().c('helpers').writeToFile(jsonMessage, filePath);
-      return true;
-    } catch (error) {
-      console.error('Error writing to file:', error);
       return false;
     }
   }
