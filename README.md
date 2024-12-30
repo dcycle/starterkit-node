@@ -36,6 +36,7 @@ Dcycle Node.js starterkit
 * The chatbot framework
 * The textFramework
 * Troubleshooting
+* Documentation management
 * Resources
 
 About
@@ -1160,6 +1161,17 @@ To increase the number of file watchers, for example, to 524288 ([this number co
     sudo sysctl -p
 
 Again, it is important to do this on your Docker host, not on the container!
+
+Documentation management
+-----
+
+We are planning to move documentation from the README to a system which:
+
+* is stored in the ./docs directory
+* is based on the [Documentation Jekyll theme](https://jekyllthemes.io/theme/documentation)
+* will be available at https://starterkit-node.dcycle.com
+
+Documentation is currently being moved from this README to https://starterkit-node.dcycle.com.
 
 Resources
 -----

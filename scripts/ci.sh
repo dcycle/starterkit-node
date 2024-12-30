@@ -12,6 +12,8 @@ set -e
 mkdir -p ./do-not-commit/screenshots
 mkdir -p ./do-not-commit/dom-captures
 
+echo '=> Test documentation site'
+./scripts/docs/ci.sh
 echo '=> Initial deployment'
 ./scripts/deploy.sh
 echo '=> Running ./scripts/test.sh'
