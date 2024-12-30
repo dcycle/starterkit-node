@@ -3,6 +3,8 @@
 do-not-commit
 unversioned.yml
 unversioned
+
+# Anything in the docs folder and related to Jekyll is for documentation.
 .jekyll-cache
 docs/.jekyll-metadata
 docs/_site
