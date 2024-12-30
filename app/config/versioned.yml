@@ -99,3 +99,4 @@ modules:
   ./sendSMS/index.js: {}
   ./webhookSMS/index.js: {}
   ./helpers/index.js: {}
+  ./tokens/index.js: {}
