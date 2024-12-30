@@ -1,9 +1,9 @@
 ---
-title: "This is the homepage title"
+title: "Dcycle Node Starterkit"
 tags: []
 sidebar: mydoc_sidebar
 permalink: index.html
-summary: This is a summary.
+summary: A starterkit for Node.js projects.
 ---
 
-This is a test
+Documentation is in the process of being moved from https://github.com/dcycle/starterkit-node/blob/master/README.md to https://starterkit-node.dcycle.com
