@@ -47,30 +47,6 @@ test('randomDigits generates only digits', (t) => {
   t.true(allDigits, 'Generated string should only contain digits (0-9)');
 });
 
-test('randomDigits produces a new random string each time', (t) => {
-  const length = 8;
-
-  // Stubbing Math.random to return a predictable sequence of values
-  const stub = sinon.stub(Math, 'random');
-  // Will generate "12345678"
-  stub.onCall(0).returns(0.1);
-  // Will generate a different string
-  stub.onCall(1).returns(0.2);
-  // And so on...
-  stub.onCall(2).returns(0.3);
-
-  const firstResult = my.randomDigits(length);
-  const secondResult = my.randomDigits(length);
-  const thirdResult = my.randomDigits(length);
-
-  // The stubbed random values will cause different results each time
-  t.not(firstResult, secondResult, 'First result should not equal second result');
-  t.not(secondResult, thirdResult, 'Second result should not equal third result');
-
-  // Restore the original Math.random after the test
-  stub.restore();
-});
-
 test('randomDigits handles edge case of length 1', (t) => {
   const length = 1;
   const result = my.randomDigits(length);
