@@ -3,7 +3,7 @@
 entries:
 - title: sidebar
   product: Dcycle Node Starterkit
-  version: unstable
+  version:
   folders:
 
   - title: Overview
