@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title></title>
+        <description>Intended as a documentation theme based on Jekyll for technical writers documenting software and other technical products, this theme has all the elements you would need to handle multiple products with both multi-level sidebar navigation, tags, and other documentation features.</description>
+        <link>/</link>
+        <atom:link href="/feed.xml" rel="self" type="application/rss+xml"/>
+        <pubDate>Mon, 30 Dec 2024 12:34:53 -0600</pubDate>
+        <lastBuildDate>Mon, 30 Dec 2024 12:34:53 -0600</lastBuildDate>
+        <generator>Jekyll v4.2.2</generator>
+        
+    </channel>
+</rss>
