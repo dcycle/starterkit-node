@@ -57,12 +57,12 @@ class Tokens extends require('../component/index.js') {
    * Checks if a token exists in the database based on the provided name and token value.
    *
    * This method queries the database to find a document in the `Tokens` collection where the `name`
-   * matches the provided `name` and the `_token` matches the provided `token`. Optionally, a `selectorString`
+   * matches the provided `name` and the `_token` matches the provided `token`. Optionally, a `fields`
    * can be provided to specify which fields to return in the query result.
    *
    * @param {string} name - The name associated with the token (e.g., "userAuthentication").
    * @param {string} token - The token value to check for existence in the database.
-   * @param {string} [selectorString=""] - A string representing the fields to be included or excluded in the result.
+   * @param {string} [fields=""] - A string representing the fields to be included or excluded in the result.
    *                                      If omitted or an empty string is provided, all fields will be returned.
    *
    * @returns {Promise<Object|null>} - A promise that resolves to the token record if found, otherwise `null`.
@@ -77,12 +77,12 @@ class Tokens extends require('../component/index.js') {
    *   console.log('Token not found');
    * }
    */
-  async checkTokenExists(name, token, selectorStrig = "") {
+  async checkTokenExists(name, token, fields = "") {
     // Query the database to find if the token exists in the _token field
     const existingToken = await this.getTokensModel().findOne({
       name: name,
       _token: token
-    }, selectorStrig);
+    }, fields);
     return existingToken;
   }
 
