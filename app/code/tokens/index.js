@@ -120,10 +120,10 @@ class Tokens extends require('../component/index.js') {
     do {
       if (tokenObject._digits_only) {
         // If the token should be digits-only, use randomDigital method
-        token = this.app().c('crypto').randomDigits(tokenObject._length);
+        token = this._app.c('crypto').randomDigits(tokenObject._length);
       } else {
         // Otherwise, generate a random string of the specified length
-        token = this.app().c('crypto').random(tokenObject._length);
+        token = this._app.c('crypto').random(tokenObject._length);
       }
 
       existingToken = await this.checkTokenExists(tokenObject.name, token);
@@ -305,7 +305,7 @@ class Tokens extends require('../component/index.js') {
         clonedTokensRecord._token = tokenToVerify;
       }
       // Generate the hash based on the cloned token record (excluding sensitive fields)
-      return await this.app().c('crypto').hash(JSON.stringify(clonedTokensRecord));
+      return await this._app.c('crypto').hash(JSON.stringify(clonedTokensRecord));
     } catch (error) {
       console.error('Error generating hash for token:', error);
       throw new Error('Failed to generate hash for the token');
@@ -322,7 +322,7 @@ class Tokens extends require('../component/index.js') {
    *
    * hash function generates different hash value for a same string. Hence
    *  instead of comparing oldHash and newHash we are calling
-   *  await this.app().c('crypto').checkHash() method for newHash, tokensRecord
+   *  await this._app.c('crypto').checkHash() method for newHash, tokensRecord
    *  and oldHash, tokensRecord. In both the case if checkHash() return true
    *  then token is valid (oldHashVerify === newHashVerify).
    *
@@ -348,12 +348,12 @@ class Tokens extends require('../component/index.js') {
       );
 
       // validate hash value generated for the string is true
-      const oldHashVerify = await this.app().c('crypto').checkHash(
+      const oldHashVerify = await this._app.c('crypto').checkHash(
         oldHash,
         JSON.stringify(tokensRecord)
       );
       // validate hash value generated for the string is true
-      const newHashVerify = await this.app().c('crypto').checkHash(
+      const newHashVerify = await this._app.c('crypto').checkHash(
         newHash,
         JSON.stringify(tokensRecord)
       );
