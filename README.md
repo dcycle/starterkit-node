@@ -20,6 +20,7 @@ Dcycle Node.js starterkit
   * Plugins: how modules can share information with each other
   * Components can define classes
   * Observers
+  * Tokens System
 * The Node.js command line interface (CLI)
 * MongoDB crud (create - read - update - delete)
 * Mongoose vs MongoDB
@@ -477,6 +478,90 @@ Steps for Testing Observers:
    4. `"world"` printed once from suscriber2 which is already insert to observer collection from observer observerExampleSubscriber module.
 
 This approach helps test how multiple subscriptions work with the observer pattern in your application.
+
+Tokens System
+----
+
+Each user account should have unlimited tokens for specific purposes.
+
+For example,
+
+user A might have a token to log in which looks like a85513, and can be used to log in without a password.
+
+user B might have a token which looks like vWnu9aYcZpAHZaZBTQvPZRgsMwkgsMwk and can be used access an API system and read user information, but not create new users. It never expires.
+
+In tokens module we are creating new tokens and validating tokens functionality.
+
+To generate a new token, you can use the newToken method.
+
+```
+await app.c('tokens').newToken({
+    name: '<token name>',
+    permissions: ['some-permission', 'another-permission'],
+    whatever: 'hello world',
+    _length: 6, // legth of a token
+    _digits_only: false // _digits_only is false then it will include strings, if true then tokens will have only digits
+  });
+```
+
+To verify the validity of a token (check if it matches its hash), you can use:
+
+```
+await app.c('tokens').checkToken(<token name>, <token>);
+
+```
+if it returns true then token valid, if null then records not found.
+
+
+You can Test functionality in ./scripts/node-cli.sh:-
+
+1. Create and store token string of length 6 and its hash.
+```
+> await app.c('tokens').newToken({
+    name: 'something',
+    permissions: ['some-permission', 'another-permission'],
+    whatever: 'hello world',
+    _length: 6,
+    _digits_only: false
+  });
+
+```
+it will return string of length 6 as a token as a response.
+
+```
+await app.c('tokens').checkToken('something', '<replace token here>');
+```
+it will return true i.e.. token is valid.
+
+
+```
+await app.c('tokens').checkToken('something', '<some value>');
+```
+it will return null i.e.. no record found for that token.
+
+
+2. Create and store 6 digits token and its hash.
+
+```
+  await app.c('tokens').newToken({
+    name: 'something',
+    permissions: ['some-permission', 'another-permission'],
+    whatever: 'hello world',
+    _length: 6,
+    _digits_only: true
+  });
+```
+it will return 6 digits token as a response.
+
+```
+  await app.c('tokens').checkToken('something', '<replace token here>');
+```
+it will return true i.e.. token is valid.
+
+```
+  await app.c('tokens').checkToken('something', '522559');
+```
+it will get null i.e.. no record found for that token.
 
 
 The Node.js command line interface (CLI)
