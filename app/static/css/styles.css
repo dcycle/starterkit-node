@@ -46,3 +46,12 @@ input {
   font-size: large;
   max-width: fit-content;
 }
+
+.phone-number-login-form input[type="radio"] {
+  margin-right: 10px;
+  width: 25px;
+}
+
+.textframework-radio-buttons {
+  margin-top: 15px;
+}
