@@ -1,10 +1,10 @@
+// @ts-expect-error
 const passport = require('passport');
+// @ts-expect-error
 const Strategy = require('passport-strategy');
 
 class PhoneTokenStratergy extends Strategy {
   constructor(options, verify) {
-    console.log("--------------- options --------");
-    console.log(options);
     super();
     // This is how Passport will identify this strategy
     this.name = 'phone-token';
@@ -15,8 +15,6 @@ class PhoneTokenStratergy extends Strategy {
   }
 
   authenticate(req, options) {
-    console.log("--------------- req --------");
-    console.log(req.body);
     // Get the phone number and OTP from the request
     const phoneNumber = req.body[this.phoneNumber];
     const token = req.body[this.token];

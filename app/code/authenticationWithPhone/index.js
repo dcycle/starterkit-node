@@ -21,9 +21,8 @@ class AuthenticationWithphone extends require('../component/index.js') {
     passport.deserializeUser(userDetails.deserializeUser());
 
     // Now, set up the custom 'phone-token' strategy to authenticate
-    // via phone number and OTP
-    console.log('Registering phone-token strategy');
     // Adjust path to where PhoneTokenStratergy is
+    // @ts-expect-error
     const PhoneTokenStratergy = require('./phoneTokenStratergy.js');
     passport.use('phoneNumber-token', new PhoneTokenStratergy({
       phoneNumber: 'phoneNumber',  // Use phoneNumber for login
@@ -32,8 +31,6 @@ class AuthenticationWithphone extends require('../component/index.js') {
       try {
         // Find the user by phone number
         const user = await userDetails.findOne({ phoneNumber: phoneNumber });
-        console.log("phone number not found");
-        console.log(user);
         if (!user) {
           return done(null, false, { message: 'Phone number not found' });
         }
