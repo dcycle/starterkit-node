@@ -1,6 +1,4 @@
-// @ts-expect-error
 const passport = require('passport');
-// @ts-expect-error
 const Strategy = require('passport-strategy');
 
 class PhoneTokenStratergy extends Strategy {
