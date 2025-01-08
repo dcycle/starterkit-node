@@ -158,7 +158,6 @@ class TextFramework extends require('../component/index.js') {
    */
   validateParameters(plugin, data) {
     const requiredParams = this.getRequiredParams();
-    console.log(requiredParams);
 
     const required = requiredParams[plugin];
     if (!required) {
