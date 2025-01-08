@@ -46,7 +46,7 @@ class UserPhoneNumberAuth extends require('../component/index.js') {
 
   // Request Token for login
   async sendTokenForLogin(req, res, next) {
-    const { phoneNumber, textframeworkSelected } = req.body;
+    let { phoneNumber, textframeworkSelected } = req.body;
 
     // Validate phoneNumber number format (you can enhance this validation)
     if (!phoneNumber) {
