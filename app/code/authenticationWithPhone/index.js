@@ -22,7 +22,6 @@ class AuthenticationWithphone extends require('../component/index.js') {
 
     // Now, set up the custom 'phone-token' strategy to authenticate
     // Adjust path to where PhoneTokenStratergy is
-    // @ts-expect-error
     const PhoneTokenStratergy = require('./phoneTokenStratergy.js');
     passport.use('phoneNumber-token', new PhoneTokenStratergy({
       phoneNumber: 'phoneNumber',  // Use phoneNumber for login
