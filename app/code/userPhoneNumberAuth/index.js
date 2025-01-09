@@ -35,18 +35,27 @@ class UserPhoneNumberAuth extends require('../component/index.js') {
 
   // Send Token via your custom mechanism
   async sendToken(textframeworkSelected, phoneNumber, token) {
-    // Use your existing mechanism to send the OTP
+    // Use your existing mechanism to send the Token
     // e.g., through SMS, email, etc.
-    return await this._app.c('textFramework').sendText({
+    let textObject = {
       plugin: textframeworkSelected,
       message: 'hello, your token is : ' + token,
-      sendTo: phoneNumber
-    });
+    }
+    // remove this condition later
+    if (textframeworkSelected == "internal") {
+      textObject.name = phoneNumber;
+    }
+    else {
+      textObject.sendTo = phoneNumber;
+    }
+    console.log(textObject);
+    return await this._app.c('textFramework').sendText(textObject);
   }
 
   // Request Token for login
   async sendTokenForLogin(req, res, next) {
     let { phoneNumber, textframeworkSelected } = req.body;
+    let token;
 
     // Validate phoneNumber number format (you can enhance this validation)
     if (!phoneNumber) {
@@ -55,31 +64,38 @@ class UserPhoneNumberAuth extends require('../component/index.js') {
 
     // Remove this code later.
     if (textframeworkSelected == "internal") {
-      phoneNumber = 'robo';
+      token = await this.generateToken('robo');
+    }
+    else {
+      token = await this.generateToken(phoneNumber);
     }
 
-    const token = await this.generateToken(phoneNumber);
     // Send Token to the user's phoneNumber
-    await this.sendToken(phoneNumber, token);
+    await this.sendToken(textframeworkSelected, phoneNumber, token);
     let info = `Kindly Enter Login Token Sent through ${textframeworkSelected} message.`;
 
     // return res.send(`/login-token-verify?phoneNumber=${encodeURIComponent(phoneNumber)}&info=${encodeURIComponent(info)}`);
-    return res.redirect(`/login-token-verify?phoneNumber=${encodeURIComponent(phoneNumber)}&info=${encodeURIComponent(info)}`);
+    return res.redirect(`/login-token-verify?phoneNumber=${encodeURIComponent(phoneNumber)}&info=${encodeURIComponent(info)}&textframeworkSelected=${textframeworkSelected}`);
   }
 
-  // Verify OTP and authenticate user
+  // Verify Token and authenticate user
   async verifyTokenAndLogin(req, res, next) {
-    const { token, phoneNumber } = req.body;
-    console.log("INSIDE post login token verify");
-    console.log(token);
-    console.log(phoneNumber);
-
-    // Validate token: Check if it exists and is valid
-    // Assuming you also pass phoneNumber to ensure the correct token is checked      
-    const validToken = await this._app.c('tokens').checkToken(
-      phoneNumber + ':token',
-      token
-    );
+    const { token, phoneNumber, textframeworkSelected } = req.body;
+    let validToken;
+    if (textframeworkSelected == "internal") {
+      validToken = await this._app.c('tokens').checkToken(
+        'robo:token',
+        token
+      );
+    }
+    else {
+      // Validate token: Check if it exists and is valid
+      // Assuming you also pass phoneNumber to ensure the correct token is checked
+      validToken = await this._app.c('tokens').checkToken(
+        phoneNumber + ':token',
+        token
+      );
+    }
 
     if (validToken) {
       console.log("*********************** INSIDE validToken **********");
@@ -90,7 +106,7 @@ class UserPhoneNumberAuth extends require('../component/index.js') {
   }
 
   /**
-   * Handle authentication using phoneNumber number and OTP.
+   * Handle authentication using phoneNumber number and Token.
    */
   async userAuthenticate(req, res, next) {
     const passport = this._app.component('./authentication/index.js').passport();
@@ -151,104 +167,3 @@ class UserPhoneNumberAuth extends require('../component/index.js') {
 }
 
 module.exports = new UserPhoneNumberAuth();
-
-
-    // const { otp } = req.body;
-    // const { phoneNumber, otpExpiresAt } = req.session;
-
-    // // Check if OTP has expired
-    // if (Date.now() > otpExpiresAt) {
-    //   return res.status(400).send('OTP has expired. Please request a new one.');
-    // }
-
-    // // Verify the OTP
-    // if (otp === req.session.otp) {
-    //   // OTP is correct, log the user in
-    //   const user = await this.userDetails().findOne({ phoneNumber });
-
-    //   if (!user) {
-    //     // If the user does not exist, create a new user
-    //     await this.createOrAlterUser(phoneNumber);
-    //   }
-
-    //   req.login(user, (err) => {
-    //     if (err) {
-    //       return res.status(500).send('Error logging in');
-    //     }
-    //     res.send('You are successfully logged in!');
-    //   });
-    // } else {
-    //   res.status(400).send('Invalid OTP. Please try again.');
-    // }
-
-
-      // const { token, phoneNumber } = req.body;
-      // console.log("INSIDE post login token verify");
-      // console.log(token);
-      // console.log(phoneNumber);
-
-      // // Validate token: Check if it exists and is valid
-      // // Assuming you also pass phoneNumber to ensure the correct token is checked      
-      // const validToken = await app.c('tokens').checkToken(
-      //   phoneNumber + ':token',
-      //   token
-      // );
-
-      // if (validToken) {
-      //   app.component('./authentication/index.js').passport().authenticate('local',
-      //   (err, user, info) => {
-      //     if (err) {
-      //       console.log('error during /login phoneNumber number');
-      //       console.log(err);
-      //       return next(err);
-      //     }
-
-      //     if (!user) {
-      //       console.log('no user during /login');
-      //       console.log(info);
-      //       return res.redirect('/login?info=' + info);
-      //     }
-
-      //     req.logIn(user, function(err) {
-      //       console.log('There is a user, we are logging in');
-      //       console.log(user);
-      //       if (err) {
-      //         return next(err);
-      //       }
-
-      //       return res.redirect('/');
-      //     });
-      //   })(req, res, next);
-      // } else {
-      //   return res.redirect('/login?info=Invalid or expired token. Please try again.');
-      // }
-
-  //   expressApp.post('/login', (req, res, next) => {
-  //     app.component('./authentication/index.js').passport().authenticate('local',
-  //     (err, user, info) => {
-  //       if (err) {
-  //         console.log('error during /login');
-  //         console.log(err);
-  //         return next(err);
-  //       }
-
-  //       if (!user) {
-  //         console.log('no user during /login');
-  //         console.log(info);
-  //         return res.redirect('/login?info=' + info);
-  //       }
-
-  //       req.logIn(user, function(err) {
-  //         console.log('There is a user, we are logging in');
-  //         console.log(user);
-  //         if (err) {
-  //           return next(err);
-  //         }
-
-  //         return res.redirect('/');
-  //       });
-  //     })(req, res, next);
-  //   });
-
-  //   return this;
-  // }

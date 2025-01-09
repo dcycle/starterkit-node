@@ -13,6 +13,7 @@
     <div class="field">
       <label>Token:</label>
       <input type="hidden" name="phoneNumber" id="phone-field" required />
+      <input type="hidden" name="textframeworkSelected" id="textframeworkSelected-field" required />      
       <input type="text" name="token" required />
     </div>
     <div class="field">
@@ -33,11 +34,14 @@
 
     const urlParams = new URLSearchParams(window.location.search);
     const phoneNumber = decodeURIComponent(urlParams.get('phoneNumber'))
-    console.log(phoneNumber);
+    const textframeworkSelected = decodeURIComponent(urlParams.get('textframeworkSelected'))
+
     if(phoneNumber) {
       document.getElementById('phone-field').value = phoneNumber;
     }
-
+    if (textframeworkSelected) {
+      document.getElementById('textframeworkSelected-field').value = textframeworkSelected;      
+    }
 
   </script>
 </body>
