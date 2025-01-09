@@ -39,8 +39,9 @@ class UserPhoneNumberAuth extends require('../component/index.js') {
     // e.g., through SMS, email, etc.
     let textObject = {
       plugin: textframeworkSelected,
-      message: 'hello, your token is : ' + token,
-    }
+      message: 'hello, your token is : ' + token
+    };
+
     // remove this condition later
     if (textframeworkSelected == "internal") {
       textObject.name = phoneNumber;
