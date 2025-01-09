@@ -1,4 +1,6 @@
+// @ts-expect-error
 const passport = require('passport');
+// @ts-expect-error
 const Strategy = require('passport-strategy');
 
 class PhoneTokenStratergy extends Strategy {
@@ -18,19 +20,23 @@ class PhoneTokenStratergy extends Strategy {
     const token = req.body[this.token];
 
     if (!phoneNumber || !token) {
+      // @ts-expect-error
       return this.fail({ message: 'Phone number and Token are required' });
     }
 
     // Now, call the verify function that you passed into the constructor
     this.verify(phoneNumber, token, (err, user, info) => {
       if (err) {
+        // @ts-expect-error
         return this.error(err);
       }
       if (!user) {
+        // @ts-expect-error
         return this.fail(info || { message: 'User not found.' });
       }
 
       // If everything is good, authenticate the user
+      // @ts-expect-error
       return this.success(user, info);
     });
   }
