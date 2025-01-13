@@ -1,18 +1,39 @@
-
+/**
+ * User Phone Number Login Authentication.
+ */
 class UserPhoneNumberAuth extends require('../component/index.js') {
 
+  /**
+   * Initializes the UserPhoneNumberAuth component.
+   *
+   * @param {Object} app - The application instance.
+   * @returns {UserPhoneNumberAuth} - The current instance for chaining.
+   */
   async init(app) {
     super.init(app);
 
     return this;
   }
 
+  /**
+   * Defines the dependencies required by the UserPhoneNumberAuth component.
+   *
+   * @returns {Array} - List of dependency file paths.
+   */
   dependencies() {
     return [
       './database/index.js',
+      './authenticationWithPhone/index.js',
     ];
   }
 
+  /**
+   * Middleware to check if a user is logged in.
+   *
+   * @param {Object} req - The request object.
+   * @param {Object} res - The response object.
+   * @param {Function} next - The next middleware function.
+   */
   loggedIn(req, res, next) {
     if (req.user) {
       next();
@@ -21,6 +42,12 @@ class UserPhoneNumberAuth extends require('../component/index.js') {
     }
   }
 
+  /**
+   * Generates a login token for the given phone number.
+   *
+   * @param {string} phoneNumber - The phone number to generate the token for.
+   * @returns {Promise<string>} - The generated token.
+   */
   async generateToken(phoneNumber) {
     const token = await this._app.c('tokens').newToken({
       name: phoneNumber + ':token',
@@ -33,53 +60,105 @@ class UserPhoneNumberAuth extends require('../component/index.js') {
     return token;
   }
 
-  // Send Token via your custom mechanism
+  /**
+   * Sends the generated token to the user's phone number using the
+   *  selected text framework.
+   *
+   * @param {string} textframeworkSelected - The selected text
+   *  framework (e.g., SMS or email).
+   * @param {string} phoneNumber - The user's phone number.
+   * @param {string} token - The generated token.
+   * @returns {Promise<Object>} - Response from the text framework service.
+   */
   async sendToken(textframeworkSelected, phoneNumber, token) {
-    // Use your existing mechanism to send the Token
+    // Use existing mechanism to send the Token
     // e.g., through SMS, email, etc.
     let textObject = {
       plugin: textframeworkSelected,
       message: 'hello, your token is : ' + token
     };
 
-    // remove this condition later
+    // remove this condition later when internal message is removed.
     if (textframeworkSelected == "internal") {
+      // internal dont have sendTo parameter to send message hence we have to sendTo.
       textObject.name = phoneNumber;
     }
     else {
       textObject.sendTo = phoneNumber;
     }
-    console.log(textObject);
+
     return await this._app.c('textFramework').sendText(textObject);
   }
 
-  // Request Token for login
+  /**
+   * Handles the request to send a login token to the user.
+   *
+   * @param {Object} req - The request object.
+   * @param {Object} res - The response object.
+   * @param {Function} next - The next middleware function.
+   */
   async sendTokenForLogin(req, res, next) {
     let { phoneNumber, textframeworkSelected } = req.body;
     let token;
 
-    // Validate phoneNumber number format (you can enhance this validation)
+    // Validate phoneNumber format (enhance this validation later)
     if (!phoneNumber) {
       return res.status(400).send('Invalid phone number');
     }
 
-    // Remove this code later.
-    if (textframeworkSelected == "internal") {
-      token = await this.generateToken('robo');
-    }
-    else {
-      token = await this.generateToken(phoneNumber);
+     // Validate textframeworkSelected or not
+     if (!textframeworkSelected) {
+      return res.status(400).send('Invalid text framework plugin');
     }
 
-    // Send Token to the user's phoneNumber
-    await this.sendToken(textframeworkSelected, phoneNumber, token);
-    let info = `Kindly Enter Login Token Sent through ${textframeworkSelected} message.`;
+    // Generate token based on selected framework
+    try {
+      // If user wants to recieve message through internal then username has to be "robo:<token>".
+      if (textframeworkSelected === "internal") {
+        // For internal testing or dummy purposes
+        token = await this.generateToken('robo');
+      } else {
+        token = await this.generateToken(phoneNumber);
+      }
 
-    // return res.send(`/login-token-verify?phoneNumber=${encodeURIComponent(phoneNumber)}&info=${encodeURIComponent(info)}`);
-    return res.redirect(`/login-token-verify?phoneNumber=${encodeURIComponent(phoneNumber)}&info=${encodeURIComponent(info)}&textframeworkSelected=${textframeworkSelected}`);
+      // Send the token via the selected text framework (SMS, Email, etc.)
+      const tokenSent = await this.sendToken(textframeworkSelected, phoneNumber, token);
+      // Construct a message indicating that the token has been sent
+      let info = `Kindly Enter the Login Token Sent through ${textframeworkSelected}.`;
+      let response = {
+        // Send phoneNumber for reference
+        phoneNumber: phoneNumber,
+        // Send selected framework
+        textframeworkSelected: textframeworkSelected
+      };
+
+      if (tokenSent.success) {
+        // This indicates that the token was sent successfully
+        response.success =  true;
+        response.message = info;
+      }
+      else if (tokenSent.errors) {
+        response.success =  false;
+        response.message = tokenSent.errors + ' ' + 'Kindly Check your phone number.';
+      }
+
+      return res.json(response);
+    } catch (error) {
+      console.error('Error while sending token:', error);
+      return res.status(500).json({
+        success: false,
+        message: 'An error occurred while generating or sending the token. Kindly Check your phone number.',
+      });
+    }
   }
 
-  // Verify Token and authenticate user
+  /**
+   * Verifies the provided token and logs in the user if valid.
+   *
+   * @param {Object} req - The request object.
+   * @param {Object} res - The response object.
+   * @param {Function} next - The next middleware function.
+   */
   async verifyTokenAndLogin(req, res, next) {
     const { token, phoneNumber, textframeworkSelected } = req.body;
     let validToken;
@@ -90,16 +169,16 @@ class UserPhoneNumberAuth extends require('../component/index.js') {
       );
     }
     else {
-      // Validate token: Check if it exists and is valid
-      // Assuming you also pass phoneNumber to ensure the correct token is checked
+      // Validate token: Check if it is exists and is valid
+      // pass phoneNumber to ensure the correct token is filtered.
       validToken = await this._app.c('tokens').checkToken(
         phoneNumber + ':token',
         token
       );
     }
 
+    // if token is valid then authenticate user to start his login session.
     if (validToken) {
-      console.log("*********************** INSIDE validToken **********");
       this.userAuthenticate(req, res, next);
     } else {
       return res.redirect('/login-with-phone-number?info=Invalid or expired token. Please try again.');
@@ -107,7 +186,11 @@ class UserPhoneNumberAuth extends require('../component/index.js') {
   }
 
   /**
-   * Handle authentication using phoneNumber number and Token.
+   * Authenticates the user using the provided token and phone number.
+   *
+   * @param {Object} req - The request object.
+   * @param {Object} res - The response object.
+   * @param {Function} next - The next middleware function.
    */
   async userAuthenticate(req, res, next) {
     const passport = this._app.component('./authentication/index.js').passport();
@@ -130,11 +213,18 @@ class UserPhoneNumberAuth extends require('../component/index.js') {
         }
 
         console.log('User authenticated successfully');
-        return res.redirect('/');  // Redirect to home page or dashboard
+        // Redirect to home page or dashboard
+        return res.redirect('/');
       });
     })(req, res, next);
   }
 
+  /**
+   * Sets up the routes and initializes necessary components.
+   *
+   * @param {Object} app - The application instance.
+   * @returns {UserPhoneNumberAuth} - The current instance for chaining.
+   */
   async run(app)  {
 
     const authenticationWithphoneNumber = this._app.component('./authenticationWithPhone/index.js');

@@ -229,8 +229,14 @@ class TextFramework extends require('../component/index.js') {
   async sendMessage(module, data) {
     try {
       // Convert data to JSON string and send it via the plugin handler
-      await this._app.c(module).sendText(JSON.stringify(data));
-      return { success: [`Message sent from ${data.plugin} plugin textFramework`] };
+      const messageStatus = await this._app.c(module).sendText(JSON.stringify(data));
+
+      if (messageStatus) {
+        return { success: [`Message sent from ${data.plugin} plugin textFramework`] };
+      }
+      else {
+        return { errors: ["Message Hasn't sent. If problem persists contact admin."] };
+      }
     } catch (error) {
       // If there's an error during message sending, catch and return error
       return { errors: [`Error sending message using ${data.plugin}: ${error.message}`] };

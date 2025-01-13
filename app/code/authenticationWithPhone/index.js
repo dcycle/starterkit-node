@@ -7,31 +7,52 @@ class AuthenticationWithphone extends require('../component/index.js') {
     app
   ) {
     super.init(app);
+    // load passport.js library.
     const passport = app.c('authentication').passport();
-    // We are now using the schema defined in the base Authentication class
+    // The user schema defined in the base Authentication class is using
+    // passport local stratergy to the userinfo schema.
+    // Overriding UserInfo schema to use phoneNumber token stratergy.
+    // call Authentication module for username and password login.
+    // call AuthenticationWithPhone module for phone login.
     const userDetails = app.c('authentication').userDetails();
     const userDetailsSchema = userDetails.schema;
     // Ensure passport-local-mongoose is applied (it was done in the base Authentication class)
     userDetailsSchema.plugin(app.c('authentication').passportLocalMongoose());
 
-    // Set up passport strategies and user serialization as done in the base Authentication class
     this.setFlagBool('initialized', true);
     passport.use(userDetails.createStrategy());
+    // adds user information to session.
     passport.serializeUser(userDetails.serializeUser());
+    // retrives userinformation from session.
     passport.deserializeUser(userDetails.deserializeUser());
 
-    // Now, set up the custom 'phone-token' strategy to authenticate
-    // Adjust path to where PhoneTokenStratergy is
+    // Set up the custom 'phone-token' strategy to authenticate.
+    // Adjust path to where PhoneTokenStratergy is present
     const PhoneTokenStratergy = require('./phoneTokenStratergy.js');
     passport.use('phoneNumber-token', new PhoneTokenStratergy({
-      phoneNumber: 'phoneNumber',  // Use phoneNumber for login
-      token: 'token',          // Use token as the password field
+      // Use phoneNumber for login
+      phoneNumber: 'phoneNumber',
+      // Use token for validation.
+      token: 'token',
     }, async (phoneNumber, token, done) => {
       try {
-        // Find the user by phone number
-        const user = await userDetails.findOne({ phoneNumber: phoneNumber });
+        // Find the user by phone number.
+        let user = await userDetails.findOne({ "phoneNumber": phoneNumber });
         if (!user) {
-          return done(null, false, { message: 'Phone number not found' });
+          // If user hasn't found then create new user with unique name.
+          const password = app.component('./crypto/index.js').random();
+          const uniqueUsername = await app.c('authentication').newUsernameLike(phoneNumber);
+          // First register user with username password.
+          user = await userDetails.register(
+            {username: uniqueUsername, active: false},
+            password
+          );
+          // Then add phoneNumber to the user.
+          await app.c('authentication').addNonUniqueFieldToUser(
+            uniqueUsername,
+            "phoneNumber",
+            phoneNumber
+          );
         }
         return done(null, user);
       } catch (err) {

@@ -1,3 +1,25 @@
+/**
+ * PhoneTokenStratergy is a Custom passport stratergy defined here
+ * to implement phone number and token authentication.
+ *
+ * Local stratergy uses username and password for authentication.
+ * github uses passport github stratergy for authentication.
+ * gmail uses passport google stratergy for authentication.
+ *
+ * For phone number authentication we have to define custom stratergy.
+ *
+ * You can refer authenticationWithPhone/index.js for calling phoneNumber-token Stratergy.
+ *
+ *   // Set up the custom 'phone-token' strategy to authenticate.
+ *   const PhoneTokenStratergy = require('./phoneTokenStratergy.js');
+ *   passport.use('phoneNumber-token', new PhoneTokenStratergy({
+ *     // Use phoneNumber for login
+ *     phoneNumber: 'phoneNumber',
+ *     // Use token for validation.
+ *     token: 'token',
+ *   }, async (phoneNumber, token, done) => {});
+ *
+ */
 // @ts-expect-error
 const passport = require('passport');
 // @ts-expect-error

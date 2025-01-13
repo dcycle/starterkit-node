@@ -1,21 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title> Login </title>
+  <title>Login</title>
   <link rel="stylesheet" href="css/styles.css">
 </head>
 
 <body>
   <div class="container">
-      <form action="/auth/phone-number" method="post" class="phone-number-login-form" id="phone-number-login-form">
+      <form action="/login-token-verify" method="post" class="phone-number-login-form" id="phone-number-login-form">
         <div class="title">
           <h3>Login With Phone Number</h3>
         </div>
         <div class="field">
           <label>Phone:</label>
-          <input type="text" name="phoneNumber" required />
+          <input placeholder="+10900000000" type="text" id="phoneNumber" name="phoneNumber" required />
           <br />
         </div>
+
         <div class="field">
           <label>Receive text through</label>
           <div id="textframework-radio-buttons" class="textframework-radio-buttons">
@@ -23,66 +24,22 @@
           </div>
           <br />
         </div>
-
         <div class="field">
-          <input class="submit-btn" type="submit" value="Submit" required />
-        </div>        
-        <label id="error-message"></label>
+          <label>Generate Token:</label>
+          <button type="button" id="generateTokenBtn">Generate Token</button>
+          <br />
+        </div>
+        <div class="field" id="tokenField" style="display: none;">
+          <label>Token:</label>
+          <input type="text" id="tokenInput" name="token" required />
+          <br />
+        </div>
+        <div class="field">
+          <input class="submit-btn" type="submit" value="Submit" disabled id="submitBtn" />
+        </div>
+        <label id="error-message" style="display: none;"></label>
       </form>
   </div>
-
-  <script>
-    const urlParams = new URLSearchParams(window.location.search);
-    const info = urlParams.get('info');
-
-    if(info) {
-      const errorMessage = document.getElementById("error-message");
-      errorMessage.innerText = info;
-      errorMessage.style.display = "block";
-    }
-
-    function getTextFramework() {
-      fetch('/textFramework/enabled-plugins')
-        .then(response => {
-          console.log(response);
-          if (!response.ok) {
-            throw new Error('Network response was not ok');
-          }
-          return response.json(); // Assuming the response is JSON
-        })
-        .then(data => {
-          const container = document.getElementById("textframework-radio-buttons");
-          // Loop through each plugin in the object
-          for (const key in data) {
-            if (data.hasOwnProperty(key)) {
-              const plugin = data[key];
-              const radioContainer = document.createElement("div");
-              const radioInput = document.createElement("input");
-              const radioLabel = document.createElement("label");
-
-              radioInput.type = "radio";
-              radioInput.name = 'textframeworkSelected';
-              radioInput.id = key;
-              radioInput.value = key;
-              // Make the radio button required
-              radioInput.required = true;
-
-              radioLabel.setAttribute("for", key);
-              radioLabel.textContent = plugin.name;
-
-              radioContainer.appendChild(radioInput);
-              radioContainer.appendChild(radioLabel);
-              container.appendChild(radioContainer);
-            }
-          }
-        })
-        .catch(error => {
-          console.error('There was a problem with the fetch operation:', error);
-        });
-    }
-
-    // Call the function to generate the radio buttons on page load
-    document.addEventListener("DOMContentLoaded", getTextFramework);
-  </script>
+  <script src="js/login-with-phone-number.js"></script>
 </body>
 </html>
