@@ -361,7 +361,7 @@ test('getPluginHandler should return null if plugin is not available', t => {
 
 test('sendMessage should send the message and return success', async t => {
   // Mock sendText to resolve successfully
-  appMock.c.returns({ sendText: sinon.stub().resolves() });
+  appMock.c.returns({ sendText: sinon.stub().resolves(true) });
 
   const data = { plugin: 'whatsapp', message: 'Test message', sendTo: '+1234567890' };
 
