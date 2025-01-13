@@ -22,8 +22,7 @@ class UserPhoneNumberAuth extends require('../component/index.js') {
    */
   dependencies() {
     return [
-      './database/index.js',
-      './authenticationWithPhone/index.js',
+      './database/index.js'
     ];
   }
 
