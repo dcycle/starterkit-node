@@ -71,7 +71,7 @@ test.beforeEach(async () => {
 
 test('sendText with sms plugin and valid parameters', async t => {
   appMock.config.returns(smsMockConfig);
-  appMock.c.returns({ sendText: sinon.stub().resolves() });
+  appMock.c.returns({ sendText: sinon.stub().resolves(true) });
 
   const result = await TextFramework.sendText({
     plugin: 'sms',
@@ -84,7 +84,7 @@ test('sendText with sms plugin and valid parameters', async t => {
 
 test('sendText with whatsapp plugin and valid parameters', async t => {
   appMock.config.returns(whatsappMockConfig);
-  appMock.c.returns({ sendText: sinon.stub().resolves() });
+  appMock.c.returns({ sendText: sinon.stub().resolves(true) });
 
   const result = await TextFramework.sendText({
     plugin: 'whatsapp',
@@ -97,7 +97,7 @@ test('sendText with whatsapp plugin and valid parameters', async t => {
 
 test('sendText with internal plugin and valid parameters', async t => {
   appMock.config.returns(internalMockConfig);
-  appMock.c.returns({ sendText: sinon.stub().resolves() });
+  appMock.c.returns({ sendText: sinon.stub().resolves(true) });
 
   const result = await TextFramework.sendText({
     plugin: 'internal',

@@ -217,7 +217,7 @@ class TextFramework extends require('../component/index.js') {
    * const result = await sendMessage(handler, messageData);
    * console.log(result);
    * // Expected output: { success: ["Message sent from whatsapp plugin textFramework"] }
-   * 
+   *
    * @example
    * const handler = getPluginHandler('sms');
    * const messageData = { plugin: 'sms', message: 'Test SMS', sendTo: '+<Phone number>' };
