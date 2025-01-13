@@ -222,7 +222,7 @@ class UserPhoneNumberAuth extends require('../component/index.js') {
    * Sets up the routes and initializes necessary components.
    *
    * @param {Object} app - The application instance.
-   * @returns {UserPhoneNumberAuth} - The current instance for chaining.
+   * @returns Promise<UserPhoneNumberAuth> - The current instance for chaining.
    */
   async run(app)  {
 
