@@ -7,7 +7,7 @@ class UserPhoneNumberAuth extends require('../component/index.js') {
    * Initializes the UserPhoneNumberAuth component.
    *
    * @param {Object} app - The application instance.
-   * @returns {UserPhoneNumberAuth} - The current instance for chaining.
+   * @returns Promise<UserPhoneNumberAuth> - The current instance for chaining.
    */
   async init(app) {
     super.init(app);
