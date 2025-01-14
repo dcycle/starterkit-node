@@ -135,8 +135,7 @@ it('should fill in the form and generate a token for sms and submit form', async
     expect(errorMessage).to.include('Kindly Enter the Login Token Sent through sms.');
 
     // Verify if the token input field is visible
-    const tokenFieldVisible = await page.$('#tokenInput') !== null;
-    expect(tokenFieldVisible).to.be.true;
+    expect(await page.$('#tokenInput')).to.not.be.null;
 
     // developement environment.
     if (envMode === "true") {
