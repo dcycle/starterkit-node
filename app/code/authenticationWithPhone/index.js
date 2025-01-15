@@ -9,9 +9,10 @@ class AuthenticationWithphone extends require('../component/index.js') {
     super.init(app);
     // load passport.js library.
     const passport = app.c('authentication').passport();
-    // The user schema defined in the base Authentication class is using
-    // passport local stratergy to the userinfo schema.
-    // Overriding UserInfo schema to use phoneNumber token stratergy.
+    // The user schema defined in the Authentication class is using
+    // passport local stratergy to the userinfo schema to login with username
+    // and passport.
+    // Make UserInfo schema to use phoneNumber token stratergy to login with phone.
     // call Authentication module for username and password login.
     // call AuthenticationWithPhone module for phone login.
     const userDetails = app.c('authentication').userDetails();
