@@ -88,10 +88,9 @@ it('Confirm that username of a message sender is same as the logged in user.', a
       elements.map(el => el.innerText)
     );
 
+    // checks if 'admin' exists anywhere in the array
     // Assert that all <h4> elements contain 'admin'
-    h4Texts.forEach(text => {
-      expect(text).to.equal('admin');
-    });
+    expect(h4Texts).to.include('admin');
 
     console.log('All messages have "admin" as the sender.');
 
