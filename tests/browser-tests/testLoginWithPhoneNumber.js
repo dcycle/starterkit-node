@@ -96,6 +96,12 @@ it("should call the login endpoint and get a valid response for whatsapp", async
   }
 });
 
+function assertElementVisible(element, selector) {
+  if (element === null) {
+    throw new Error(`Element with selector "${selector}" is not visible on the page`);
+  }
+}
+
 it('should fill in the form and generate a token for sms and submit form', async function () {
   this.timeout(40000);
   const puppeteer = require('puppeteer');
@@ -136,7 +142,7 @@ it('should fill in the form and generate a token for sms and submit form', async
 
     // Verify if the token input field is visible
     const tokenFieldVisible = await page.$('#tokenInput');
-    expect(tokenFieldVisible).to.not.be.null;
+    assertElementVisible(tokenFieldVisible, '#tokenInput');
 
     // developement environment.
     if (envMode === "true") {
