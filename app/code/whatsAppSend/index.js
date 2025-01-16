@@ -209,22 +209,17 @@ class WhatsAppSend extends require('../component/index.js') {
        * DEV_MODE=false then message sending functionality executed.
        * else messages are written to ./unversioned/output/whatsapp-send.json file.
        *
-       * Ensure DEV_MODE=true in dev mode.
+       * Ensure DEV_MODE="true" in dev mode.
        */
-      const isDevMode = this.app().c('env').required('DEV_MODE') === "false";
-
+      // Set isDevMode = false if DEV_MODE="true" is not set in .env file.
+      const isDevMode = this.app().c('env').required('DEV_MODE') === "true" || false;
       if (isDevMode) {
-        return await this.sendMessage(messageObject);
-      } else {
         const filePath = '/output/whatsapp-send.json';
         const jsonMessage = JSON.stringify(messageObject);
-        const response = await this.app().c('helpers').writeToFile(jsonMessage, filePath);
-        if (response) {
-          return true;
-        }
-        else {
-          return false;
-        }
+        const res = await this.app().c('helpers').writeToFile(jsonMessage, filePath);
+        return res;
+      } else {
+        return await this.sendMessage(messageObject);
       }
     } catch (error) {
       console.error('Unexpected error:', error);
@@ -262,10 +257,8 @@ class WhatsAppSend extends require('../component/index.js') {
       }
 
       // Send the message
-      await client.messages.create(clientMessage);
-
-      console.log('Message sent successfully');
-      return true;
+      const messageStatus = await client.messages.create(clientMessage);
+      return messageStatus;
 
     } catch (error) {
       console.error('Error sending WhatsApp message:', error);

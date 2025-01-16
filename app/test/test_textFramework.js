@@ -6,6 +6,56 @@ const sinon = require('sinon');
 const TextFramework = require('/mycode/textFramework/index.js');
 
 let appMock;
+const smsMockConfig = {
+  modules: {
+    './textFramework/index.js': {
+      plugins: {
+        sms: {
+          name: 'sms',
+          plugin: sinon.stub().returns(Promise.resolve()),
+          requiredParams: [
+            'sendTo',
+            'message'
+          ]
+        }
+      }
+    }
+  }
+};
+
+const whatsappMockConfig = {
+  modules: {
+    './textFramework/index.js': {
+      plugins: {
+        whatsapp: {
+          name: 'whatsapp',
+          plugin: sinon.stub().returns(Promise.resolve()),
+          requiredParams: [
+            'sendTo',
+            'message'
+          ]
+        }
+      }
+    }
+  }
+};
+
+const internalMockConfig = {
+  modules: {
+    './textFramework/index.js': {
+      plugins: {
+        internal: {
+          name: 'internal',
+          plugin: sinon.stub().returns(Promise.resolve()),
+          requiredParams: [
+            'name',
+            'message'
+          ]
+        }
+      }
+    }
+  }
+};
 
 test.beforeEach(async () => {
   // Create a new instance of the TextFramework and mock app
@@ -20,18 +70,8 @@ test.beforeEach(async () => {
 });
 
 test('sendText with sms plugin and valid parameters', async t => {
-  const mockConfig = {
-    modules: {
-      './textFramework/index.js': {
-        plugins: {
-          sms: { plugin: sinon.stub().returns(Promise.resolve()) }
-        }
-      }
-    }
-  };
-
-  appMock.config.returns(mockConfig);
-  appMock.c.returns({ sendText: sinon.stub().resolves() });
+  appMock.config.returns(smsMockConfig);
+  appMock.c.returns({ sendText: sinon.stub().resolves(true) });
 
   const result = await TextFramework.sendText({
     plugin: 'sms',
@@ -43,18 +83,8 @@ test('sendText with sms plugin and valid parameters', async t => {
 });
 
 test('sendText with whatsapp plugin and valid parameters', async t => {
-  const mockConfig = {
-    modules: {
-      './textFramework/index.js': {
-        plugins: {
-          whatsapp: { plugin: sinon.stub().returns(Promise.resolve()) }
-        }
-      }
-    }
-  };
-
-  appMock.config.returns(mockConfig);
-  appMock.c.returns({ sendText: sinon.stub().resolves() });
+  appMock.config.returns(whatsappMockConfig);
+  appMock.c.returns({ sendText: sinon.stub().resolves(true) });
 
   const result = await TextFramework.sendText({
     plugin: 'whatsapp',
@@ -66,18 +96,8 @@ test('sendText with whatsapp plugin and valid parameters', async t => {
 });
 
 test('sendText with internal plugin and valid parameters', async t => {
-  const mockConfig = {
-    modules: {
-      './textFramework/index.js': {
-        plugins: {
-          internal: { plugin: sinon.stub().returns(Promise.resolve()) }
-        }
-      }
-    }
-  };
-
-  appMock.config.returns(mockConfig);
-  appMock.c.returns({ sendText: sinon.stub().resolves() });
+  appMock.config.returns(internalMockConfig);
+  appMock.c.returns({ sendText: sinon.stub().resolves(true) });
 
   const result = await TextFramework.sendText({
     plugin: 'internal',
@@ -96,17 +116,7 @@ test('sendText with an empty object', async t => {
 });
 
 test('sendText with sms plugin and missing parameters', async t => {
-  const mockConfig = {
-    modules: {
-      './textFramework/index.js': {
-        plugins: {
-          sms: { plugin: sinon.stub().returns(Promise.resolve()) }
-        }
-      }
-    }
-  };
-
-  appMock.config.returns(mockConfig);
+  appMock.config.returns(smsMockConfig);
   // appMock.c.returns({ sendText: sinon.stub().resolves() });
 
   const result = await TextFramework.sendText({ plugin: 'sms' });
@@ -114,49 +124,19 @@ test('sendText with sms plugin and missing parameters', async t => {
 });
 
 test('sendText with whatsapp plugin and missing parameters', async t => {
-  const mockConfig = {
-    modules: {
-      './textFramework/index.js': {
-        plugins: {
-          whatsapp: { plugin: sinon.stub().returns(Promise.resolve()) }
-        }
-      }
-    }
-  };
-
-  appMock.config.returns(mockConfig);
+  appMock.config.returns(whatsappMockConfig);
   const result = await TextFramework.sendText({ plugin: 'whatsapp' });
   t.deepEqual(result, { errors: ["Missing 'sendTo' parameter for whatsapp plugin"] });
 });
 
 test('sendText with internal plugin and missing parameters', async t => {
-  const mockConfig = {
-    modules: {
-      './textFramework/index.js': {
-        plugins: {
-          internal: { plugin: sinon.stub().returns(Promise.resolve()) }
-        }
-      }
-    }
-  };
-
-  appMock.config.returns(mockConfig);
+  appMock.config.returns(internalMockConfig);
   const result = await TextFramework.sendText({ plugin: 'internal' });
   t.deepEqual(result, { errors: ["Missing 'name' parameter for internal plugin"] });
 });
 
 test('sendText with sms plugin and missing sendTo', async t => {
-  const mockConfig = {
-    modules: {
-      './textFramework/index.js': {
-        plugins: {
-          sms: { plugin: sinon.stub().returns(Promise.resolve()) }
-        }
-      }
-    }
-  };
-
-  appMock.config.returns(mockConfig);
+  appMock.config.returns(smsMockConfig);
   const result = await TextFramework.sendText({
     plugin: 'sms',
     message: 'hello'
@@ -165,17 +145,7 @@ test('sendText with sms plugin and missing sendTo', async t => {
 });
 
 test('sendText with whatsapp plugin and missing sendTo', async t => {
-  const mockConfig = {
-    modules: {
-      './textFramework/index.js': {
-        plugins: {
-          whatsapp: { plugin: sinon.stub().returns(Promise.resolve()) }
-        }
-      }
-    }
-  };
-
-  appMock.config.returns(mockConfig);
+  appMock.config.returns(whatsappMockConfig);
   const result = await TextFramework.sendText({
     plugin: 'whatsapp',
     message: 'hello'
@@ -184,17 +154,7 @@ test('sendText with whatsapp plugin and missing sendTo', async t => {
 });
 
 test('sendText with internal plugin and missing name', async t => {
-  const mockConfig = {
-    modules: {
-      './textFramework/index.js': {
-        plugins: {
-          internal: { plugin: sinon.stub().returns(Promise.resolve()) }
-        }
-      }
-    }
-  };
-
-  appMock.config.returns(mockConfig);
+  appMock.config.returns(internalMockConfig);
   const result = await TextFramework.sendText({
     plugin: 'internal',
     message: 'hello'
@@ -203,17 +163,7 @@ test('sendText with internal plugin and missing name', async t => {
 });
 
 test('sendText with sms plugin and empty message', async t => {
-  const mockConfig = {
-    modules: {
-      './textFramework/index.js': {
-        plugins: {
-          sms: { plugin: sinon.stub().returns(Promise.resolve()) }
-        }
-      }
-    }
-  };
-
-  appMock.config.returns(mockConfig);
+  appMock.config.returns(smsMockConfig);
   const result = await TextFramework.sendText({
     plugin: 'sms',
     message: '',
@@ -223,17 +173,7 @@ test('sendText with sms plugin and empty message', async t => {
 });
 
 test('sendText with whatsapp plugin and empty message', async t => {
-  const mockConfig = {
-    modules: {
-      './textFramework/index.js': {
-        plugins: {
-          whatsapp: { plugin: sinon.stub().returns(Promise.resolve()) }
-        }
-      }
-    }
-  };
-
-  appMock.config.returns(mockConfig);
+  appMock.config.returns(whatsappMockConfig);
   const result = await TextFramework.sendText({
     plugin: 'whatsapp',
     message: '',
@@ -243,17 +183,7 @@ test('sendText with whatsapp plugin and empty message', async t => {
 });
 
 test('sendText with internal plugin and empty message', async t => {
-  const mockConfig = {
-    modules: {
-      './textFramework/index.js': {
-        plugins: {
-          internal: { plugin: sinon.stub().returns(Promise.resolve()) }
-        }
-      }
-    }
-  };
-
-  appMock.config.returns(mockConfig);
+  appMock.config.returns(internalMockConfig);
   const result = await TextFramework.sendText({
     plugin: 'internal',
     message: '',
@@ -263,17 +193,7 @@ test('sendText with internal plugin and empty message', async t => {
 });
 
 test('sendText with sms plugin and empty sendTo', async t => {
-  const mockConfig = {
-    modules: {
-      './textFramework/index.js': {
-        plugins: {
-          sms: { plugin: sinon.stub().returns(Promise.resolve()) }
-        }
-      }
-    }
-  };
-
-  appMock.config.returns(mockConfig);
+  appMock.config.returns(smsMockConfig);
   const result = await TextFramework.sendText({
     plugin: 'sms',
     message: 'hello',
@@ -283,17 +203,7 @@ test('sendText with sms plugin and empty sendTo', async t => {
 });
 
 test('sendText with whatsapp plugin and empty sendTo', async t => {
-  const mockConfig = {
-    modules: {
-      './textFramework/index.js': {
-        plugins: {
-          whatsapp: { plugin: sinon.stub().returns(Promise.resolve()) }
-        }
-      }
-    }
-  };
-
-  appMock.config.returns(mockConfig);
+  appMock.config.returns(whatsappMockConfig);
   const result = await TextFramework.sendText({
     plugin: 'whatsapp',
     message: 'hello',
@@ -303,17 +213,7 @@ test('sendText with whatsapp plugin and empty sendTo', async t => {
 });
 
 test('sendText with internal plugin and empty name', async t => {
-  const mockConfig = {
-    modules: {
-      './textFramework/index.js': {
-        plugins: {
-          internal: { plugin: sinon.stub().returns(Promise.resolve()) }
-        }
-      }
-    }
-  };
-
-  appMock.config.returns(mockConfig);
+  appMock.config.returns(internalMockConfig);
   const result = await TextFramework.sendText({
     plugin: 'internal',
     message: 'hello',
@@ -347,18 +247,7 @@ test('sendText should return error if plugin is not enabled', async t => {
 });
 
 test('sendText should return error if required parameters are missing', async t => {
-  // Mock the app config to return a valid plugin setup
-  const mockConfig = {
-    modules: {
-      './textFramework/index.js': {
-        plugins: {
-          whatsapp: { plugin: sinon.stub().returns(Promise.resolve()) }
-        }
-      }
-    }
-  };
-
-  appMock.config.returns(mockConfig);
+  appMock.config.returns(whatsappMockConfig);
 
   // Missing 'sendTo' parameter
   const data = {
@@ -415,7 +304,7 @@ test('validateParameters should return an error for missing parameter', t => {
     plugin: 'whatsapp',
     message: 'Hello!'
   };
-
+  sinon.stub(TextFramework, 'getRequiredParams').returns({ whatsapp: [ 'sendTo', 'message' ] });
   const result = TextFramework.validateParameters('whatsapp', data);
   t.deepEqual(result, { errors: ["Missing 'sendTo' parameter for whatsapp plugin"] });
 });
@@ -426,6 +315,11 @@ test('validateParameters should pass with correct parameters', t => {
     message: 'Hello!',
     sendTo: '+1234567890'
   };
+
+  // Stub the getRequiredParams method
+  // sinon.stub(TextFramework, 'getRequiredParams').returns({ whatsapp: [ 'sendTo', 'message' ] });
+
+  // TextFramework.getRequiredParams().returns({ whatsapp: [ 'sendTo', 'message' ] });
 
   const result = TextFramework.validateParameters('whatsapp', data);
   t.deepEqual(result, {});
@@ -467,7 +361,7 @@ test('getPluginHandler should return null if plugin is not available', t => {
 
 test('sendMessage should send the message and return success', async t => {
   // Mock sendText to resolve successfully
-  appMock.c.returns({ sendText: sinon.stub().resolves() });
+  appMock.c.returns({ sendText: sinon.stub().resolves(true) });
 
   const data = { plugin: 'whatsapp', message: 'Test message', sendTo: '+1234567890' };
 

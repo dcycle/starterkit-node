@@ -35,7 +35,7 @@ class TextFrameworkWhatsApp extends require('../component/index.js') {
    *                 with the WhatsApp service.
    */
   async sendText(data) {
-    await this._app.c('whatsAppSend').parsepropertySendMessage(data);
+    return await this._app.c('whatsAppSend').parsepropertySendMessage(data);
   }
 
   dependencies() {

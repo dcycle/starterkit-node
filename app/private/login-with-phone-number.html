@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Login</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+  <div class="container">
+      <form action="/login-token-verify" method="post" class="phone-number-login-form" id="phone-number-login-form">
+        <div class="title">
+          <h3>Login With Phone Number</h3>
+        </div>
+        <div class="field">
+          <label>Phone:</label>
+          <input placeholder="+10900000000" type="text" id="phoneNumber" name="phoneNumber" required />
+          <br />
+        </div>
+
+        <div class="field">
+          <label>Receive text through</label>
+          <div id="textframework-radio-buttons" class="textframework-radio-buttons">
+            <!-- Radio buttons will be dynamically inserted here -->
+          </div>
+          <br />
+        </div>
+        <div class="field">
+          <label>Generate Token:</label>
+          <button type="button" id="generateTokenBtn">Generate Token</button>
+          <br />
+        </div>
+        <div class="field" id="tokenField" style="display: none;">
+          <label>Token:</label>
+          <input type="text" id="tokenInput" name="token" required />
+          <br />
+        </div>
+        <div class="field">
+          <input class="submit-btn" type="submit" value="Submit" disabled id="submitBtn" />
+        </div>
+        <label id="error-message" style="display: none;"></label>
+      </form>
+  </div>
+  <script src="js/login-with-phone-number.js"></script>
+</body>
+</html>

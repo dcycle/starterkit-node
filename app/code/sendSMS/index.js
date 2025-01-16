@@ -8,7 +8,7 @@
  * If DEV_MODE=true then the sms is saved to file ./unversioned/output/sms-send.json
  * If DEV_MODE=false then the sms is send to respective sendTo number.
  *
- * Ensure DEV_MODE=true in dev mode.
+ * Ensure DEV_MODE="true" in dev mode.
  *
  * Test sms sending functionality in terminal.
  *
@@ -187,23 +187,18 @@ class SendSMS extends require('../component/index.js') {
        * DEV_MODE=false then message sending functionality executed.
        * else messages are written to ./unversioned/output/sms-send.json file.
        *
-       * Ensure DEV_MODE=true in dev mode.
+       * Ensure DEV_MODE="true" in dev mode.
        */
-      const isDevMode = this.app().c('env').required('DEV_MODE') === "false";
-
+      // Set isDevMode = false if DEV_MODE="true" is not set in .env file.
+      const isDevMode = this.app().c('env').required('DEV_MODE') === "true" || false;
       if (isDevMode) {
-        return await this.sendMessage(messageObject);
-      } else {
         // messages are written to ./unversioned/output/sms-send.json file.
         const filePath = '/output/sms-sent.json';
         const jsonMessage = JSON.stringify(messageObject);
-        const response = await this.app().c('helpers').writeToFile(jsonMessage, filePath);
-        if (response) {
-          return true;
-        }
-        else {
-          return false;
-        }
+        return await this.app().c('helpers').writeToFile(jsonMessage, filePath);
+      } else {
+        return await this.sendMessage(messageObject);
+
       }
     } catch (error) {
       console.error('Unexpected error:', error);

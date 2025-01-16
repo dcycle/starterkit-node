@@ -28,11 +28,14 @@ modules:
         verb: post
       - route: googleErr
         verb: get
+      - route: textFrameworkPlugins
+        verb: get
   ./rest/index.js:
     path: '/api/v1'
   ./chatWeb/index.js:
     path: '/'
   ./userPassAuth/index.js: {}
+  ./userPhoneNumberAuth/index.js: {}
   # This can be overridden in unversioned.yml, as per the example in
   # ./app/config/unversioned.example.yml.
   ./mail/index.js:
@@ -80,12 +83,21 @@ modules:
       whatsapp:
         name: whatsapp
         plugin: textFrameworkWhatsApp
+        requiredParams:
+          - 'sendTo'
+          - 'message'
       sms:
         name: sms
         plugin: textFrameworkSMS
+        requiredParams:
+          - 'sendTo'
+          - 'message'
       internal:
         name: internal
         plugin: textFrameworkInternal
+        requiredParams:
+          - 'name'
+          - 'message'
   ./textFrameworkWhatsApp/index.js: {}
   ./textFrameworkSMS/index.js: {}
   ./textFrameworkInternal/index.js: {}

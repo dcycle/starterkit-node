@@ -19,6 +19,18 @@ class TextFramework extends require('../component/index.js') {
     return this;
   }
 
+  async run(app)  {
+    const that = this;
+
+    app.c('express').addRoute('textFrameworkPlugins', 'get', '/textFramework/enabled-plugins', (req, res) => {
+      const plugins = that.getTextFrameworkPlugins();
+      res.header('Content-Type', 'application/json');
+      res.send(JSON.stringify(plugins));
+    });
+
+    return this;
+  }
+
   /**
    * Main function that orchestrates the sending of a message via the specified plugin.
    * This function validates the plugin, retrieves the appropriate plugin handler,
@@ -108,6 +120,27 @@ class TextFramework extends require('../component/index.js') {
     return {}; // No errors if plugin is valid
   }
 
+  getTextFrameworkPlugins() {
+    return this._app.config().modules['./textFramework/index.js'].plugins;
+  }
+
+  getRequiredParams() {
+    let requiredParams = {};
+
+    const plugins = this.getTextFrameworkPlugins();
+    if (!plugins) {
+      return { errors: [`Plugins is not enabled in textFramework`] };
+    }
+
+    for (const pluginName in plugins) {
+      if (plugins.hasOwnProperty(pluginName)) {
+        requiredParams[pluginName] = plugins[pluginName].requiredParams;
+      }
+    }
+
+    return requiredParams;
+  }
+
   /**
    * Validates the required parameters for the specified plugin.
    * 
@@ -124,11 +157,7 @@ class TextFramework extends require('../component/index.js') {
    * // Expected output: { errors: ["Missing 'sendTo' parameter for sms plugin"] }
    */
   validateParameters(plugin, data) {
-    const requiredParams = {
-      whatsapp: ['sendTo', 'message'],
-      sms: ['sendTo', 'message'],
-      internal: ['name', 'message']
-    };
+    const requiredParams = this.getRequiredParams();
 
     const required = requiredParams[plugin];
     if (!required) {
@@ -164,7 +193,7 @@ class TextFramework extends require('../component/index.js') {
    *
    */
   getPluginHandler(plugin) {
-    const plugins = this._app.config().modules['./textFramework/index.js'].plugins;
+    const plugins = this.getTextFrameworkPlugins();
     const pluginConfig = plugins[plugin];
 
     if (pluginConfig && pluginConfig.plugin) {
@@ -188,7 +217,7 @@ class TextFramework extends require('../component/index.js') {
    * const result = await sendMessage(handler, messageData);
    * console.log(result);
    * // Expected output: { success: ["Message sent from whatsapp plugin textFramework"] }
-   * 
+   *
    * @example
    * const handler = getPluginHandler('sms');
    * const messageData = { plugin: 'sms', message: 'Test SMS', sendTo: '+<Phone number>' };
@@ -200,8 +229,14 @@ class TextFramework extends require('../component/index.js') {
   async sendMessage(module, data) {
     try {
       // Convert data to JSON string and send it via the plugin handler
-      await this._app.c(module).sendText(JSON.stringify(data));
-      return { success: [`Message sent from ${data.plugin} plugin textFramework`] };
+      const messageStatus = await this._app.c(module).sendText(JSON.stringify(data));
+
+      if (messageStatus) {
+        return { success: [`Message sent from ${data.plugin} plugin textFramework`] };
+      }
+      else {
+        return { errors: ["Message Hasn't sent. If problem persists contact admin."] };
+      }
     } catch (error) {
       // If there's an error during message sending, catch and return error
       return { errors: [`Error sending message using ${data.plugin}: ${error.message}`] };

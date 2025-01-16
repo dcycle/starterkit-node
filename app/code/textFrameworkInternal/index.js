@@ -33,7 +33,7 @@ class TextFrameworkInternal extends require('../component/index.js') {
    */
   async sendText(dataString) {
     const data = JSON.parse(dataString);
-    await this._app.c('chat').addMessage(data);
+    return await this._app.c('chat').addMessage(data);
   }
 
   dependencies() {

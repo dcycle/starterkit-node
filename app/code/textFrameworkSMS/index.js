@@ -34,7 +34,7 @@ class TextFrameworkSMS extends require('../component/index.js') {
    * @throws {Error} If the SMS cannot be sent or if there is an error while parsing the data.
    */
   async sendText(data) {
-    await this._app.c('sendSMS').parsepropertySendSMS(data);
+    return await this._app.c('sendSMS').parsepropertySendSMS(data);
   }
 
   dependencies() {

@@ -1,5 +1,6 @@
 body {
   display: flex;
+  flex-direction: column;
   align-items: center;
   background: #37474F;
   font-family: monospace;
@@ -45,4 +46,13 @@ input {
   margin: 10px;
   font-size: large;
   max-width: fit-content;
+}
+
+.phone-number-login-form input[type="radio"] {
+  margin-right: 10px;
+  width: 25px;
+}
+
+.textframework-radio-buttons {
+  margin-top: 15px;
 }

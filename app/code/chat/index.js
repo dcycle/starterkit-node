@@ -62,11 +62,17 @@ class Chat extends require('../component/index.js') {
   }
 
   addMessage(messageObject) {
-    const message = this.message()(messageObject);
-    message.save()
-      .then(() => {
-        this.invoke(messageObject);
-      });
+    return new Promise((resolve, reject) => {
+      const message = this.message()(messageObject);
+      message.save()
+        .then(() => {
+          this.invoke(messageObject);
+          resolve(true); // Resolving when message is saved and invoked
+        })
+        .catch((error) => {
+          reject(error); // Rejecting if there's an error during save
+        });
+    });
   }
 
   /**
