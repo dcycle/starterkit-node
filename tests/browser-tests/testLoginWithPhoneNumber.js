@@ -2,7 +2,6 @@ const { expect } = require('chai');
 const fs = require('fs').promises;
 const testBase = require('./testBase.js');
 
-
 it("should call the login endpoint and get a valid response for whatsapp", async function() {
   console.log('Testing ' + __filename);
   try {
