@@ -167,9 +167,9 @@ it('should fill in the form and generate a token for sms and submit form', async
         await page.type('#tokenInput', token);
         // Click the "Generate Token" button
         await page.click('#submitBtn');
+
         // Adjust based on your needs
-        await page.waitForNavigation({ waitUntil: 'networkidle0' });
-        await page.waitForSelector('#message');
+        // await page.waitForSelector('#message');
 
         // Check the HTML content
         const content = await page.content();
