@@ -390,7 +390,7 @@ class Tokens extends require('../component/index.js') {
    *
    * @param {Object} tokenObject - The object containing the specifications
    *  for the token.
-   * @param {Number|string}  tokenExpiryDuration - Token expiry duration in minutes.
+   * @param {Number}  tokenExpiryDuration - Token expiry duration in minutes.
    *  if not specified then token never expires.
    *
    * @returns {Promise<String>} - The token from saved token object
@@ -418,7 +418,7 @@ class Tokens extends require('../component/index.js') {
    * const result = await app.c('tokens').newToken(tokenObject);
    * console.log('Genereated token is:', result);
    */
-  async newToken(tokenObject, tokenExpiryDuration = "") {
+  async newToken(tokenObject, tokenExpiryDuration = 0) {
     // Generate the token based on the specifications
     const token = await this.generateToken(tokenObject);
     // Add the generated token to the tokenObject
@@ -428,7 +428,7 @@ class Tokens extends require('../component/index.js') {
     const myhash = await this.generateHash(tokenObject);
     // Store the hash
     tokenObject._hash = myhash;
-    if (tokenExpiryDuration != "" && parseInt(tokenExpiryDuration)) {
+    if (tokenExpiryDuration >  0) {
       // tokenExpiryDuration is in minutes. Convert tokenExpiryDuration minutes to milliseconds
       // and add it to current timestamp to get token expiry timestamp.
       tokenObject.expiresAt = Date.now() + (tokenExpiryDuration * 60 * 1000);
