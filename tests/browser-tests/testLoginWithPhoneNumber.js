@@ -218,14 +218,6 @@ it('should fill in the form and generate a token for whatsapp and submit form', 
     // Wait for the token field to appear (token field should appear after generating the token)
     await page.waitForSelector('#tokenInput', { visible: true });
 
-    // // Check if the error message is shown (or any other relevant confirmation)
-    // const errorMessage = await page.$eval('#error-message', (el) => el.innerText);
-    // expect(errorMessage).to.include('Kindly Enter the Login Token Sent through whatsapp.');
-
-    // // Verify if the token input field is visible
-    // const tokenFieldVisible = await page.$('#tokenInput') !== null;
-    // expect(tokenFieldVisible).to.be.true;
-
     // developement environment.
     if (envMode === "true") {
       // Get content of a file.
