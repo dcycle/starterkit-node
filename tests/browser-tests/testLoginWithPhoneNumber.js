@@ -169,7 +169,6 @@ it('should fill in the form and generate a token for sms and submit form', async
         await page.click('#submitBtn');
         // Adjust based on your needs
         await page.waitForNavigation({ waitUntil: 'networkidle0' });
-        await testBase.screenshot(page, 'login-with-phone-sms-submit', await page.content());
         await page.waitForSelector('#message');
 
         // Check the HTML content
