@@ -390,7 +390,7 @@ class Tokens extends require('../component/index.js') {
    *
    * @param {Object} tokenObject - The object containing the specifications
    *  for the token.
-   * @param {Number}  tokenExpiryDuration - Token expiry duration in minutes.
+   * @param {Number|string}  tokenExpiryDuration - Token expiry duration in minutes.
    *  if not specified then token never expires.
    *
    * @returns {Promise<String>} - The token from saved token object
