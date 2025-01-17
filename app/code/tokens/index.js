@@ -428,7 +428,7 @@ class Tokens extends require('../component/index.js') {
     const myhash = await this.generateHash(tokenObject);
     // Store the hash
     tokenObject._hash = myhash;
-    if (tokenExpiryDuration) {
+    if (tokenExpiryDuration != "" && parseInt(tokenExpiryDuration)) {
       // tokenExpiryDuration is in minutes. Convert tokenExpiryDuration minutes to milliseconds
       // and add it to current timestamp to get token expiry timestamp.
       tokenObject.expiresAt = Date.now() + (tokenExpiryDuration * 60 * 1000);
