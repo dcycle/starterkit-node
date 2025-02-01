@@ -112,3 +112,4 @@ modules:
   ./webhookSMS/index.js: {}
   ./helpers/index.js: {}
   ./tokens/index.js: {}
+  ./accountFramework/index.js: {}
