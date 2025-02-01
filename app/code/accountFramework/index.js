@@ -64,7 +64,7 @@ class AccountFramework extends require('../component/index.js') {
   /**
    * Finds an account framework by a userInfoId.
    *
-   * @ts-expect-error
+   * // @ts-expect-error
    * @param {mongoose.Types.ObjectId} userInfoId - The ObjectId of the user to search.
    * @returns {Promise<Object|null>} - The account document if found, otherwise null.
    */
@@ -80,7 +80,7 @@ class AccountFramework extends require('../component/index.js') {
   /**
    * Creates a new account framework with the provided userIds and saves it.
    *
-   * @ts-expect-error
+   * // @ts-expect-error
    * @param {Array<mongoose.Types.ObjectId>} userIds - The userIds to be included in the new account framework.
    * @returns {Promise<Object>} - The newly created account framework.
    */
@@ -141,9 +141,9 @@ class AccountFramework extends require('../component/index.js') {
    * If the accounts are in separate frameworks, it creates a new merged framework.
    * If the accounts are in the same framework, it simply updates the userIds.
    *
-   * @ts-expect-error
+   * // @ts-expect-error
    * @param {mongoose.Types.ObjectId} userInfoId1 - The ObjectId of the first user.
-   * @ts-expect-error
+   * // @ts-expect-error
    * @param {mongoose.Types.ObjectId} userInfoId2 - The ObjectId of the second user.
    * @returns {Promise<Object>} - The status and message of the merge operation.
    */
@@ -191,7 +191,7 @@ class AccountFramework extends require('../component/index.js') {
    * Unmerges a user from an account framework, removing them from the existing framework 
    * and creating a new account framework for them alone.
    *
-   * @ts-expect-error
+   * // @ts-expect-error
    * @param {mongoose.Types.ObjectId} userInfoId - The ObjectId of the user to be unmerged.
    * @returns {Promise<Object>} - The status and message of the unmerge operation.
    */
