@@ -64,7 +64,7 @@ class AccountFramework extends require('../component/index.js') {
   /**
    * Finds an account framework by a userInfoId.
    *
-   * @param {ObjectId} userInfoId - The ObjectId of the user to search.
+   * @param {string} userInfoId - The ObjectId of the user to search.
    * @returns {Promise<Object|null>} - The account document if found, otherwise null.
    */
   async findAccountByUserId(userInfoId) {
@@ -79,7 +79,7 @@ class AccountFramework extends require('../component/index.js') {
   /**
    * Creates a new account framework with the provided userIds and saves it.
    *
-   * @param {Array<ObjectId>} userIds - The userIds to be included in the new account framework.
+   * @param {Array<string>} userIds - The userIds to be included in the new account framework.
    * @returns {Promise<Object>} - The newly created account framework.
    */
   async createNewAccountFramework(userIds) {
@@ -139,8 +139,8 @@ class AccountFramework extends require('../component/index.js') {
    * If the accounts are in separate frameworks, it creates a new merged framework.
    * If the accounts are in the same framework, it simply updates the userIds.
    *
-   * @param {ObjectId} userInfoId1 - The ObjectId of the first user.
-   * @param {ObjectId} userInfoId2 - The ObjectId of the second user.
+   * @param {string} userInfoId1 - The ObjectId of the first user.
+   * @param {string} userInfoId2 - The ObjectId of the second user.
    * @returns {Promise<Object>} - The status and message of the merge operation.
    */
   async merge(userInfoId1, userInfoId2) {
@@ -187,7 +187,7 @@ class AccountFramework extends require('../component/index.js') {
    * Unmerges a user from an account framework, removing them from the existing framework 
    * and creating a new account framework for them alone.
    *
-   * @param {ObjectId} userInfoId - The ObjectId of the user to be unmerged.
+   * @param {string} userInfoId - The ObjectId of the user to be unmerged.
    * @returns {Promise<Object>} - The status and message of the unmerge operation.
    */
   async unmerge(userInfoId) {
