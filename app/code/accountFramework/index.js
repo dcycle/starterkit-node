@@ -124,7 +124,8 @@ class AccountFramework extends require('../component/index.js') {
     // Validate the ObjectId
     await this.validateObjectId(userInfoId);
 
-    const userInfoObjectId = this.app().component('./database/index.js').mongoose().Types.ObjectId(userInfoId);
+    const mongoose = this.app().component('./database/index.js').mongoose();
+    const userInfoObjectId = new mongoose.Types.ObjectId(userInfoId);
     const account = await this.findAccountByUserId(userInfoObjectId);
 
     if (account) {
@@ -149,8 +150,11 @@ class AccountFramework extends require('../component/index.js') {
       const status = true;
 
       // Find account frameworks for both users
-      const account1 = await this.findAccountByUserId(userInfoId1);
-      const account2 = await this.findAccountByUserId(userInfoId2);
+      // Find the account framework that contains userInfoId1
+      const account1 = await this.getAccountFrameworkModel().findOne({ 'userIds': userInfoId1 });
+
+      // Find the account framework that contains userInfoid2
+      const account2 = await this.getAccountFrameworkModel().findOne({ 'userIds': userInfoId2 });
 
       if (!account1 && !account2) {
         // Case: Neither account exists in an account framework
