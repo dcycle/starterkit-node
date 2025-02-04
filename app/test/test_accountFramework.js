@@ -115,10 +115,7 @@ test('merge should create a new account framework when neither account exists', 
   const userInfoId1 = "user1";
   const userInfoId2 = "user2";
 
-  // Mock the return value of findOne to return null for both accounts
-  sinon.stub(my, 'getAccountFrameworkModel').returns({
-    findOne: sinon.stub().resolves(null) // Both accounts don't exist
-  });
+  my.getAccountFrameworkModel().findOne.resolves(null);
 
   // Mock the createNewAccountFramework method
   const createNewAccountFrameworkStub = sinon.stub(my, 'createNewAccountFramework').resolves({
@@ -146,11 +143,11 @@ test('merge should add userInfoId2 to account1 when account1 exists and account2
     save: sinon.stub().resolves()
   };
 
-  sinon.stub(my, 'getAccountFrameworkModel').returns({
-    findOne: sinon.stub()
-      .onFirstCall().resolves(account1) // account1 exists
-      .onSecondCall().resolves(null)    // account2 doesn't exist
-  });
+  my.getAccountFrameworkModel().findOne
+    // account1 exists
+    .onFirstCall().resolves(account1)
+    // account2 doesn't exist
+    .onSecondCall().resolves(null)
 
   // Call the merge function
   const result = await my.merge(userInfoId1, userInfoId2);
@@ -173,11 +170,11 @@ test('merge should add userInfoId1 to account2 when account2 exists and account1
     save: sinon.stub().resolves()
   };
 
-  sinon.stub(my, 'getAccountFrameworkModel').returns({
-    findOne: sinon.stub()
-      .onFirstCall().resolves(null)    // account1 doesn't exist
-      .onSecondCall().resolves(account2) // account2 exists
-  });
+  my.getAccountFrameworkModel().findOne
+    // account1 exists
+    .onFirstCall().resolves(null)
+    // account2 doesn't exist
+    .onSecondCall().resolves(account2)
 
   // Call the merge function
   const result = await my.merge(userInfoId1, userInfoId2);
@@ -205,12 +202,11 @@ test('merge should merge two separate accounts when both accounts exist in separ
     save: sinon.stub().resolves()
   };
 
-  // Mock both accounts existing separately
-  sinon.stub(my, 'getAccountFrameworkModel').returns({
-    findOne: sinon.stub()
-      .onFirstCall().resolves(account1)  // account1 exists
-      .onSecondCall().resolves(account2) // account2 exists
-  });
+  my.getAccountFrameworkModel().findOne
+    // account1 exists
+    .onFirstCall().resolves(account1)
+    // account2 doesn't exist
+    .onSecondCall().resolves(account2)
 
   // Mock the mergeAccountFrameworks method
   const mergeAccountFrameworksStub = sinon.stub(my, 'mergeAccountFrameworks').resolves();
@@ -233,12 +229,11 @@ test('merge should not do anything if both accounts are in the same framework', 
     userIds: [userInfoId1, userInfoId2]
   };
 
-  // Mock both accounts being in the same framework
-  sinon.stub(my, 'getAccountFrameworkModel').returns({
-    findOne: sinon.stub()
-      .onFirstCall().resolves(account)  // account1 exists
-      .onSecondCall().resolves(account) // account2 exists in the same framework
-  });
+  my.getAccountFrameworkModel().findOne
+    // account1 exists
+    .onFirstCall().resolves(account)
+    // account2 doesn't exist
+    .onSecondCall().resolves(account)
 
   // Call the merge function
   const result = await my.merge(userInfoId1, userInfoId2);
