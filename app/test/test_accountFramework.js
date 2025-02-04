@@ -37,10 +37,10 @@ test('should create a new framework when no accounts exist', async t => {
   const user1 = '507f1f77bcf86cd799439011';
   const user2 = '507f1f77bcf86cd799439012';
 
-  // Mock the createNewAccountFramework method on the instance
-  sinon.stub(AccountFramework, 'createNewAccountFramework').resolves({
-    userIds: ['507f1f77bcf86cd799439011', '507f1f77bcf86cd799439012'],
-  });
+  // // Mock the createNewAccountFramework method on the instance
+  // sinon.stub(AccountFramework, 'createNewAccountFramework').resolves({
+  //   userIds: ['507f1f77bcf86cd799439011', '507f1f77bcf86cd799439012'],
+  // });
 
   // Mock findOne to return null (no accounts found)
   mockModel.findOne.resolves(null);
