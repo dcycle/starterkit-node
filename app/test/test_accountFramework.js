@@ -25,6 +25,9 @@ test.before(() => {
   sinon.stub(my, 'getAccountFrameworkModel').returns({
     findOne: sinon.stub().resolves() // default mock for findOne, to be updated in each test
   });
+  sinon.stub(my, 'createNewAccountFramework').returns({
+    findOne: sinon.stub().resolves() // default mock for findOne, to be updated in each test
+  });
 });
 
 test.after(() => {
@@ -51,9 +54,10 @@ test('unmerge should remove user from account framework and create a new one', a
   my.getAccountFrameworkModel().findOne.resolves(account);
 
   // Mock createNewAccountFramework to return a new account with only the other user
-  const createNewAccountFrameworkStub = sinon.stub(my, 'createNewAccountFramework').resolves({
+  const createNewAccountFrameworkStub = my.createNewAccountFramework().findOne.resolves({
     _id: new MockObjectId('679e4bd779cea8c463197127'),
-    userIds: [mockId2]  // After unmerging, only this user should be left
+    // After unmerging, only this user should be left
+    userIds: [mockId2]
   });
 
   // Call the function
@@ -118,7 +122,7 @@ test('merge should create a new account framework when neither account exists', 
   my.getAccountFrameworkModel().findOne.resolves(null);
 
   // Mock the createNewAccountFramework method
-  const createNewAccountFrameworkStub = sinon.stub(my, 'createNewAccountFramework').resolves({
+  const createNewAccountFrameworkStub = my.createNewAccountFramework().findOne.resolves({
     _id: new MockObjectId('newAccountId'),
     userIds: [userInfoId1, userInfoId2]
   });
