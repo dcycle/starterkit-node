@@ -196,22 +196,33 @@ class AccountFramework extends require('../component/index.js') {
    */
   async unmerge(userInfoId) {
     try {
+      let status;
+      let message;
       // Find the account framework that contains the user
       const account = await this.getAccountFrameworkModel().findOne({ 'userIds': userInfoId });
-
       if (!account) {
-        throw new Error('Account not found in any Account Framework');
+        return {
+          status: false,
+          message: `Account Framework not found for userIds ${userInfoId}`
+        };
       }
 
-      // Remove the user from the account framework
-      account.userIds = account.userIds.filter(id => !id.equals(userInfoId));
-      await account.save();
+      if (account.userIds.length > 1) {
+        // Remove the user from the account framework
+        account.userIds = account.userIds.filter(id => !id.equals(userInfoId));
+        await account.save();
 
-      // Create a new account framework with only this user
-      const newAccountFramework = await this.createNewAccountFramework([userInfoId]);
-
-      let message = 'Removed userInfoId from the account framework and created a new account framework with only this user.';
-      return { status: true, message };
+        // Create a new account framework with only this user
+        await this.createNewAccountFramework([userInfoId]);
+        status = true;
+        message = 'Removed userInfoId from the account framework';
+        message += ' and created a new account framework with only this user.';
+      }
+      else {
+        status = false;
+        message = "account framework doc don't have multiple userIds";
+      }
+      return { status: status, message: message};
     } catch (error) {
       console.error(`Error unmerging account framework for ${userInfoId}:`, error);
       return { status: false, message: error.message };
