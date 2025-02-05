@@ -28,6 +28,7 @@ Dcycle Node.js starterkit
 * GitHub Apps
 * Logging in with Google
 * Configuring the Google OAuth consent screen and setting up credentials for your application.
+* Account framework
 * Security tokens
 * REST API
 * Access to content by permission
@@ -850,6 +851,104 @@ Configuring the Google OAuth consent screen and setting up credentials for your 
 
 ### Step 7: Publish (if applicable)
 - If you are ready to make your app available to all users, return to the **OAuth consent screen** and click **Publish App**.
+
+Account framework
+-----
+
+The account framework merges the IDs from the userInfo collections into the userIds field of the Account framework collection. If a user signs up with GitHub, Google, a phone number, or a username, a separate entry is created for the same user in the userInfo collections. Now, in the Account framework module, we are merging, unmerging, and fetching details of the IDs from the userInfo collection for different types of the same user.
+
+Let's say a user logs in with GitHub, then Google, then a phone number. It should be possible to merge these accounts through the Account framework APIs, so that no matter which account they log in with, it will always be the same account.
+
+    Example:
+
+    In Browser 1: Let's create an account using the phone number 1234567:
+
+        Go to http://0.0.0.0:8428/login
+        Click "Login with phone number"
+        Enter 1234567
+        Select "Internal"
+        Click "Generate token"
+
+        Run ./scripts/uli.sh in the terminal to generate a username and password.
+
+    Now, in another browser:
+
+    In Browser 2:
+
+        Go to http://0.0.0.0:8428/login
+        Enter the username and password to log in
+        You should see a token in the chat
+        In Browser 1, enter the token to log in with the phone number.
+        Click "Submit."
+
+    Now, in Browser 2, it should say: "Welcome <username>" (the username generated in the terminal). In Browser 1, it should say: "Welcome 1234567."
+
+    This happens because there are two separate accounts in the system:
+
+Let's say that the user "admin" and the user "1234567" are, in fact, the same person, and they want to log in either with their phone number or with their username and password.
+
+Now, with the help of the Account framework, we can merge these accounts.
+
+For example, if you want to merge two accounts: one with a username and the other with a phone login.
+
+In nodec-cli.sh, try to merge the two userInfo IDs as follows.
+
+`
+> await app.c('accountFramework').merge('679cab8c2c8c9642d2d862b1', '679ce2347d8a5b31b1df6a77');
+`
+
+Now, in mongo-cli.sh, you can see that the userIds are merged in the accountframeworks collection.
+
+`
+    db.accountframeworks.find();
+
+    { "_id" : ObjectId("679e4bd779cea8c463197127"), "userIds" : [ ObjectId("679c5b56126a8ab71deaad0f"), ObjectId("679c5ce4f6469177ef7ecb43") ], "__v" : 5 }
+`
+
+
+Now, in mongo-cli.sh, if you try to fetch the details of user ID 679c5b56126a8ab71deaad0f, you will see details of both userInfo documents.
+
+`
+> await app.c('accountFramework').getAccounts('679c5b56126a8ab71deaad0f');
+>
+[
+    {
+        _id: new ObjectId('679c5b56126a8ab71deaad0f'),
+        username: 'admin',
+        createdAt: 2025-01-31T10:53:04.530Z,
+        updatedAt: 2025-02-01T14:35:38.593Z,
+        __v: 0
+    },
+    {
+        _id: new ObjectId('679c5ce4f6469177ef7ecb43'),
+        username: '1234567',
+        createdAt: 2025-01-31T14:46:13.845Z,
+        updatedAt: 2025-01-31T14:46:13.845Z,
+        __v: 0,
+        phoneNumber: '1234567'
+    }
+]
+`
+
+If you don't want to merge the accounts, you can unmerge the userIds.
+
+In nodec-cli.sh, unmerge the userId 679c5ce4f6469177ef7ecb43.
+
+`
+> await app.c('accountFramework').unmerge('679c5ce4f6469177ef7ecb43');
+`
+
+Now, in mongo-cli.sh, you can see that the userIds are unmerged in the accountframeworks collection.
+
+
+`
+    db.accountframeworks.find();
+
+    { "_id" : ObjectId("679e4bd779cea8c463197127"), "userIds" : [ ObjectId("679c5b56126a8ab71deaad0f") ], "__v" : 2 }
+
+    { "_id" : ObjectId("679e4c2179cea8c463197136"), "userIds" : [ ObjectId("679c5ce4f6469177ef7ecb43") ], "__v" : 0 }
+`
+
 
 
 Security tokens
