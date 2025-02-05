@@ -307,3 +307,104 @@ test.serial('merge should not do anything if both accounts are in the same frame
   t.is(result.message, `${userInfoId1}, ${userInfoId2} are in the same account framework.`);
 });
 
+// Test if `getAccounts` correctly validates the ObjectId
+test.serial('getAccounts should validate the ObjectId before performing the query', async t => {
+  const userInfoId = "679cab8c2c8c9642d2d862b1";
+
+  // Mock the return value of findAccountByUserId
+  my.findAccountByUserId.resolves(null);  // Simulate no account found
+
+  // Call the function
+  await my.getAccounts(userInfoId);
+
+  // Check if validateObjectId was called with the correct userInfoId
+  t.true(my.validateObjectId.calledOnce);
+  t.true(my.validateObjectId.calledWith(userInfoId));
+});
+
+// Test if `getAccounts` retrieves the correct account when it exists
+test.serial('getAccounts should return the userIds when an account is found', async t => {
+
+  const userInfoId1 = "679cab8c2c8c9642d2d862b1";
+  const userInfoId2 = "679cab8c2c8c9642d2d86277";
+
+  const mockId1 = new MockObjectId(userInfoId1);
+  const mockId2 = new MockObjectId(userInfoId2);
+
+  // Mock the return value of findAccountByUserId to return an account
+  my.findAccountByUserId.resolves({userIds: [mockId1, mockId2]});
+
+  // Call the function
+  const result = await my.getAccounts(userInfoId1);
+  // Assertions
+  // Ensure the correct userIds are returned
+  t.deepEqual(result, [mockId1, mockId2]);
+
+});
+
+// Test if `getAccounts` returns an empty array when no account is found
+test('getAccounts should return an empty array if no account is found', async t => {
+  const userInfoId = "679cab8c2c8c9642d2d862b1";
+
+  // Mock the return value of findAccountByUserId to return null (no account found)
+  my.findAccountByUserId.resolves(null);
+
+  // Call the function
+  const result = await my.getAccounts(userInfoId);
+
+  // Assertions
+  t.deepEqual(result, []);  // Ensure an empty array is returned
+});
+
+test.serial('mergeAccountFrameworks merges userIds and deduplicates correctly', async (t) => {
+  const account1 = { 
+    _id: 'account1', 
+    userIds: ['user1', 'user2'], 
+    save: sinon.stub().resolves() 
+  };
+
+  const account2 = { 
+    _id: 'account2', 
+    userIds: ['user2', 'user3'], 
+    save: sinon.stub().resolves() 
+  };
+
+  await my.mergeAccountFrameworks(account1, account2);
+
+  // Check that userIds are merged and deduplicated correctly
+  t.deepEqual(account1.userIds, ['user1', 'user2', 'user3']);
+  t.deepEqual(account2.userIds, ['user1', 'user2', 'user3']);
+
+  // Ensure that the save method is called on both accounts
+  t.true(account1.save.calledOnce);
+  t.true(account2.save.calledOnce);
+
+  // Ensure that the delete operation was called for account2
+  const findByIdAndDelete = my.getAccountFrameworkModel().findByIdAndDelete;
+  t.true(findByIdAndDelete.calledOnceWith('account2'));
+});
+
+test('validateObjectId resolves for valid ObjectId', async (t) => {
+  const validObjectId = '507f1f77bcf86cd799439011'; // Valid ObjectId
+
+  try {
+    await my.validateObjectId(validObjectId);
+    t.pass('No error thrown for valid ObjectId');
+  } catch (err) {
+    t.fail('Error should not be thrown for valid ObjectId');
+  }
+});
+
+test('validateObjectId resolves with mocked ObjectId', async (t) => {
+  const validObjectId = new MockObjectId('507f1f77bcf86cd799439011');
+
+  // Stub the mongoose ObjectId to behave as valid
+  my.app().component().mongoose().Types.ObjectId.returns(validObjectId);
+
+  try {
+    await my.validateObjectId(validObjectId.toString());
+    t.pass('No error thrown for mocked valid ObjectId');
+  } catch (err) {
+    t.fail('Error should not be thrown for mocked valid ObjectId');
+  }
+});
