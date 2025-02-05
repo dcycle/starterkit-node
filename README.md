@@ -893,22 +893,22 @@ For example, if you want to merge two accounts: one with a username and the othe
 
 In nodec-cli.sh, try to merge the two userInfo IDs as follows.
 
-`
+
 > await app.c('accountFramework').merge('679cab8c2c8c9642d2d862b1', '679ce2347d8a5b31b1df6a77');
-`
+
 
 Now, in mongo-cli.sh, you can see that the userIds are merged in the accountframeworks collection.
 
-`
+
     db.accountframeworks.find();
 
     { "_id" : ObjectId("679e4bd779cea8c463197127"), "userIds" : [ ObjectId("679c5b56126a8ab71deaad0f"), ObjectId("679c5ce4f6469177ef7ecb43") ], "__v" : 5 }
-`
+
 
 
 Now, in mongo-cli.sh, if you try to fetch the details of user ID 679c5b56126a8ab71deaad0f, you will see details of both userInfo documents.
 
-`
+
 > await app.c('accountFramework').getAccounts('679c5b56126a8ab71deaad0f');
 >
 [
@@ -928,26 +928,26 @@ Now, in mongo-cli.sh, if you try to fetch the details of user ID 679c5b56126a8ab
         phoneNumber: '1234567'
     }
 ]
-`
+
 
 If you don't want to merge the accounts, you can unmerge the userIds.
 
 In nodec-cli.sh, unmerge the userId 679c5ce4f6469177ef7ecb43.
 
-`
+
 > await app.c('accountFramework').unmerge('679c5ce4f6469177ef7ecb43');
-`
+
 
 Now, in mongo-cli.sh, you can see that the userIds are unmerged in the accountframeworks collection.
 
 
-`
+
     db.accountframeworks.find();
 
     { "_id" : ObjectId("679e4bd779cea8c463197127"), "userIds" : [ ObjectId("679c5b56126a8ab71deaad0f") ], "__v" : 2 }
 
     { "_id" : ObjectId("679e4c2179cea8c463197136"), "userIds" : [ ObjectId("679c5ce4f6469177ef7ecb43") ], "__v" : 0 }
-`
+
 
 
 
