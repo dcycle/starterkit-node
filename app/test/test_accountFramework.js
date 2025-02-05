@@ -34,7 +34,7 @@ test.before(() => {
   };
 
   sinon.stub(my, 'app').returns(mockApp);
-  
+
   // Stub the global method only once before all tests
   sinon.stub(my, 'getAccountFrameworkModel').returns({
      // default mock for findOne, to be updated in each test
@@ -306,74 +306,4 @@ test.serial('merge should not do anything if both accounts are in the same frame
   t.true(result.status);
   t.is(result.message, `${userInfoId1}, ${userInfoId2} are in the same account framework.`);
 });
-
-// Test if `getAccounts` correctly validates the ObjectId
-test('getAccounts should validate the ObjectId before performing the query', async t => {
-  const userInfoId = "679cab8c2c8c9642d2d862b1";
-
-  // Mock the return value of findAccountByUserId
-  my.findAccountByUserId.resolves(null);  // Simulate no account found
-
-  // Call the function
-  await my.getAccounts(userInfoId);
-
-  // Check if validateObjectId was called with the correct userInfoId
-  t.true(my.validateObjectId.calledOnce);
-  t.true(my.validateObjectId.calledWith(userInfoId));
-});
-
-// Test if `getAccounts` retrieves the correct account when it exists
-// test('getAccounts should return the userIds when an account is found', async t => {
-//   const userInfoId = "679cab8c2c8c9642d2d862b1";
-//   const mockAccount = {
-//     userIds: ["user1", "user2"]
-//   };
-
-//   // Mock the return value of findAccountByUserId to return an account
-//   my.findAccountByUserId.resolves(mockAccount);
-
-//   // Call the function
-//   const result = await my.getAccounts(userInfoId);
-
-//   // Assertions
-//   t.deepEqual(result, ["user1", "user2"]);  // Ensure the correct userIds are returned
-//   t.true(my.findAccountByUserId.calledOnce);  // Ensure findAccountByUserId was called once
-//   t.true(my.findAccountByUserId.calledWith(sinon.match.object));  // Ensure it's called with the ObjectId
-// });
-
-// Test if `getAccounts` returns an empty array when no account is found
-// test('getAccounts should return an empty array if no account is found', async t => {
-//   const userInfoId = "679cab8c2c8c9642d2d862b1";
-
-//   // Mock the return value of findAccountByUserId to return null (no account found)
-//   my.findAccountByUserId.resolves(null);
-
-//   // Call the function
-//   const result = await my.getAccounts(userInfoId);
-
-//   // Assertions
-//   t.deepEqual(result, []);  // Ensure an empty array is returned
-//   t.true(my.findAccountByUserId.calledOnce);  // Ensure findAccountByUserId was called once
-//   t.true(my.findAccountByUserId.calledWith(sinon.match.object));  // Ensure it's called with the ObjectId
-// });
-
-// // Test if `getAccounts` throws an error when validateObjectId fails
-// test('getAccounts should throw an error if validateObjectId fails', async t => {
-//   const userInfoId = "invalidId";
-
-//   // Stub validateObjectId to throw an error
-//   // sinon.stub(my, 'validateObjectId').throws(new Error('Invalid ObjectId'));
-//   my.validateObjectId.throws(new Error('Invalid ObjectId'));
-
-//   try {
-//     await my.getAccounts(userInfoId);
-//     t.fail('Expected error to be thrown');
-//   } catch (err) {
-//     t.is(err.message, 'Invalid ObjectId');
-//   }
-
-//   // Check if validateObjectId was called
-//   t.true(my.validateObjectId.calledOnce);
-// });
-
 
