@@ -855,7 +855,7 @@ Configuring the Google OAuth consent screen and setting up credentials for your 
 Account framework
 -----
 
-The account framework merges the IDs from the userInfo collections into the userIds field of the Account framework collection. If a user signs up with GitHub, Google, a phone number, or a username, a separate entry is created for the same user in the userInfo collections. Now, in the Account framework module, we are merging, unmerging, and fetching details of the IDs from the userInfo collection for different types of the same user.
+The account framework merges the IDs from the userInfo collections into the userIds field of the Account framework collection. If a user signs up with GitHub, Google, a phone number, or a username, a separate entry is created for the same user in the userInfo collections. Now, in the Account framework module, we are merging, unmerging, and fetching details of the IDs from the userInfo collection for different types logins of the same user.
 
 Let's say a user logs in with GitHub, then Google, then a phone number. It should be possible to merge these accounts through the Account framework APIs, so that no matter which account they log in with, it will always be the same account.
 
