@@ -390,7 +390,7 @@ class Tokens extends require('../component/index.js') {
    *
    * @param {Object} tokenObject - The object containing the specifications
    *  for the token.
-   * @param {Number}  tokenExpiryDuration - Token expiry duration in minutes.
+   * @param {Number} tokenExpiryDuration - Token expiry duration in seconds.
    *  if not specified then token never expires.
    *
    * @returns {Promise<String>} - The token from saved token object
@@ -429,9 +429,9 @@ class Tokens extends require('../component/index.js') {
     // Store the hash
     tokenObject._hash = myhash;
     if (tokenExpiryDuration >  0) {
-      // tokenExpiryDuration is in minutes. Convert tokenExpiryDuration minutes to milliseconds
+      // tokenExpiryDuration is in seconds. Convert tokenExpiryDuration seconds to milliseconds
       // and add it to current timestamp to get token expiry timestamp.
-      tokenObject.expiresAt = Date.now() + (tokenExpiryDuration * 60 * 1000);
+      tokenObject.expiresAt = Date.now() + (tokenExpiryDuration * 1000);
     }
     const savedObject = await this.saveTokenToDatabase(tokenObject);
 

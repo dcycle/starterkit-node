@@ -563,6 +563,43 @@ it will return true i.e.. token is valid.
 ```
 it will get null i.e.. no record found for that token.
 
+tokens expire after a given time
+------
+
+    You can verify token expiry functionality for login with phone number token by setting tokenExpiryDuration for token in app/config/versioned.yml.
+
+    ./userPhoneNumberAuth/index.js:
+    # user phone number login token expiry duration in seconds.
+        tokenExpiryDuration: 3
+
+    currently tokenExpiryDuration duration is 3 seconds. you can change the value and deploy it.
+
+    go to http://0.0.0.0:8428/login-with-phone-number and fill the form , click on generate token, wait for 3 seconds and then fill the token which you received and submit the form.
+
+    It will redirect to login page with error message
+    "Invalid or expired token. Please try again." which means token is expired.
+
+    You can also verify tokens expiry in node-cli.sh
+
+        const tokenObject = {
+            name: 'test',
+            permissions: ['some-permission', 'another-permission'],
+            whatever: 'hello world',
+            _length: 6,
+            _digits_only: false,
+            };
+        const token = await app.c('tokens').newToken(tokenObject, 3);
+        console.log(token);
+        // verify token
+        await app.c('tokens').checkToken('test', token);
+        // true
+        // try to verify token expiry after 3 seconds
+        const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+        await delay(4000);
+        await app.c('tokens').checkToken('test', token);
+        // false
+
+
 
 The Node.js command line interface (CLI)
 -----
