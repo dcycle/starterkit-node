@@ -35,9 +35,7 @@ modules:
   ./chatWeb/index.js:
     path: '/'
   ./userPassAuth/index.js: {}
-  ./userPhoneNumberAuth/index.js:
-  # user phone number login token expiry duration in seconds.
-    tokenExpiryDuration: 3
+  ./userPhoneNumberAuth/index.js: {}
   # This can be overridden in unversioned.yml, as per the example in
   # ./app/config/unversioned.example.yml.
   ./mail/index.js:
