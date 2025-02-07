@@ -31,19 +31,16 @@ test.before(() => {
         }
       })
     }),
-  };
-  const _mockapp = {
-    c: {
-      authentication: {
-        userDetails: sinon.stub().returns({
-          find: sinon.stub()  // This is where we'll mock find()
-        })
-      }
-    }
+    c: sinon.stub().returns({
+      // userDetails should be a function
+      userDetails: sinon.stub().returns({
+        // Stub find() as a method
+        find: sinon.stub()
+      })
+    })
   };
 
   sinon.stub(my, 'app').returns(mockApp);
-  sinon.stub(my, '_app').returns(_mockapp);
 
   // Stub the global method only once before all tests
   sinon.stub(my, 'getAccountFrameworkModel').returns({
@@ -353,13 +350,13 @@ test.serial('getAccounts should return the userIds when an account is found', as
 });
 
 // Test if `getAccounts` returns an empty array when no account is found
-test('getAccounts should return an empty array if no account is found', async t => {
+test.serial('getAccounts should return an empty array if no account is found', async t => {
   const userInfoId = "679cab8c2c8c9642d2d862b1";
 
   // Mock the return value of findAccountByUserId to return null (no account found)
   my.findAccountByUserId.resolves(null);
   // Stub the find method to return null in this specific test
-  my._app.c('authentication').userDetails().find.resolves(null);
+  my.app().c('authentication').userDetails().find.resolves(null);
 
   // Call the function
   const result = await my.getAccounts(userInfoId);
@@ -369,13 +366,13 @@ test('getAccounts should return an empty array if no account is found', async t 
 });
 
 // Test if `getAccounts` returns an empty array when no account is found
-test('getAccounts should return an user details from userInfo if account not found in account framework', async t => {
+test.serial('getAccounts should return an user details from userInfo if account not found in account framework', async t => {
   const userInfoId = "679cab8c2c8c9642d2d862b1";
 
   // Mock the return value of findAccountByUserId to return null (no account found)
   my.findAccountByUserId.resolves(null);
-  // Stub the find method to return null in this specific test
-  my._app.c('authentication').userDetails().find.resolves(['user1']);
+  // Stub the find method to return ['user1'] in this specific test
+  my.app().c('authentication').userDetails().find.resolves(['user1']);
 
   // Call the function
   const result = await my.getAccounts(userInfoId);
