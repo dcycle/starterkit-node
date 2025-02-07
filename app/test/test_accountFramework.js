@@ -40,7 +40,7 @@ test.before(() => {
         })
       }
     }
-  }
+  };
 
   sinon.stub(my, 'app').returns(mockApp);
   sinon.stub(my, '_app').returns(_mockapp);
