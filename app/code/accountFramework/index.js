@@ -123,15 +123,21 @@ class AccountFramework extends require('../component/index.js') {
   async getAccounts(userInfoId) {
     // Validate the ObjectId
     await this.validateObjectId(userInfoId);
-
+    let account;
     const mongoose = this.app().component('./database/index.js').mongoose();
     const userInfoObjectId = new mongoose.Types.ObjectId(userInfoId);
-    const account = await this.findAccountByUserId(userInfoObjectId);
+    account = await this.findAccountByUserId(userInfoObjectId);
 
     if (account) {
       return account.userIds;
     } else {
-      return [];
+      account = await this.app().c('authentication').userDetails().find({_id:'679cab8c2c8c9642d2d862b1'});
+      if (account) {
+        account;
+      }
+      else {
+        return [];
+      }
     }
   }
 

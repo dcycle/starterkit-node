@@ -30,7 +30,14 @@ test.before(() => {
           ObjectId: sinon.stub().returns({})
         }
       })
-    })
+    }),
+    c: {
+      authentication: {
+        userDetails: sinon.stub().returns({
+          find: sinon.stub()  // This is where we'll mock find()
+        })
+      }
+    }
   };
 
   sinon.stub(my, 'app').returns(mockApp);
@@ -348,12 +355,30 @@ test('getAccounts should return an empty array if no account is found', async t 
 
   // Mock the return value of findAccountByUserId to return null (no account found)
   my.findAccountByUserId.resolves(null);
+  // Stub the find method to return null in this specific test
+  my.app().c('authentication').userDetails().find.resolves(null);
 
   // Call the function
   const result = await my.getAccounts(userInfoId);
 
   // Assertions
   t.deepEqual(result, []);  // Ensure an empty array is returned
+});
+
+// Test if `getAccounts` returns an empty array when no account is found
+test('getAccounts should return an user details from userInfo if account not found in account framework', async t => {
+  const userInfoId = "679cab8c2c8c9642d2d862b1";
+
+  // Mock the return value of findAccountByUserId to return null (no account found)
+  my.findAccountByUserId.resolves(null);
+  // Stub the find method to return null in this specific test
+  my.app().c('authentication').userDetails().find.resolves(['user1']);
+
+  // Call the function
+  const result = await my.getAccounts(userInfoId);
+
+  // Assertions
+  t.deepEqual(result, ['user1']);  // Ensure an empty array is returned
 });
 
 test.serial('mergeAccountFrameworks merges userIds and deduplicates correctly', async (t) => {
