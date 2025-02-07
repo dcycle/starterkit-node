@@ -929,6 +929,7 @@ Now, in mongo-cli.sh, if you try to fetch the details of user ID 679c5b56126a8ab
     }
 ]
 
+The getAccounts method tries to filter userIDs field from the account framework collection. If no documents are found, it will query the user info collection to retrieve user details. If no matching documents are found there either, it will return an empty array.
 
 If you don't want to merge the accounts, you can unmerge the userIds.
 
