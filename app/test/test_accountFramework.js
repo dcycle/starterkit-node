@@ -31,6 +31,8 @@ test.before(() => {
         }
       })
     }),
+  };
+  const _mockapp = {
     c: {
       authentication: {
         userDetails: sinon.stub().returns({
@@ -38,9 +40,10 @@ test.before(() => {
         })
       }
     }
-  };
+  }
 
   sinon.stub(my, 'app').returns(mockApp);
+  sinon.stub(my, '_app').returns(_mockapp);
 
   // Stub the global method only once before all tests
   sinon.stub(my, 'getAccountFrameworkModel').returns({
@@ -356,7 +359,7 @@ test('getAccounts should return an empty array if no account is found', async t 
   // Mock the return value of findAccountByUserId to return null (no account found)
   my.findAccountByUserId.resolves(null);
   // Stub the find method to return null in this specific test
-  my.app().c('authentication').userDetails().find.resolves(null);
+  my._app.c('authentication').userDetails().find.resolves(null);
 
   // Call the function
   const result = await my.getAccounts(userInfoId);
@@ -372,7 +375,7 @@ test('getAccounts should return an user details from userInfo if account not fou
   // Mock the return value of findAccountByUserId to return null (no account found)
   my.findAccountByUserId.resolves(null);
   // Stub the find method to return null in this specific test
-  my.app().c('authentication').userDetails().find.resolves(['user1']);
+  my._app.c('authentication').userDetails().find.resolves(['user1']);
 
   // Call the function
   const result = await my.getAccounts(userInfoId);

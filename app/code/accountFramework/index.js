@@ -131,7 +131,7 @@ class AccountFramework extends require('../component/index.js') {
     if (account) {
       return account.userIds;
     } else {
-      account = await this.app().c('authentication').userDetails().find({_id:'679cab8c2c8c9642d2d862b1'});
+      account = await this._app.c('authentication').userDetails().find({_id:'679cab8c2c8c9642d2d862b1'});
       if (account) {
         return account;
       }
