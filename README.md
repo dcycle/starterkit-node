@@ -570,7 +570,7 @@ tokens expire after a given time
 
     currently tokenExpiryDuration duration is set to 3 seconds for phone number login.
     If tokenExpiryDuration duration is 0 then token never expires.
-   
+
     add/update tokenExpiryDuration in app/config/versioned.yml
 
     example :- 
@@ -581,7 +581,7 @@ tokens expire after a given time
     and run ./scripts/deploy.sh
 
 
-    go to http://0.0.0.0:8428/login-with-phone-number and fill the form , click on generate token, wait for 3 seconds and then fill the token which you received and submit the form.
+    go to http://0.0.0.0:8428/login-with-phone-number and fill the form , click on generate token, wait for 5 seconds and then fill the token which you received and submit the form.
 
     It will redirect to login page with error message
     "Invalid or expired token. Please try again." which means token is expired.
@@ -595,14 +595,14 @@ tokens expire after a given time
             _length: 6,
             _digits_only: false,
             };
-        const token = await app.c('tokens').newToken(tokenObject, 3);
+        const token = await app.c('tokens').newToken(tokenObject, 5);
         console.log(token);
         // verify token
         await app.c('tokens').checkToken('test', token);
         // true
-        // try to verify token expiry after 3 seconds
+        // try to verify token expiry after 5 seconds
         const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
-        await delay(4000);
+        await delay(6000);
         await app.c('tokens').checkToken('test', token);
         // false
 
