@@ -48,7 +48,8 @@ class UserPhoneNumberAuth extends require('../component/index.js') {
    * @returns {Promise<string>} - The generated token.
    */
   async generateToken(phoneNumber) {
-    let tokenExpiryDuration;
+    // If tokenExpiryDuration duration is 0 then token never expires.
+    let tokenExpiryDuration = 0;
     // Fetch token Expiration time set in config.
     if (this._app.config().modules['./userPhoneNumberAuth/index.js'].tokenExpiryDuration) {
       tokenExpiryDuration = this._app.config().modules['./userPhoneNumberAuth/index.js'].tokenExpiryDuration;
