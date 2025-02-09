@@ -568,14 +568,15 @@ tokens expire after a given time
 
     You can verify token expiry functionality for login with phone number token by setting tokenExpiryDuration for ./userPhoneNumberAuth/index.js in app/config/versioned.yml.
 
-    currently tokenExpiryDuration duration is not set hence tokens never expires.
-
-    add tokenExpiryDuration 3 seconds in app/config/versioned.yml
+    currently tokenExpiryDuration duration is set to 3 seconds for phone number login.
+    If tokenExpiryDuration duration is 0 then token never expires.
+   
+    add/update tokenExpiryDuration in app/config/versioned.yml
 
     example :- 
     ./userPhoneNumberAuth/index.js:
-    # user phone number login token expiry duration in seconds.
-        tokenExpiryDuration: 3
+    # user phone number login token expiry duration in 5 seconds.
+        tokenExpiryDuration: 5
 
     and run ./scripts/deploy.sh
 
