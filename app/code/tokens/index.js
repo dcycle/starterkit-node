@@ -462,7 +462,7 @@ class Tokens extends require('../component/index.js') {
     if (shouldBeTrue !== true) {
       throw new Error('Token should be valid immediately after creation');
     }
-    if (shouldBeFalse !== true) {
+    if (shouldBeFalse !== false) {
       throw new Error('Token should be expired after 4 second delay');
     }
   }
