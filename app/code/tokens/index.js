@@ -439,6 +439,34 @@ class Tokens extends require('../component/index.js') {
     return savedObject._token;
   }
 
+  // Self-test for tokens
+  // This runs in ./scripts/command-line-tests.sh
+  async selfTest() {
+    const tokenName = this._app.c('crypto').random();
+    const tokenObject = {
+      name: tokenName,
+      permissions: ['some-permission', 'another-permission'],
+      whatever: 'hello world',
+      _length: 6,
+      _digits_only: false,
+      };
+    const token = await this.newToken(tokenObject, 3);
+    console.log(token);
+    // verify token
+    const shouldBeTrue = await this.checkToken(tokenName, token);
+    // true
+    // try to verify token expiry after 3 seconds
+    const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+    await delay(4000);
+    const shouldBeFalse = await this.checkToken(tokenName, token);
+    if (shouldBeTrue !== true) {
+      throw new Error('Token should be valid immediately after creation');
+    }
+    if (shouldBeFalse !== true) {
+      throw new Error('Token should be expired after 4 second delay');
+    }
+  }
+
 }
 
 module.exports = new Tokens();
