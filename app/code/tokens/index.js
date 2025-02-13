@@ -30,7 +30,7 @@ class Tokens extends require('../component/index.js') {
       // Store timestamp in milliseconds
       createdAt: { type: Number, default: () => Date.now() },
       // Store expiration timestamp in milliseconds
-      expiresAt: { type: Number, required: true },
+      expiresAt: { type: Number },
     });
 
     this.tokensModel = app.component('./database/index.js').mongoose().model('tokens', tokensSchema);
