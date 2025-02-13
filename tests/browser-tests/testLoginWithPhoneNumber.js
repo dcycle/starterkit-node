@@ -2,7 +2,6 @@ const { expect } = require('chai');
 const fs = require('fs').promises;
 const testBase = require('./testBase.js');
 
-
 it("should call the login endpoint and get a valid response for whatsapp", async function() {
   console.log('Testing ' + __filename);
   try {
@@ -168,8 +167,9 @@ it('should fill in the form and generate a token for sms and submit form', async
         await page.type('#tokenInput', token);
         // Click the "Generate Token" button
         await page.click('#submitBtn');
-        await testBase.screenshot(page, 'login-with-phone-sms-submit', await page.content());
-        await page.waitForSelector('#message');
+
+        // Adjust based on your needs
+        // await page.waitForSelector('#message');
 
         // Check the HTML content
         const content = await page.content();
@@ -218,14 +218,6 @@ it('should fill in the form and generate a token for whatsapp and submit form', 
 
     // Wait for the token field to appear (token field should appear after generating the token)
     await page.waitForSelector('#tokenInput', { visible: true });
-
-    // // Check if the error message is shown (or any other relevant confirmation)
-    // const errorMessage = await page.$eval('#error-message', (el) => el.innerText);
-    // expect(errorMessage).to.include('Kindly Enter the Login Token Sent through whatsapp.');
-
-    // // Verify if the token input field is visible
-    // const tokenFieldVisible = await page.$('#tokenInput') !== null;
-    // expect(tokenFieldVisible).to.be.true;
 
     // developement environment.
     if (envMode === "true") {

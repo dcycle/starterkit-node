@@ -27,6 +27,10 @@ class Tokens extends require('../component/index.js') {
       _digits_only: { type: Boolean, required: true },
       _hash: { type: String, required: true },
       _token: { type: String, required: true },
+      // Store timestamp in milliseconds
+      createdAt: { type: Number, default: () => Date.now() },
+      // Store expiration timestamp in milliseconds
+      expiresAt: { type: Number },
     });
 
     this.tokensModel = app.component('./database/index.js').mongoose().model('tokens', tokensSchema);
@@ -223,6 +227,14 @@ class Tokens extends require('../component/index.js') {
         return null;
       }
 
+      // If expiresAt not set then token doesn't expire forever.
+      // difference between current timestamp - expiresAt timestamp is greater
+      // than 0 then token expiry time elapsed.
+      if (tokensRecord.expiresAt && (Date.now() - tokensRecord.expiresAt > 0)) {
+        console.log('Token time elapsed.');
+        return false;
+      }
+
       // Perform hash verification
       const isValid = await this.verifyTokenHash(tokensRecord, tokenToVerify);
 
@@ -258,7 +270,7 @@ class Tokens extends require('../component/index.js') {
       return await this.checkTokenExists(
         name,
         tokenToVerify,
-        'name permissions whatever _length _digits_only _token _hash -_id'
+        'name permissions whatever _length _digits_only _token _hash expiresAt -_id'
       );
     } catch (error) {
       console.error('Error fetching token record:', error);
@@ -378,6 +390,8 @@ class Tokens extends require('../component/index.js') {
    *
    * @param {Object} tokenObject - The object containing the specifications
    *  for the token.
+   * @param {Number} tokenExpiryDuration - Token expiry duration in seconds.
+   *  if not specified then token never expires.
    *
    * @returns {Promise<String>} - The token from saved token object
    *  after it has been successfully saved to the database.
@@ -404,7 +418,7 @@ class Tokens extends require('../component/index.js') {
    * const result = await app.c('tokens').newToken(tokenObject);
    * console.log('Genereated token is:', result);
    */
-  async newToken(tokenObject) {
+  async newToken(tokenObject, tokenExpiryDuration = 0) {
     // Generate the token based on the specifications
     const token = await this.generateToken(tokenObject);
     // Add the generated token to the tokenObject
@@ -414,11 +428,43 @@ class Tokens extends require('../component/index.js') {
     const myhash = await this.generateHash(tokenObject);
     // Store the hash
     tokenObject._hash = myhash;
-
+    if (tokenExpiryDuration >  0) {
+      // tokenExpiryDuration is in seconds. Convert tokenExpiryDuration seconds to milliseconds
+      // and add it to current timestamp to get token expiry timestamp.
+      tokenObject.expiresAt = Date.now() + (tokenExpiryDuration * 1000);
+    }
     const savedObject = await this.saveTokenToDatabase(tokenObject);
 
     // Save the token object to the database and returns token.
     return savedObject._token;
+  }
+
+  // Self-test for tokens
+  // This runs in ./scripts/command-line-tests.sh
+  async selfTest() {
+    const tokenName = this._app.c('crypto').random();
+    const tokenObject = {
+      name: tokenName,
+      permissions: ['some-permission', 'another-permission'],
+      whatever: 'hello world',
+      _length: 6,
+      _digits_only: false,
+      };
+    const token = await this.newToken(tokenObject, 3);
+    console.log(token);
+    // verify token
+    const shouldBeTrue = await this.checkToken(tokenName, token);
+    // true
+    // try to verify token expiry after 3 seconds
+    const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+    await delay(4000);
+    const shouldBeFalse = await this.checkToken(tokenName, token);
+    if (shouldBeTrue !== true) {
+      throw new Error('Token should be valid immediately after creation');
+    }
+    if (shouldBeFalse !== false) {
+      throw new Error('Token should be expired after 4 second delay');
+    }
   }
 
 }
