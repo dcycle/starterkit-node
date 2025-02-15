@@ -16,6 +16,7 @@ class ChatWeb extends require('../component/index.js') {
     const io = app.c('socket').socketIoHttp();
 
     app.c('express').addRoute('chat', 'get', path, async (req, res) => {
+      // show name from merged account username in Send message page.
       const users = await app.c('accountFramework').getAccounts(req.user._id);
       let name = req.user.username;
       if (users) {

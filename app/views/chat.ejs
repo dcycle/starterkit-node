@@ -59,6 +59,11 @@
         $("#messages").append(formatMessage(message));
       }
 
+      // when user clicks on send message without refreshing page we are appending
+      // message to message history. socket on receiving message,
+      // calls addMessagesAfterFetchingUsername method.
+      // addMessagesAfterFetchingUsername fetches username from
+      // message object name (which is a currently logged in user id)
       function addMessagesAfterFetchingUsername(message){
         $.get('/get-username?userid=' + message.name, (data) => {
           if (data.username) {
@@ -83,6 +88,8 @@
       function updateNumUsers(users) {
         $("#numusers").html(users);
       }
+
+
       socket.on('message', addMessagesAfterFetchingUsername);
       socket.on('updateNumUsers', updateNumUsers);
     </script>

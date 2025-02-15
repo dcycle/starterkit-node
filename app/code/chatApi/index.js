@@ -18,6 +18,8 @@ class ChatApi extends require('../component/index.js') {
     const path = '/messages';
 
     app.c('express').addRoute('chatApi', 'post', path, (req, res) => {
+      // update messge sender name with user id so that it will help us in fetching
+      // username from account framework.
       if (req.user) {
         req.body.name = req.user._id;
       }
