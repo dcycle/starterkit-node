@@ -15,9 +15,14 @@ class ChatWeb extends require('../component/index.js') {
     const path = app.config().modules['./chatWeb/index.js'].path;
     const io = app.c('socket').socketIoHttp();
 
-    app.c('express').addRoute('chat', 'get', path, (req, res) => {
+    app.c('express').addRoute('chat', 'get', path, async (req, res) => {
+      const users = await app.c('accountFramework').getAccounts(req.user._id);
+      let name = req.user.username;
+      if (users) {
+        name = users['0'].username;
+      }
       res.render('chat', {
-        name: req.user.username,
+        name: name
       });
     });
 
