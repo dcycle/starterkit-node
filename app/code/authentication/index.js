@@ -288,6 +288,10 @@ class Authentication extends require('../component/index.js') {
     return (await this.userDetails().find({_id: ObjectId(id)})).length;
   }
 
+  async getUserInfoById(id) {
+    return await this.userDetails().find(id);
+  }
+
   async user(name) {
     if (await this.userExists(name)) {
       return (await this.userDetails().find({username: name}))[0];

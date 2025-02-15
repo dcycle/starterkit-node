@@ -50,13 +50,22 @@
 
       function formatMessage(message) {
         let ret = '<div class="message-single">';
-        ret += '<h4>' + htmlEncode(message.name) + '</h4>';
+        ret += '<h4>' + htmlEncode(message.name.username ? message.name.username : message.name) + '</h4>';
         ret += '<p>' + htmlEncode(message.message) +'</p>';
         return ret + '</div>';
       }
 
       function addMessages(message) {
         $("#messages").append(formatMessage(message));
+      }
+
+      function addMessagesAfterFetchingUsername(message){
+        $.get('/get-username?userid=' + message.name, (data) => {
+          if (data.username) {
+            message.name = data.username;
+          }
+          $("#messages").append(formatMessage(message));
+        })
       }
 
       function getMessages(){
@@ -74,7 +83,7 @@
       function updateNumUsers(users) {
         $("#numusers").html(users);
       }
-      socket.on('message', addMessages);
+      socket.on('message', addMessagesAfterFetchingUsername);
       socket.on('updateNumUsers', updateNumUsers);
     </script>
   </body>

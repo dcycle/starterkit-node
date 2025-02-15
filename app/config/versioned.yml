@@ -10,6 +10,8 @@ modules:
         verb: post
       - route: CrashTest
         verb: get
+      - route: userDetails
+        verb: get
     authenticatedJson:
       - route: tokenRequest
         verb: get
