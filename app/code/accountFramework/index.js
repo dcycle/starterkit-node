@@ -235,6 +235,19 @@ class AccountFramework extends require('../component/index.js') {
     }
   }
 
+  async run(app) {
+    const that = this;
+    // /get-username/<userid> path gets the user details from account framework.
+    app.c('express').addRoute('userDetails', 'get', '/get-username', async (req, res) => {
+      const userdetails = await that.getAccounts(req.query.userid);
+      if (userdetails) {
+        res.header('Content-Type', 'application/json');
+        res.send(JSON.stringify(userdetails['0']));
+      }
+    });
+
+    return this;
+  }
 }
 
 module.exports = new AccountFramework();
