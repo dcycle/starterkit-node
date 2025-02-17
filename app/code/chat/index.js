@@ -14,7 +14,8 @@ class Chat extends require('../component/index.js') {
 
     const Schema = app.component('./database/index.js').mongoose().Schema;
     const Message = new Schema({
-      name : String,
+      // Reference to the User model
+      name: { type: Schema.Types.ObjectId, ref: 'userInfo' },
       message : String
     },
     {
