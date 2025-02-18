@@ -17,10 +17,15 @@ class ChatApi extends require('../component/index.js') {
 
     const path = '/messages';
 
-    app.c('express').addRoute('chatApi', 'post', path, (req, res) => {
+    app.c('express').addRoute('chatApi', 'post', path, async (req, res) => {
       // update messge sender name with user id so that it will help us in fetching
       // username from account framework.
       if (req.user) {
+        const userdetails = await app.c('accountFramework').getAccounts(req.user._id);
+        if (userdetails) {
+          req.body.accountFrameworkname = userdetails['0']._id;
+        }
+
         req.body.name = req.user._id;
       }
       app.c('chat').addMessage(req.body);
@@ -28,7 +33,7 @@ class ChatApi extends require('../component/index.js') {
     });
 
     app.c('express').addRoute('chatApi', 'get', path, (req, res) => {
-      app.c('chat').message().find({}).populate('name')
+      app.c('chat').message().find({}).populate('accountFrameworkname')
         .then((messages) => {
           res.send(messages);
         });

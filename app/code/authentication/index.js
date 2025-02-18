@@ -289,7 +289,7 @@ class Authentication extends require('../component/index.js') {
   }
 
   async getUserInfoById(id) {
-    return await this.userDetails().find(id);
+    return await this.userDetails().findById(id);
   }
 
   async user(name) {
@@ -309,6 +309,21 @@ class Authentication extends require('../component/index.js') {
       throw Error('User does not exist');
     }
   }
+
+  async run(app) {
+    const that = this;
+    // /get-username/<userid> path gets the user details from account framework.
+    app.c('express').addRoute('userInfo', 'get', '/get-userInfo-username', async (req, res) => {
+      const userdetails = await that.getUserInfoById(req.query.userid);
+      if (userdetails) {
+        res.header('Content-Type', 'application/json');
+        res.send(JSON.stringify(userdetails));
+      }
+    });
+
+    return this;
+  }
+
 }
 
 module.exports = new Authentication();

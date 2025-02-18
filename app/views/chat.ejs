@@ -49,8 +49,11 @@
       }
 
       function formatMessage(message) {
+        const result = (typeof message.accountFrameworkname === 'object' && message.accountFrameworkname !== null)
+          ? message.accountFrameworkname.username
+          : message.name;
         let ret = '<div class="message-single">';
-        ret += '<h4>' + htmlEncode(message.name.username ? message.name.username : message.name) + '</h4>';
+        ret += '<h4>' + htmlEncode(result) + '</h4>';
         ret += '<p>' + htmlEncode(message.message) +'</p>';
         return ret + '</div>';
       }
@@ -62,10 +65,10 @@
       // when user clicks on send message without refreshing page we are appending
       // message to message history. socket on receiving message,
       // calls addMessagesAfterFetchingUsername method.
-      // addMessagesAfterFetchingUsername fetches username from
-      // message object name (which is a currently logged in user id)
+      // addMessagesAfterFetchingUsername fetches username from user id of a
+      // accountFramework merged user id.
       function addMessagesAfterFetchingUsername(message){
-        $.get('/get-username?userid=' + message.name, (data) => {
+        $.get('/get-userinfo-username?userid=' + message.accountFrameworkname, (data) => {
           if (data.username) {
             message.name = data.username;
           }
@@ -91,6 +94,7 @@
 
 
       socket.on('message', addMessagesAfterFetchingUsername);
+      // socket.on('message', addMessages);
       socket.on('updateNumUsers', updateNumUsers);
     </script>
   </body>

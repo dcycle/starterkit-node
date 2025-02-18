@@ -12,6 +12,8 @@ modules:
         verb: get
       - route: userDetails
         verb: get
+      - route: userInfo
+        verb: get
     authenticatedJson:
       - route: tokenRequest
         verb: get
