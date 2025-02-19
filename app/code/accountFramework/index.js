@@ -154,7 +154,7 @@ class AccountFramework extends require('../component/index.js') {
     // Check if either userInfoId1 or userInfoId2 is null
     if (userInfoId1 === null || userInfoId2 === null) {
       throw new Error("userInfoId1 and userInfoId2 cannot be null");
-    }    
+    }
     try {
       let message = '';
       const status = true;
@@ -250,6 +250,27 @@ class AccountFramework extends require('../component/index.js') {
         res.header('Content-Type', 'application/json');
         res.send(JSON.stringify(userdetails['0']));
       }
+    });
+
+    // we have to pass username1 and username2. we have to find user ids
+    // of username1 and username2 and merge user ids.
+    // We have written this code to test merge functionality chat based tests cases.
+    app.c('express').addRoute('accountFrameworkMerge', 'post', '/account-framework/merge-accounts', async (req, res) => {
+      const username1 = req.params.username1;
+      const username2 = req.params.username2;
+      const userid1 = await app.c('authentication').user(username1)._id;
+      const userid2 = await app.c('authentication').user(username2)._id;
+      const response = await that.merge(userid1, userid2);
+      res.status(200).send(JSON.stringify(response));
+    });
+
+    // we have to pass username. we have to find user id of username and merge user id.
+    // We have written this code to test merge functionality chat based tests cases.
+    app.c('express').addRoute('accountFrameworkUnMerge', 'post', '/account-framework/unmerge-accounts', async (req, res) => {
+      const username = req.params.username;
+      const userid = await app.c('authentication').user(username)._id;
+      const response = await that.unmerge(userid);
+      res.status(200).send(JSON.stringify(response));
     });
 
     return this;
