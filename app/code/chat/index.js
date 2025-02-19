@@ -15,7 +15,15 @@ class Chat extends require('../component/index.js') {
     const Schema = app.component('./database/index.js').mongoose().Schema;
     const Message = new Schema({
       name : String,
-      message : String
+      message : String,
+      anonymousMessage: {
+        type: Boolean,
+        // Message can be send by authenticated user and anonymous user
+        // If authenticated user message then we will store user id in name of a message.
+        //  and anonymousMessage is false. For anonymous user we will store name as it is.
+        // Default value for anonymousMessage is true which means anonymous message by default.
+        default: true
+      }
     },
     {
       // This will add createdAt and updatedAt fields.

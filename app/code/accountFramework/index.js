@@ -151,6 +151,10 @@ class AccountFramework extends require('../component/index.js') {
    * @returns {Promise<Object>} - The status and message of the merge operation.
    */
   async merge(userInfoId1, userInfoId2) {
+    // Check if either userInfoId1 or userInfoId2 is null
+    if (userInfoId1 === null || userInfoId2 === null) {
+      throw new Error("userInfoId1 and userInfoId2 cannot be null");
+    }    
     try {
       let message = '';
       const status = true;
@@ -233,6 +237,22 @@ class AccountFramework extends require('../component/index.js') {
       console.error(`Error unmerging account framework for ${userInfoId}:`, error);
       return { status: false, message: error.message };
     }
+  }
+
+  async run(app) {
+    const that = this;
+    // /account-framework/get-username?userid=<userid> path gets the user account details
+    // from account framework. It will try to find merged userIds userIfo if not merged gets the
+    // user data from userInfo.
+    app.c('express').addRoute('accountFrameworkUserDetail', 'get', '/account-framework/get-username', async (req, res) => {
+      const userdetails = await that.getAccounts(req.query.userid);
+      if (userdetails) {
+        res.header('Content-Type', 'application/json');
+        res.send(JSON.stringify(userdetails['0']));
+      }
+    });
+
+    return this;
   }
 
 }
