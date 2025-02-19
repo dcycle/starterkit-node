@@ -25,4 +25,4 @@ set -e
 >&2 echo ""
 
 # -i Interactive shell
-docker compose exec -i node /bin/sh -c 'node app/tools/repl.js localhost:8001'
+docker compose exec -iT node /bin/sh -c 'node app/tools/repl.js localhost:8001'
