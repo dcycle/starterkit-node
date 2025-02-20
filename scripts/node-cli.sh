@@ -24,4 +24,8 @@ set -e
 >&2 echo "YOU CAN START TYPING."
 >&2 echo ""
 
-docker compose exec -T node /bin/sh -c 'node app/tools/repl.js localhost:8001'
+if [ "$1" == "ci" ]; then
+  docker compose exec -T node /bin/sh -c 'node app/tools/repl.js localhost:8001'
+else
+  docker compose exec -T node /bin/sh -c 'node app/tools/repl.js localhost:8001'
+fi
