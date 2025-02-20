@@ -264,6 +264,7 @@ class AccountFramework extends require('../component/index.js') {
         const response = await that.merge(userid1._id, userid2._id);
         res.status(200).send(JSON.stringify(response));
       } catch (error) {
+        // @ts-ignore
         console.error(`Error merging account framework for ${username1}, ${username2}`, error);
         return { status: false, message: error.message };
       }
@@ -279,6 +280,7 @@ class AccountFramework extends require('../component/index.js') {
         const response = await that.unmerge(userid._id);
         res.status(200).send(JSON.stringify(response));
       } catch (error) {
+        // @ts-ignore
         console.error(`Error unmerging account framework for ${username}:`, error);
         return { status: false, message: error.message };
       }
