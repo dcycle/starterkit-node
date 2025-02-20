@@ -257,8 +257,7 @@ class AccountFramework extends require('../component/index.js') {
     // We have written this code to test merge functionality chat based tests cases.
     app.c('express').addRoute('accountFrameworkMerge', 'post', '/account-framework/merge-accounts', async (req, res) => {
       try {
-        const username1 = req.body.username1;
-        const username2 = req.body.username2;
+        let { username1, username2 } = req.body;
         const userid1 = await app.c('authentication').user(username1);
         const userid2 = await app.c('authentication').user(username2);
         const response = await that.merge(userid1._id, userid2._id);
@@ -273,7 +272,7 @@ class AccountFramework extends require('../component/index.js') {
     // We have written this code to test merge functionality chat based tests cases.
     app.c('express').addRoute('accountFrameworkUnMerge', 'post', '/account-framework/unmerge-accounts', async (req, res) => {
       try {
-        const username = req.body.username;
+        let { username } = req.body;
         const userid = await app.c('authentication').user(username);
         const response = await that.unmerge(userid._id);
         res.status(200).send(JSON.stringify(response));
