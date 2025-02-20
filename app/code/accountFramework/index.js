@@ -256,21 +256,31 @@ class AccountFramework extends require('../component/index.js') {
     // of username1 and username2 and merge user ids.
     // We have written this code to test merge functionality chat based tests cases.
     app.c('express').addRoute('accountFrameworkMerge', 'post', '/account-framework/merge-accounts', async (req, res) => {
-      const username1 = req.body.username1;
-      const username2 = req.body.username2;
-      const userid1 = await app.c('authentication').user(username1)._id;
-      const userid2 = await app.c('authentication').user(username2)._id;
-      const response = await that.merge(userid1, userid2);
-      res.status(200).send(JSON.stringify(response));
+      try {
+        const username1 = req.body.username1;
+        const username2 = req.body.username2;
+        const userid1 = await app.c('authentication').user(username1);
+        const userid2 = await app.c('authentication').user(username2);
+        const response = await that.merge(userid1._id, userid2._id);
+        res.status(200).send(JSON.stringify(response));
+      } catch (error) {
+        console.error(`Error merging account framework for ${username1}, ${username2}`, error);
+        return { status: false, message: error.message };
+      }
     });
 
     // we have to pass username. we have to find user id of username and merge user id.
     // We have written this code to test merge functionality chat based tests cases.
     app.c('express').addRoute('accountFrameworkUnMerge', 'post', '/account-framework/unmerge-accounts', async (req, res) => {
-      const username = req.body.username;
-      const userid = await app.c('authentication').user(username)._id;
-      const response = await that.unmerge(userid);
-      res.status(200).send(JSON.stringify(response));
+      try {
+        const username = req.body.username;
+        const userid = await app.c('authentication').user(username);
+        const response = await that.unmerge(userid._id);
+        res.status(200).send(JSON.stringify(response));
+      } catch (error) {
+        console.error(`Error unmerging account framework for ${username}:`, error);
+        return { status: false, message: error.message };
+      }
     });
 
     return this;
