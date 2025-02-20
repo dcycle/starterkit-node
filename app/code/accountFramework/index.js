@@ -256,8 +256,8 @@ class AccountFramework extends require('../component/index.js') {
     // of username1 and username2 and merge user ids.
     // We have written this code to test merge functionality chat based tests cases.
     app.c('express').addRoute('accountFrameworkMerge', 'post', '/account-framework/merge-accounts', async (req, res) => {
-      const username1 = req.params.username1;
-      const username2 = req.params.username2;
+      const username1 = req.body.username1;
+      const username2 = req.body.username2;
       const userid1 = await app.c('authentication').user(username1)._id;
       const userid2 = await app.c('authentication').user(username2)._id;
       const response = await that.merge(userid1, userid2);
@@ -267,7 +267,7 @@ class AccountFramework extends require('../component/index.js') {
     // we have to pass username. we have to find user id of username and merge user id.
     // We have written this code to test merge functionality chat based tests cases.
     app.c('express').addRoute('accountFrameworkUnMerge', 'post', '/account-framework/unmerge-accounts', async (req, res) => {
-      const username = req.params.username;
+      const username = req.body.username;
       const userid = await app.c('authentication').user(username)._id;
       const response = await that.unmerge(userid);
       res.status(200).send(JSON.stringify(response));
