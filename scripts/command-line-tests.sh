@@ -6,8 +6,8 @@ set -e
 
 echo "Making sure random numbers are different each time."
 
-RAND1=$(echo 'app.c("crypto").random()' | ./scripts/node-cli.sh)
-RAND2=$(echo 'app.c("crypto").random()' | ./scripts/node-cli.sh)
+RAND1=$(echo 'app.c("crypto").random()' | ./scripts/node-cli.sh ci)
+RAND2=$(echo 'app.c("crypto").random()' | ./scripts/node-cli.sh ci)
 
 echo "First"
 echo "$RAND1"
