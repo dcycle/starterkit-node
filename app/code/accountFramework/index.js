@@ -252,11 +252,17 @@ class AccountFramework extends require('../component/index.js') {
       }
     });
 
-    // we have to pass username1 and username2. we have to find user ids
+    // we have to pass username1 and username2. find user ids
     // of username1 and username2 and merge user ids.
     // We have written this code to test merge functionality chat based tests cases.
-    app.c('express').addRoute('accountFrameworkMerge', 'post', '/account-framework/merge-accounts', async (req, res) => {
+    app.c('express').addRoute('accountFrameworkMerge', 'post', '/account-framework/merge-accounts/:token', async (req, res) => {
       try {
+        // Capture the rest of the URL after /send/.
+        const token = req.params.token;
+        const isValidToken = app.c('helpers').validateToken(token, 'AUTH_API_TOKEN');
+        if (!isValidToken) {
+          return res.status(403).send('Invalid token.');
+        }
         // @ts-ignore
         let { username1, username2 } = req.body;
         const userid1 = await app.c('authentication').user(username1);
@@ -270,10 +276,16 @@ class AccountFramework extends require('../component/index.js') {
       }
     });
 
-    // we have to pass username. we have to find user id of username and merge user id.
+    // we have to pass username. find user id of username and unmerge user id.
     // We have written this code to test merge functionality chat based tests cases.
-    app.c('express').addRoute('accountFrameworkUnMerge', 'post', '/account-framework/unmerge-accounts', async (req, res) => {
+    app.c('express').addRoute('accountFrameworkUnMerge', 'post', '/account-framework/unmerge-accounts/:token', async (req, res) => {
       try {
+        // Capture the rest of the URL after /send/.
+        const token = req.params.token;
+        const isValidToken = app.c('helpers').validateToken(token, 'AUTH_API_TOKEN');
+        if (!isValidToken) {
+          return res.status(403).send('Invalid token.');
+        }
         // @ts-ignore
         let { username } = req.body;
         const userid = await app.c('authentication').user(username);

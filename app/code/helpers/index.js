@@ -140,6 +140,20 @@ class Helpers extends require('../component/index.js') {
     return '<?xml version="1.0" encoding="UTF-8"?>' + `<Response>${errorMessage}</Response>`;
   }
 
+  /**
+   * Validates the token against the expected token from the environment.
+   * @param {string} token - The token from the request.
+   * @param {string} tokenPurpose - The tokenPurpose represents purpose.
+   * 'AUTH_API_TOKEN' represents sending messages .....
+   *
+   * @returns {boolean} True if the token is valid, otherwise false.
+   */
+   validateToken(token, tokenPurpose) {
+    // 'AUTH_API_TOKEN'
+    const expectedToken = String(require('../env/index.js').required(tokenPurpose));
+    return token === expectedToken;
+  }
+
 }
 
 module.exports = new Helpers();

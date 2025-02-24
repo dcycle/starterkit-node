@@ -42,7 +42,8 @@ grep SALT "$ENVLOC" > /dev/null || echo "export SALT=$(./scripts/lib/generate-uu
 grep ENVIRONMENT_USAGE "$ENVLOC" > /dev/null || echo "export ENVIRONMENT_USAGE=$TARGET_ENV" >> "$ENVLOC"
 grep CRASHTEST_TOKEN "$ENVLOC" > /dev/null ||  echo "export CRASHTEST_TOKEN=$(./scripts/lib/generate-uuid.sh)" >> "$ENVLOC"
 grep DEV_MODE "$ENVLOC" > /dev/null || echo "export DEV_MODE=true" >> "$ENVLOC"
-grep SENDM_API_TOKEN "$ENVLOC" > /dev/null ||  echo "export SENDM_API_TOKEN=$(./scripts/lib/generate-uuid.sh)" >> "$ENVLOC"
+# Authorised user api token AUTH_API_TOKEN to access sensitive endpoints.
+grep AUTH_API_TOKEN "$ENVLOC" > /dev/null ||  echo "export AUTH_API_TOKEN=$(./scripts/lib/generate-uuid.sh)" >> "$ENVLOC"
 grep FROM_NUM "$ENVLOC" > /dev/null ||  echo "export FROM_NUM=$(./scripts/lib/generate-uuid.sh)" >> "$ENVLOC"
 
 source "$ENVLOC"

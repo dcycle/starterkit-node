@@ -2,7 +2,7 @@ const { expect } = require('chai');
 const fs = require('fs').promises;
 const testBase = require('./testBase.js');
 
-it("You shouldn't send message if SENDM_API_TOKEN is not sent in url", async function() {
+it("You shouldn't send message if AUTH_API_TOKEN is not sent in url", async function() {
   console.log('Testing ' + __filename);
   try {
     const response = await fetch('http://node:8080/sms/send/', {
@@ -21,7 +21,7 @@ it("You shouldn't send message if SENDM_API_TOKEN is not sent in url", async fun
   }
 });
 
-it("You shouldn't send message if SENDM_API_TOKEN in url is invalid", async function() {
+it("You shouldn't send message if AUTH_API_TOKEN in url is invalid", async function() {
   console.log('Testing ' + __filename);
   try {
     const response = await fetch('http://node:8080/sms/send/dafasdfasdf', {
@@ -44,7 +44,7 @@ it("send sms should send to a respective sendTo number or written to file.", asy
   console.log('Testing ' + __filename);
   try {
     const envMode = process.env.DEV_MODE;
-    const sendmApiToken = process.env.SENDM_API_TOKEN;
+    const sendmApiToken = process.env.AUTH_API_TOKEN;
     const response = await fetch('http://node:8080/sms/send/'+sendmApiToken, {
       method: 'POST',
       headers: {
@@ -77,7 +77,7 @@ it("send sms should send to a respective sendTo number or written to file.", asy
 it("verify Message couldn't be send case.", async function() {
   console.log('Testing ' + __filename);
   try {
-    const sendmApiToken = process.env.SENDM_API_TOKEN;
+    const sendmApiToken = process.env.AUTH_API_TOKEN;
     const response = await fetch('http://node:8080/whatsappmessage/send/'+sendmApiToken, {
       method: 'POST',
       headers: {
