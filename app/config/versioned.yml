@@ -12,6 +12,10 @@ modules:
         verb: get
       - route: accountFrameworkUserDetail
         verb: get
+      - route: accountFrameworkMerge
+        verb: post
+      - route: accountFrameworkUnMerge
+        verb: post
     authenticatedJson:
       - route: tokenRequest
         verb: get
