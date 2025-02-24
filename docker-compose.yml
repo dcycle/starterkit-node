@@ -34,7 +34,8 @@ services:
       - TWILIO_PASS=${TWILIO_PASS}
       - FROM_NUM=${FROM_NUM}
       - DEV_MODE=${DEV_MODE}
-      - SENDM_API_TOKEN=${SENDM_API_TOKEN}
+      # Authorized api token to access sensitive end points.
+      - AUTH_API_TOKEN=${AUTH_API_TOKEN}
     ports:
       - "${DOCKERPORT}:8080"
 

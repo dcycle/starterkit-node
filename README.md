@@ -1134,7 +1134,7 @@ Ensure `DEV_MODE=true` in the development environment.
     curl -X POST \
         -H "Content-Type: application/json" \
         --data '{"message": "This is a test message000", "sendTo": "+XXXXXXXXXX"}' \
-         http://0.0.0.0:8792/whatsappmessage/send/<SENDM_API_TOKEN>
+         http://0.0.0.0:8792/whatsappmessage/send/<AUTH_API_TOKEN>
 
    ```
 
@@ -1143,16 +1143,16 @@ Ensure `DEV_MODE=true` in the development environment.
         curl -X POST \
            -H "Content-Type: application/json" \
            --data '{"message": "This is a test message", "sendTo": "+XXXXXXXXXX"}' \
-           https://<DOMAIN-NAME>/whatsappmessage/send/<SENDM_API_TOKEN>
+           https://<DOMAIN-NAME>/whatsappmessage/send/<AUTH_API_TOKEN>
    ```
     modify message and sendTo according to your requirement.
 
-    * If you are a authorised user then access .env and copy SENDM_API_TOKEN value and replace in above command.
+    * If you are a authorised user then access .env and copy AUTH_API_TOKEN value and replace in above command.
 
 - **Sending media message :**
 
     ```
-        curl -X POST -H "Content-Type: application/json" --data '{"message": "<media caption message or leave empty>", "sendTo": "+91XXXXXXXXXX","mediaUrl": "<valid url of a image or video or excel or csv >"}' <base url>/whatsappmessage/send/<SENDM_API_TOKEN>
+        curl -X POST -H "Content-Type: application/json" --data '{"message": "<media caption message or leave empty>", "sendTo": "+91XXXXXXXXXX","mediaUrl": "<valid url of a image or video or excel or csv >"}' <base url>/whatsappmessage/send/<AUTH_API_TOKEN>
     ```
 
 **Receive WhatsApp Message:**
@@ -1234,7 +1234,7 @@ Ensure `DEV_MODE=true` in the development environment.
     curl -X POST \
         -H "Content-Type: application/json" \
         --data '{"message": "This is a test message000", "sendTo": "'"+XXXXXXXXXX"'"}' \
-         http://0.0.0.0:8792/sms/send/<SENDM_API_TOKEN>
+         http://0.0.0.0:8792/sms/send/<AUTH_API_TOKEN>
 
    ```
 
@@ -1243,11 +1243,11 @@ Ensure `DEV_MODE=true` in the development environment.
         curl -X POST \
            -H "Content-Type: application/json" \
            --data '{"message": "This is a test message", "sendTo": "'"+XXXXXXXXXX"'"}' \
-           https://<DOMAIN-NAME>/sms/send/<SENDM_API_TOKEN>
+           https://<DOMAIN-NAME>/sms/send/<AUTH_API_TOKEN>
    ```
     modify message and sendTo according to your requirement.
 
-    * If you are a authorised user then access .env and copy SENDM_API_TOKEN value and replace in above command.
+    * If you are a authorised user then access .env and copy AUTH_API_TOKEN value and replace in above command.
 
 Typechecking
 -----

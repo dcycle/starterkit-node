@@ -22,11 +22,11 @@
  * Test whatsapp message sending functionality using curl.
  *
  * In dev environment:-
- * If you are a authorised user then access .env and copy SENDM_API_TOKEN value and replace in below command.
- * >> curl -X POST --data '{"message": "This is a test", "sendTo":"91XXXXXXXXX"}' http://0.0.0.0:8792/whatsappmessage/send/<SENDM_API_TOKEN>
+ * If you are a authorised user then access .env and copy AUTH_API_TOKEN value and replace in below command.
+ * >> curl -X POST --data '{"message": "This is a test", "sendTo":"91XXXXXXXXX"}' http://0.0.0.0:8792/whatsappmessage/send/<AUTH_API_TOKEN>
  *
  * In test environment:-
- * >> curl -X POST --data '{"message": "This is a test", "sendTo":"91XXXXXXXXXX"}' https://whatsapp-communication.dcycleproject.org/whatsappmessage/send/<SENDM_API_TOKEN>
+ * >> curl -X POST --data '{"message": "This is a test", "sendTo":"91XXXXXXXXXX"}' https://whatsapp-communication.dcycleproject.org/whatsappmessage/send/<AUTH_API_TOKEN>
  *
  */
 
@@ -84,7 +84,7 @@ class WhatsAppSend extends require('../component/index.js') {
     try {
       // Capture the rest of the URL after /send/.
       const token = req.params.token;
-      const isValidToken = this.validateToken(token);
+      const isValidToken = this.app().c('helpers').validateToken(token, 'AUTH_API_TOKEN');
       if (!isValidToken) {
         return res.status(403).send('Invalid token.');
       }
@@ -105,16 +105,6 @@ class WhatsAppSend extends require('../component/index.js') {
       console.error('Something bad happened:', error.toString());
       res.status(500).send('An error occurred.');
     }
-  }
-
-  /**
-   * Validates the token against the expected token from the environment.
-   * @param {string} token - The token from the request.
-   * @returns {boolean} True if the token is valid, otherwise false.
-   */
-  validateToken(token) {
-    const expectedToken = String(require('../env/index.js').required('SENDM_API_TOKEN'));
-    return token === expectedToken;
   }
 
   /**
