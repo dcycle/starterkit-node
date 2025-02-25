@@ -74,7 +74,22 @@
       function updateNumUsers(users) {
         $("#numusers").html(users);
       }
-      socket.on('message', addMessages);
+
+      // when user clicks on send message without refreshing page we are appending
+      // message to message history. socket on receiving message,
+      // calls addMessagesAfterFetchingUsername method.
+      // addMessagesAfterFetchingUsername fetches username from user id of a
+      // accountFramework merged user id.
+      function addMessagesAfterFetchingUsername(message) {
+        $.get('/account-framework/get-username?userid=' + message.name, (data) => {
+          if (data.username) {
+            message.name = data.username;
+          }
+          $("#messages").append(formatMessage(message));
+        })
+      }
+
+      socket.on('message', addMessagesAfterFetchingUsername);
       socket.on('updateNumUsers', updateNumUsers);
     </script>
   </body>

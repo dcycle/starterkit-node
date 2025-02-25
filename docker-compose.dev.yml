@@ -1,6 +1,4 @@
 ---
-version: '2'
-
 services:
   mail:
     # Dummy email client for development, see ./README.md.

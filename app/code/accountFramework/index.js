@@ -151,6 +151,10 @@ class AccountFramework extends require('../component/index.js') {
    * @returns {Promise<Object>} - The status and message of the merge operation.
    */
   async merge(userInfoId1, userInfoId2) {
+    // Check if either userInfoId1 or userInfoId2 is null
+    if (userInfoId1 === null || userInfoId2 === null) {
+      throw new Error("userInfoId1 and userInfoId2 cannot be null");
+    }    
     try {
       let message = '';
       const status = true;
@@ -233,6 +237,69 @@ class AccountFramework extends require('../component/index.js') {
       console.error(`Error unmerging account framework for ${userInfoId}:`, error);
       return { status: false, message: error.message };
     }
+  }
+
+  async run(app) {
+    const that = this;
+    // /account-framework/get-username?userid=<userid> path gets the user account details
+    // from account framework. It will try to find merged userIds userIfo if not merged gets the
+    // user data from userInfo.
+    app.c('express').addRoute('accountFrameworkUserDetail', 'get', '/account-framework/get-username', async (req, res) => {
+      const userdetails = await that.getAccounts(req.query.userid);
+      if (userdetails) {
+        res.header('Content-Type', 'application/json');
+        res.send(JSON.stringify(userdetails['0']));
+      }
+    });
+
+    // we have to pass username1 and username2. find user ids
+    // of username1 and username2 and merge user ids.
+    // We have written this code to test merge functionality
+    // chat based tests cases.
+    app.c('express').addRoute('accountFrameworkMerge', 'post', '/account-framework/merge-accounts/:token', async (req, res) => {
+      try {
+        // Capture the rest of the URL after /send/.
+        const token = req.params.token;
+        const isValidToken = app.c('helpers').validateToken(token, 'AUTH_API_TOKEN');
+        if (!isValidToken) {
+          return res.status(403).send('Invalid token.');
+        }
+        // @ts-ignore
+        let { username1, username2 } = req.body;
+        const userid1 = await app.c('authentication').user(username1);
+        const userid2 = await app.c('authentication').user(username2);
+        const response = await that.merge(userid1._id, userid2._id);
+        res.status(200).send(JSON.stringify(response));
+      } catch (error) {
+        // @ts-ignore
+        console.error(`Error merging account framework for ${username1}, ${username2}`, error);
+        return { status: false, message: error.message };
+      }
+    });
+
+    // we have to pass username. find user id of username and unmerge user id.
+    // We have written this code to test merge functionality chat based tests cases.
+    app.c('express').addRoute('accountFrameworkUnMerge', 'post', '/account-framework/unmerge-accounts/:token', async (req, res) => {
+      try {
+        // Capture the rest of the URL after /send/.
+        const token = req.params.token;
+        const isValidToken = app.c('helpers').validateToken(token, 'AUTH_API_TOKEN');
+        if (!isValidToken) {
+          return res.status(403).send('Invalid token.');
+        }
+        // @ts-ignore
+        let { username } = req.body;
+        const userid = await app.c('authentication').user(username);
+        const response = await that.unmerge(userid._id);
+        res.status(200).send(JSON.stringify(response));
+      } catch (error) {
+        // @ts-ignore
+        console.error(`Error unmerging account framework for ${username}:`, error);
+        return { status: false, message: error.message };
+      }
+    });
+
+    return this;
   }
 
 }
