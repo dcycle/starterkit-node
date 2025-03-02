@@ -84,8 +84,7 @@ function showMergeModal() {
     .then((data) => {
       // Update the merge status message
       mergeMessage.innerText = data.message;
-
-      if (data.status == 200) {
+      if (data.status) {
         // If merge is successful, display the merged accounts
         $("#merged-accounts").empty();
         let ul = $("<ul></ul>");
@@ -95,12 +94,14 @@ function showMergeModal() {
         });
 
         // Display the merged accounts
-        $("#merged-accounts p").insert("<p>Your account is a merger of the following accounts:</p>");
+        $("#merged-accounts").append("<p>Your account is a merger of the following accounts:</p>");
         $("#merged-accounts p").append(ul);
         // show the "Un Merge" button after a successful merge
         const unmergeBtn = document.getElementById('unmerge-account-btn');
         // Display the button as a block element
         unmergeBtn.style.display = 'block';
+        // clear token from textbox
+        $("#merge-token-input").val("");
       }
     }).catch((error) => {
       // Handle any errors during the merge process

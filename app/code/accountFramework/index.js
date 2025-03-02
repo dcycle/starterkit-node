@@ -254,8 +254,8 @@ class AccountFramework extends require('../component/index.js') {
         // Create a new account framework with only this user
         await this.createNewAccountFramework([userInfoId]);
         status = true;
-        message = 'Removed userInfoId from the account framework';
-        message += ' and created a new account framework with only this user.';
+        message = `Removed ${userInfoId} from the account framework`;
+        message += ` and created a new account framework with only this user.`;
       }
       else {
         status = false;
@@ -438,24 +438,22 @@ class AccountFramework extends require('../component/index.js') {
           // If either part is missing, return an error with status 400 and a message indicating invalid token format
           res.status(400).send(JSON.stringify({ message: 'Invalid Token format' }));
         }
+        else {
+          // Validate the token using the tokens service
+          const validToken = await app.c('tokens').checkToken(
+            "merge-with-another-account:" + userID,
+            token
+          );
 
-        // Validate the token using the tokens service
-        const validToken = await app.c('tokens').checkToken(
-          "merge-with-another-account:" + userID,
-          token
-        );
-
-        // If the token is valid, proceed with the account merge process
-        if (validToken) {
-          const mergeResponse = await that.merge(userID, req.user._id);
-          // If the merge is successful, retrieve the accounts and send a success response
-          if (mergeResponse.status) {
+          // If the token is valid, proceed with the account merge process
+          if (validToken) {
+            const mergeResponse = await that.merge(userID, req.user._id);
             // Retrieve the updated accounts for the user
             const accounts = await that.getAccounts(req.user._id);
 
             res.status(200).send(JSON.stringify({
               // Indicates the operation was successful
-              'status': true,
+              'status': mergeResponse.status,
               // Message from the merge operation
               'message': mergeResponse.message,
               // The updated list of accounts after merging
@@ -463,13 +461,9 @@ class AccountFramework extends require('../component/index.js') {
             }));
           }
           else {
-            // If the merge operation failed, send the merge response message
-            res.status(200).send(JSON.stringify(mergeResponse));
+            // If the token is invalid, return a response with an invalid token message
+            res.status(400).send(JSON.stringify({ message: 'Invalid Token format / Token expired / accounts already merged. Refresh the page and Enter New token.' }));
           }
-        }
-        else {
-          // If the token is invalid, return a response with an invalid token message
-          res.status(400).send(JSON.stringify({ message: 'Invalid Token format / Token expired / accounts already merged. Refresh the page and Enter New token.' }));
         }
       } catch (error) {
         // Log any errors that occur during the process for debugging purposes
