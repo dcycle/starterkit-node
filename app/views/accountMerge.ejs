@@ -57,7 +57,15 @@
             </ul>
           </div>
           <% } %>
-          <button <% if (accountMerged === false && accounts.length > 1) { %> style="display: none;" <% } %> id="unmerge-account-btn">Un Merge This Account</button>
+          <!-- display button only if account is merged -->
+          <button
+            <% if (accountMerged === true && accounts.length > 1) { %>
+              style="display: block;"
+            <% } else { %>
+              style="display: none;"
+            <% } %> id="unmerge-account-btn">
+            Un Merge This Account
+          </button>
           <div>
             <p>To merge an account into this account, enter a merge token that you got from another account:</p>
             <input type="text" id="merge-token-input" placeholder="Enter merge token here" />
