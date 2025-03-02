@@ -311,7 +311,7 @@ test.serial('merge should not do anything if both accounts are in the same frame
 
   // Assertions
   t.true(result.status);
-  t.is(result.message, `${userInfoId1}, ${userInfoId2} are in the same account framework.`);
+  t.is(result.message, `User ids ${userInfoId1}, ${userInfoId2} are in the same account framework.`);
 });
 
 // Test if `getAccounts` correctly validates the ObjectId

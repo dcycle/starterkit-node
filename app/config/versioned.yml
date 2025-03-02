@@ -16,6 +16,14 @@ modules:
         verb: post
       - route: accountFrameworkUnMerge
         verb: post
+      - route: accountFrameworkMergeUI
+        verb: get
+      - route: accountFrameworkMergeUIGT
+        verb: get
+      - route: accountFrameworkTokenSubmit
+        verb: post
+      - route: accountFrameworkUnmergeSubmit
+        verb: get
     authenticatedJson:
       - route: tokenRequest
         verb: get
@@ -119,4 +127,6 @@ modules:
   ./webhookSMS/index.js: {}
   ./helpers/index.js: {}
   ./tokens/index.js: {}
-  ./accountFramework/index.js: {}
+  ./accountFramework/index.js:
+    # Token expiry duration 1 hour = 3600 seconds
+    tokenExpiryDuration: 3600
