@@ -273,10 +273,10 @@ class AccountFramework extends require('../component/index.js') {
    *
    * note :- token expiryduration set to 1 hour in config/versioned.yml.
    *
-   * @param {string} username - The username to generate the token for.
+   * @param {string} name - The name to generate the token for.
    * @returns {Promise<string>} - The generated token.
    */
-   async generateToken(username) {
+   async generateToken(name) {
     // If tokenExpiryDuration duration is 0 then token never expires.
     let tokenExpiryDuration = 0;
     // Fetch token Expiration time set in config.
@@ -285,7 +285,7 @@ class AccountFramework extends require('../component/index.js') {
     }
 
     const token = await this._app.c('tokens').newToken({
-      name: username,
+      name: name,
       permissions: ['some-permission', 'another-permission'],
       whatever: 'Token generated for merge accounts',
       _length: 12,
