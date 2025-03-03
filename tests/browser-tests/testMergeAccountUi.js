@@ -36,20 +36,25 @@ it('should merge account and display merged account names and unmerge and. remov
     await page1.waitForSelector('#generate-token-btn');
     await page1.click('#generate-token-btn');
     await testBase.screenshot(page1, 'xyz1-merge-account-page', await page1.content());
+
+    // Sleep for 2 or 3 seconds to ensure the token generation is complete
+    // 3000ms = 3 seconds, adjust as needed
+    await page1.waitForTimeout(3000);
+
     // Wait for the token status message to appear and extract the token
     await page1.waitForSelector('#token-status-message');
     const tokenMessage = await page1.$eval('#token-status-message', el => el.textContent);
     await testBase.screenshot(page1, 'xyz1-merge-account-page-after-token-generate', await page1.content());
 
-    // console.log("-- tokenMessage --");
-    // console.log(tokenMessage);
-    const tokenRegex = /([a-zA-Z0-9\-]+:[a-zA-Z0-9]+) Token generated successfully/;
+    console.log("-- tokenMessage --");
+    console.log(tokenMessage);
+    const tokenRegex = /([a-zA-Z0-9\-]+:[a-zA-Z0-9\+]+) Token generated successfully/;
     const match = tokenMessage.match(tokenRegex);
-    // console.log("-- match --");
-    // console.log(match);
+    console.log("-- match --");
+    console.log(match);
     const token = match ? match[1] : null;
-    // console.log("-- token --");
-    // console.log(token);
+    console.log("-- token --");
+    console.log(token);
     if (!token) {
       throw new Error("Token generation failed or token not found");
     }
