@@ -48,7 +48,8 @@ it('should merge account and display merged account names and unmerge and. remov
 
     console.log("-- tokenMessage --");
     console.log(tokenMessage);
-    const tokenRegex = /([a-zA-Z0-9\-]+:[a-zA-Z0-9\+]+) Token generated successfully/;
+
+    const tokenRegex = /([a-zA-Z0-9\-]+:[a-zA-Z0-9\+\-\/=]+) Token generated successfully/;
     const match = tokenMessage.match(tokenRegex);
     console.log("-- match --");
     console.log(match);
