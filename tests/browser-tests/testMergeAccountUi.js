@@ -98,14 +98,7 @@ it('should merge account and display merged account names and unmerge and. remov
     await page2.waitForSelector('#confirm-btn');
     await page2.click('#confirm-btn');
     await page2.waitForSelector('#merged-accounts', { visible: true });
-
-    // Wait for merged accounts to be removed by checking that the list is empty
-    const isMergedAccountsListEmpty = await page2.$eval('#merged-accounts-list', el => el.innerText.trim() === '');
-    if (isMergedAccountsListEmpty) {
-      console.log("Merged accounts list is empty, unmerge successful.");
-    } else {
-      console.log("Merged accounts list still has values.");
-    }
+    await page2.waitForSelector('#merged-accounts-list', { hidden: true });
   }
   catch (error) {
     await testBase.showError(error, browser1);
