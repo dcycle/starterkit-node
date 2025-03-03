@@ -154,6 +154,7 @@ function showUnmergeModal() {
         const unmergeBtn = document.getElementById('unmerge-account-btn');
         // Hide the button
         unmergeBtn.style.display = 'none';
+        $("#merged-accounts").append("<p>Your account is not merged with any other account.</p>");
       }
     }).catch((error) => {
       // Handle any errors during the unmerge process

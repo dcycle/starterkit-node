@@ -45,18 +45,18 @@
         <h1 class="display-4">Account Merge</h1>
         <div>
           <!-- Check if accountMerged is false -->
-          <% if (accountMerged === false) { %>
-          <p>Your account is not merged with any other account.</p>
-          <% } else if (accounts.length > 1) { %>
-          <div id="merged-accounts"> 
-            <p>Your account is a merger of the following accounts:</p>
-            <ul id="merged-accounts-list">
-              <% accounts.forEach(function(account) { %>
-              <li>* <%= account.username %></li>
-              <% }); %>
-            </ul>
+          <div id="merged-accounts">
+            <% if ((accountMerged === false) || (accountMerged === true || accounts.length == 1)) { %>
+              <p>Your account is not merged with any other account.</p>
+            <% } else if (accounts.length > 1) { %>
+              <p>Your account is a merger of the following accounts:</p>
+              <ul id="merged-accounts-list">
+                <% accounts.forEach(function(account) { %>
+                <li>* <%= account.username %></li>
+                <% }); %>
+              </ul>
+            <% } %>
           </div>
-          <% } %>
           <!-- display button only if account is merged -->
           <button
             <% if (accountMerged === true && accounts.length > 1) { %>
