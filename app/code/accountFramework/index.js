@@ -165,7 +165,6 @@ class AccountFramework extends require('../component/index.js') {
       return await this.findAccountByUserId(userInfoObjectId);
     } catch (error) {
       // Step 4: Handle errors and throw them if the operation fails
-      console.error("Error in accountIsMerged:", error);
       throw new Error(`Failed to check if the account is merged: ${error.message}`);
     }
   }
