@@ -996,9 +996,9 @@ Now, in mongo-cli.sh, you can see that the userIds are unmerged in the accountfr
 
 
 Merge and Unmerge accounts through UI.
----------------------------------------
+------------------------------------
 
-    Suppose you want to merge your github login account , with username password login account.
+    Suppose you want to merge your github login account with username password login account.
 
     In browser 1 login from your username password login account.
 
