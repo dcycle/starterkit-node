@@ -82,9 +82,12 @@ it('should merge account and display merged account names and unmerge and. remov
     // Wait for the confirmation modal to appear and click the confirm button
     await page2.waitForSelector('#confirm-btn');
     await page2.click('#confirm-btn');
+    await testBase.screenshot(page2, 'xyz2-merge-account-merge-complete', await page2.content());
 
     // Wait for merged accounts to display
     await page2.waitForSelector('#merged-accounts');
+    await testBase.screenshot(page2, 'xyz2-merge-account-merge-list', await page2.content());
+
     const mergedAccountsList = await page2.$eval('#merged-accounts-list', el => el.innerText);
     console.log('Merged Accounts: ', mergedAccountsList);
 
