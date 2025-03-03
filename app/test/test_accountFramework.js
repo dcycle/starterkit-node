@@ -36,13 +36,12 @@ test.before(() => {
       userDetails: sinon.stub().returns({
         // Stub find() as a method
         find: sinon.stub()
-      })
+      }),
+      newToken: sinon.stub()
     }),
     config: sinon.stub().returns({
       modules: {
-        './accountFramework/index.js': {
-          tokenExpiryDuration: sinon.stub()
-        }
+        './accountFramework/index.js': sinon.stub()
       }
     }),
   };
@@ -481,4 +480,40 @@ test.serial('accountIsMerged should throw an error if finding account fails', as
 
   const error = await t.throwsAsync(() => my.accountIsMerged(userInfoId));
   t.is(error.message, 'Failed to check if the account is merged: Invalid ObjectId', 'Error message should match');
+});
+
+// Default Token Expiry (when no expiry duration is set)
+test.serial('generateToken should generate a token with no expiry if tokenExpiryDuration is 0', async t => {
+  // Mock the config to return 0 for tokenExpiryDuration
+  my.app().config().modules['./accountFramework/index.js'].returns({
+    "tokenExpiryDuration": 0
+  });
+
+  const name = 'testName';
+
+  // Call the method and assert the result
+  const token = await my.generateToken(name);
+
+  t.true(my.app().c('tokens').newToken.calledOnce, 'newToken method should be called once');
+  t.deepEqual(my.app().c('tokens').newToken.firstCall.args[0], {
+    name: name,
+    permissions: ['some-permission', 'another-permission'],
+    whatever: 'Token generated for merge accounts',
+    _length: 12,
+    _digits_only: false,
+  }, 'newToken method should be called with the correct parameters');
+
+  // Check token expiry duration (should be 0 for no expiry)
+  t.is(my.app().c('tokens').newToken.firstCall.args[1], 0, 'Token should have no expiry duration');
+});
+
+// Error in Token Creation
+test.serial('generateToken should throw an error if token generation fails', async t => {
+  // Mock the newToken method to throw an error
+  my.app().c('tokens').newToken.rejects(new Error('Token generation failed'));
+
+  const name = 'testName';
+
+  const error = await t.throwsAsync(() => my.generateToken(name));
+  t.is(error.message, 'Token generation failed', 'The error message should match');
 });

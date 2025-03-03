@@ -279,11 +279,11 @@ class AccountFramework extends require('../component/index.js') {
     // If tokenExpiryDuration duration is 0 then token never expires.
     let tokenExpiryDuration = 0;
     // Fetch token Expiration time set in config.
-    if (this._app.config().modules['./accountFramework/index.js'].tokenExpiryDuration) {
-      tokenExpiryDuration = this._app.config().modules['./accountFramework/index.js'].tokenExpiryDuration;
+    if (this.app().config().modules['./accountFramework/index.js'].tokenExpiryDuration) {
+      tokenExpiryDuration = this.app().config().modules['./accountFramework/index.js'].tokenExpiryDuration;
     }
 
-    const token = await this._app.c('tokens').newToken({
+    const token = await this.app().c('tokens').newToken({
       name: name,
       permissions: ['some-permission', 'another-permission'],
       whatever: 'Token generated for merge accounts',
