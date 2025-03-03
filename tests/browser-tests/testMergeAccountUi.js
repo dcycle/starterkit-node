@@ -87,7 +87,7 @@ it('should merge account and display merged account names and unmerge and. remov
     // Wait for merged accounts to display
     await page2.waitForSelector('#merged-accounts');
     await testBase.screenshot(page2, 'xyz2-merge-account-merge-list', await page2.content());
-
+    await page2.waitForSelector('#merged-accounts-list', { visible: true });
     const mergedAccountsList = await page2.$eval('#merged-accounts-list', el => el.innerText);
     console.log('Merged Accounts: ', mergedAccountsList);
 
