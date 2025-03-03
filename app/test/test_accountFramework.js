@@ -105,7 +105,7 @@ test('unmerge should remove user from account framework and create a new one', a
 
   // Assertions
   t.true(result.status);
-  t.is(result.message, 'Removed' + userInfoId + 'from the account framework and created a new account framework with only this user.');
+  t.is(result.message, 'Removed ' + userInfoId + ' from the account framework and created a new account framework with only this user.');
 
   // Check that account.save was called once
   t.true(account.save.calledOnce);
