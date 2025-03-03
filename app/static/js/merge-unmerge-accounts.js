@@ -87,7 +87,7 @@ function showMergeModal() {
       if (data.status) {
         // If merge is successful, display the merged accounts
         $("#merged-accounts").empty();
-        let ul = $("<ul></ul>");
+        let ul = $('<ul id="merged-accounts-list"></ul>');
         data.accounts.forEach((account) => {
           let li = $("<li></li>").text('* ' + account.username);
           ul.append(li);

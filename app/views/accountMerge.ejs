@@ -46,7 +46,7 @@
         <div>
           <!-- Check if accountMerged is false -->
           <div id="merged-accounts">
-            <% if ((accountMerged === false) || (accountMerged === true || accounts.length == 1)) { %>
+            <% if ((accountMerged === false) || (accountMerged === true && accounts.length == 1)) { %>
               <p>Your account is not merged with any other account.</p>
             <% } else if (accounts.length > 1) { %>
               <p>Your account is a merger of the following accounts:</p>
