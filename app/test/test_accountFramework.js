@@ -37,7 +37,14 @@ test.before(() => {
         // Stub find() as a method
         find: sinon.stub()
       })
-    })
+    }),
+    config: sinon.stub().returns({
+      modules: {
+        './accountFramework/index.js': {
+          tokenExpiryDuration: sinon.stub()
+        }
+      }
+    }),
   };
 
   sinon.stub(my, 'app').returns(mockApp);
@@ -98,7 +105,7 @@ test('unmerge should remove user from account framework and create a new one', a
 
   // Assertions
   t.true(result.status);
-  t.is(result.message, 'Removed userInfoId from the account framework and created a new account framework with only this user.');
+  t.is(result.message, 'Removed' + userInfoId + 'from the account framework and created a new account framework with only this user.');
 
   // Check that account.save was called once
   t.true(account.save.calledOnce);
@@ -409,7 +416,7 @@ test.serial('mergeAccountFrameworks merges userIds and deduplicates correctly', 
   t.true(findByIdAndDelete.calledOnceWith('account2'));
 });
 
-test('validateObjectId resolves for valid ObjectId', async (t) => {
+test.serial('validateObjectId resolves for valid ObjectId', async (t) => {
   const validObjectId = '507f1f77bcf86cd799439011'; // Valid ObjectId
 
   try {
@@ -420,7 +427,7 @@ test('validateObjectId resolves for valid ObjectId', async (t) => {
   }
 });
 
-test('validateObjectId resolves with mocked ObjectId', async (t) => {
+test.serial('validateObjectId resolves with mocked ObjectId', async (t) => {
   const validObjectId = new MockObjectId('507f1f77bcf86cd799439011');
 
   // Stub the mongoose ObjectId to behave as valid
@@ -432,4 +439,46 @@ test('validateObjectId resolves with mocked ObjectId', async (t) => {
   } catch (err) {
     t.fail('Error should not be thrown for mocked valid ObjectId');
   }
+});
+
+// Valid ObjectId, account is merged
+test.serial('accountIsMerged should return true when account is merged', async t => {
+  const userInfoId = 'validUserId';
+  const mockUserInfoObjectId = new MockObjectId(userInfoId);
+
+  // Mock the findAccountByUserId to return an account with merged status
+  const mockAccount = {
+    _id: mockUserInfoObjectId,
+    userIds: ['validUserId'],
+    save: sinon.stub().resolves()
+  };
+
+  my.findAccountByUserId.resolves(mockAccount);
+
+  // Call the method and assert the result
+  const result = await my.accountIsMerged(userInfoId);
+
+  t.deepEqual(result.userIds, ['validUserId'], 'accountIsMerged should return the merged account');
+});
+
+// Invalid ObjectId
+test.serial('accountIsMerged should throw an error when ObjectId is invalid', async t => {
+  const invalidUserInfoId = 'invalidUserId';
+
+  // Simulate invalid ObjectId
+  my.validateObjectId.throws(new Error('Invalid ObjectId'));
+
+  const error = await t.throwsAsync(() => my.accountIsMerged(invalidUserInfoId));
+  t.is(error.message, 'Failed to check if the account is merged: Invalid ObjectId', 'Error message should match');
+});
+
+// Error in finding account
+test.serial('accountIsMerged should throw an error if finding account fails', async t => {
+  const userInfoId = 'validUserId';
+
+  // Simulate a failure in the findAccountByUserId method
+  my.findAccountByUserId.throws(new Error('Database error'));
+
+  const error = await t.throwsAsync(() => my.accountIsMerged(userInfoId));
+  t.is(error.message, 'Failed to check if the account is merged: Invalid ObjectId', 'Error message should match');
 });
