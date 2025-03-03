@@ -73,6 +73,10 @@ it('should merge account and display merged account names and unmerge and. remov
     await page2.click('#merge-account-btn');
     await testBase.screenshot(page2, 'xyz2-merge-account-page-token-submit', await page2.content());
 
+    // Wait for the confirmation modal to appear and click the confirm button
+    await page2.waitForSelector('#confirm-btn');
+    await page2.click('#confirm-btn');
+
     // Wait for merged accounts to display
     await page2.waitForSelector('#merged-accounts');
     const mergedAccountsList = await page2.$eval('#merged-accounts-list', el => el.innerText);
@@ -83,6 +87,11 @@ it('should merge account and display merged account names and unmerge and. remov
     await testBase.screenshot(page2, 'xyz2-merge-account-before-unmerge', await page2.content());
     await page2.click('#unmerge-account-btn');
     await testBase.screenshot(page2, 'xyz2-merge-account-after-unmerge', await page2.content());
+
+    // Wait for the confirmation modal for unmerge and click the confirm button
+    await page2.waitForSelector('#confirm-btn');
+    await page2.click('#confirm-btn');
+    await page2.waitForSelector('#merged-accounts', { visible: true });
 
     // Wait for merged accounts to be removed by checking that the list is empty
     const isMergedAccountsListEmpty = await page2.$eval('#merged-accounts-list', el => el.innerText.trim() === '');
