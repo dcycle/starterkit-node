@@ -11,6 +11,7 @@ class AccountFramework extends require('../component/index.js') {
   dependencies() {
     return [
       './database/index.js',
+      './express/index.js'
     ];
   }
 
@@ -142,6 +143,33 @@ class AccountFramework extends require('../component/index.js') {
   }
 
   /**
+   * Checks if an account is merged by verifying if a user is associated with a merged account.
+   *
+   * This method validates the given `userInfoId` to ensure it's a valid MongoDB ObjectId.
+   * After validation, it attempts to retrieve the account associated with the provided user ID
+   * to determine if the account is merged with others.
+   *
+   * @param {string} userInfoId - The user ID of the account to check.
+   * @returns {Promise<Object|null>} - Returns the account details if merged, or null if not merged.
+   *
+   * @throws {Error} If the userInfoId is invalid or the database operation fails.
+   */
+   async accountIsMerged(userInfoId) {
+    try {
+      // Step 1: Validate that the provided userInfoId is a valid MongoDB ObjectId
+      await this.validateObjectId(userInfoId);
+      // Step 2: Initialize mongoose and convert userInfoId to a valid MongoDB ObjectId
+      const mongoose = this.app().component('./database/index.js').mongoose();
+      const userInfoObjectId = new mongoose.Types.ObjectId(userInfoId);
+      // Step 3: Find the account in the account Framework based on the validated ObjectId
+      return await this.findAccountByUserId(userInfoObjectId);
+    } catch (error) {
+      // Step 4: Handle errors and throw them if the operation fails
+      throw new Error(`Failed to check if the account is merged: ${error.message}`);
+    }
+  }
+
+  /**
    * Merges two accounts into a single account framework.
    * If the accounts are in separate frameworks, it creates a new merged framework.
    * If the accounts are in the same framework, it simply updates the userIds.
@@ -154,7 +182,7 @@ class AccountFramework extends require('../component/index.js') {
     // Check if either userInfoId1 or userInfoId2 is null
     if (userInfoId1 === null || userInfoId2 === null) {
       throw new Error("userInfoId1 and userInfoId2 cannot be null");
-    }    
+    }
     try {
       let message = '';
       const status = true;
@@ -186,7 +214,7 @@ class AccountFramework extends require('../component/index.js') {
           await this.mergeAccountFrameworks(account1, account2);
           message = 'Both accounts are already in account frameworks, merged them and deleted the later one.';
         } else {
-          message = `${userInfoId1}, ${userInfoId2} are in the same account framework.`;
+          message = `User ids ${userInfoId1}, ${userInfoId2} are in the same account framework.`;
         }
       }
 
@@ -198,7 +226,7 @@ class AccountFramework extends require('../component/index.js') {
   }
 
   /**
-   * Unmerges a user from an account framework, removing them from the existing framework 
+   * Unmerges a user from an account framework, removing them from the existing framework
    * and creating a new account framework for them alone.
    *
    * @param {string} userInfoId - The ObjectId of the user to be unmerged.
@@ -225,8 +253,8 @@ class AccountFramework extends require('../component/index.js') {
         // Create a new account framework with only this user
         await this.createNewAccountFramework([userInfoId]);
         status = true;
-        message = 'Removed userInfoId from the account framework';
-        message += ' and created a new account framework with only this user.';
+        message = `Removed ${userInfoId} from the account framework`;
+        message += ` and created a new account framework with only this user.`;
       }
       else {
         status = false;
@@ -237,6 +265,33 @@ class AccountFramework extends require('../component/index.js') {
       console.error(`Error unmerging account framework for ${userInfoId}:`, error);
       return { status: false, message: error.message };
     }
+  }
+
+  /**
+   * Generates a token for the accounts merging.
+   *
+   * note :- token expiryduration set to 1 hour in config/versioned.yml.
+   *
+   * @param {string} name - The name to generate the token for.
+   * @returns {Promise<string>} - The generated token.
+   */
+   async generateToken(name) {
+    // If tokenExpiryDuration duration is 0 then token never expires.
+    let tokenExpiryDuration = 0;
+    // Fetch token Expiration time set in config.
+    if (this.app().config().modules['./accountFramework/index.js'].tokenExpiryDuration) {
+      tokenExpiryDuration = this.app().config().modules['./accountFramework/index.js'].tokenExpiryDuration;
+    }
+
+    const token = await this.app().c('tokens').newToken({
+      name: name,
+      permissions: ['some-permission', 'another-permission'],
+      whatever: 'Token generated for merge accounts',
+      _length: 12,
+      _digits_only: false,
+    }, tokenExpiryDuration);
+
+    return token;
   }
 
   async run(app) {
@@ -296,6 +351,150 @@ class AccountFramework extends require('../component/index.js') {
         // @ts-ignore
         console.error(`Error unmerging account framework for ${username}:`, error);
         return { status: false, message: error.message };
+      }
+    });
+
+    // Add route for handling account merge UI requests
+    app.c('express').addRoute('accountFrameworkMergeUI', 'get', '/account/merge', async (req, res) => {
+      // This line checks if the account for the current logged-in user is already merged.
+      // `req.user._id` contains the user ID from the session or authentication.
+      const account = await that.accountIsMerged(req.user._id);
+      // Declare a variable to hold the response object
+      let response;
+      // Check if the account is merged
+      if (account) {
+        // If the account is merged, return a response with account merged status as true
+        // and the associated userIds of the merged accounts.
+        response = {
+          // Indicates the account is merged.
+          'accountMerged': true,
+          // Array of users info of a merged accounts.
+          'accounts': account.userIds
+        };
+      }
+      else {
+        // If the account is not merged, return a response with accountMerged as false
+        response = {
+          // Indicates the account is not merged
+          'accountMerged': false,
+        };
+      }
+
+      // Render the 'accountMerge' template and pass the response data to the template
+      // The 'accountMerge' template will be populated with the values of 'accountMerged' and 'accounts'
+      res.render('accountMerge', response);
+    });
+
+    // Add route for generating a token for account merge operation
+    app.c('express').addRoute('accountFrameworkMergeUIGT', 'get', '/account/merge/generate-token', async (req, res) => {
+      try {
+        // Generate a token using the user's ID and a specific action ('merge-with-another-account')
+        // The token will be associated with the user's ID
+        const token = await that.generateToken("merge-with-another-account:" + req.user._id);
+        // Check if the token was generated successfully
+        if (token) {
+          // If token generation is successful, send a response with the token and a success message
+          res.status(200).send(JSON.stringify({
+            // Token format is userID:generatedToken
+            'token': req.user._id + ":" + token,
+            // Success message
+            'message': 'Token generated successfully. Copy this token and paste it in your other account'
+          }));
+        }
+        else {
+          // If token generation failed, send a response indicating the failure
+          res.status(200).send(JSON.stringify({
+            // No token generated
+            'token': '',
+            // Failure message
+            'message': "Token hasn't generated."
+          }));
+        }
+      } catch (error) {
+        // Handle any errors that occur during the token generation process
+        // Log the error for debugging purposes
+        console.error(`Error at account framework generate token`, error);
+        // Return an error response with status and message
+        return res.status(500).send({
+          // Indicates failure
+          status: false,
+          // Error message from the catch block
+          message: error.message
+        });
+      }
+    });
+
+    // Add route to merge accounts through ui using a merge token.
+    app.c('express').addRoute('accountFrameworkTokenSubmit', 'post', '/account/merge/token-submit', async (req, res) => {
+      try {
+        // Retrieve the merge token from the request body
+        const mergeToken = req.body.token;
+        // Split the token into userID and token parts using colon as separator
+        const [userID, token] = mergeToken.split(':');
+
+        // Check if both userID and token are provided
+        if (!userID || !token) {
+          // If either part is missing, return an error with status 400 and a message indicating invalid token format
+          res.status(400).send(JSON.stringify({ message: 'Invalid Token format' }));
+        }
+        else {
+          // Validate the token using the tokens service
+          const validToken = await app.c('tokens').checkToken(
+            "merge-with-another-account:" + userID,
+            token
+          );
+
+          // If the token is valid, proceed with the account merge process
+          if (validToken) {
+            const mergeResponse = await that.merge(userID, req.user._id);
+            // Retrieve the updated accounts for the user
+            const accounts = await that.getAccounts(req.user._id);
+
+            res.status(200).send(JSON.stringify({
+              // Indicates the operation was successful
+              'status': mergeResponse.status,
+              // Message from the merge operation
+              'message': mergeResponse.message,
+              // The updated list of accounts after merging
+              'accounts': accounts
+            }));
+          }
+          else {
+            // If the token is invalid, return a response with an invalid token message
+            res.status(400).send(JSON.stringify({ message: 'Invalid Token format / Token expired / accounts already merged. Refresh the page and Enter New token.' }));
+          }
+        }
+      } catch (error) {
+        // Log any errors that occur during the process for debugging purposes
+        // @ts-ignore is used to suppress TypeScript errors related to the console.error call
+        console.error(`Error at account framework accountFrameworkTokenSubmit`, error);
+        // Return an error response with status and message indicating the error
+        return {
+          // Indicates failure
+          status: false,
+          // The error message generated during the try block
+          message: error.message
+        };
+      }
+    });
+
+    // Add route for handling account unmerge requests
+    app.c('express').addRoute('accountFrameworkUnmergeSubmit', 'get', '/account/unmerge', async (req, res) => {
+      try {
+        // Call the 'unmerge' function to unmerge the account using the current user's ID (req.user._id)
+        const unmergeResponse = await that.unmerge(req.user._id);
+        // Send the unmerge response back to the client with a status code of 200 (OK)
+        res.status(200).send(JSON.stringify(unmergeResponse));
+      } catch (error) {
+        // If an error occurs during the unmerge operation, log the error
+        // @ts-ignore is used to suppress TypeScript errors related to the console.error call
+        console.error(`Error at account framework accountFrameworkUnmergeSubmit`, error);
+
+        // Return an error response with a failure status and the error message
+        return res.status(500).send({
+          status: false,           // Indicates failure
+          message: error.message  // Error message generated during the unmerge process
+        });
       }
     });
 

@@ -995,6 +995,80 @@ Now, in mongo-cli.sh, you can see that the userIds are unmerged in the accountfr
 
 
 
+Merge and Unmerge accounts through UI.
+------------------------------------
+
+    Suppose you want to merge your github login account with username password login account.
+
+    In browser 1 login from your username password login account.
+
+    go to /account/merge
+
+    click on GENERATE A TOKEN BUTTON and copy the token.
+
+    token format < user id of username password login account >:<token with length 12>
+    token expiry duration : 1 hour
+
+    In browser 2 login using your github login account.
+
+    go to /account/merge
+
+    Paste token into token input textbox and click MERGE button you will see popup and click yes, merge button .
+    Upon successful merge you will see
+
+    ```
+    "Your account is a merger of the following accounts"
+
+    "* <name of your username password login account>"
+    "* <name of your github login account >"
+
+    [UNMERGE THIS ACCOUNT]
+
+    "To merge an account into this account, enter a merge token that you got from another account"
+
+    [         ] ENTER MERGE TOKEN HERE
+
+    "To merge this account into another account, generate a token and enter it into the other account"
+
+    [GENERATE A TOKEN BUTTON]
+    ```
+
+    Now in browser 1 refresh /account/merge page you will see
+
+    ```
+    "Your account is a merger of the following accounts"
+
+    "* <name of your username password login account>"
+    "* <name of your github login account >"
+
+    [UNMERGE THIS ACCOUNT]
+
+    "To merge an account into this account, enter a merge token that you got from another account"
+
+    [         ] ENTER MERGE TOKEN HERE
+
+    "To merge this account into another account, generate a token and enter it into the other account"
+
+    [GENERATE A TOKEN BUTTON]
+    ```
+
+    If you wan to UNMERGE the accounts.
+
+    click on [UNMERGE THIS ACCOUNT] button to unmerge the account. you will see popup and click yes, unmerge button . Upon success you will see
+
+    ```
+    "Your account is not merged with any other account"
+
+    "To merge an account into this account, enter a merge token that you got from another account"
+
+    [ ] ENTER MERGE TOKEN HERE
+
+    "To merge this account into another account, generate a token and enter it into the other account"
+
+    [GENERATE A TOKEN BUTTON]
+    ````
+
+
 
 Security tokens
 -----
