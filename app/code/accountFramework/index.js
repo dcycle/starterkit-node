@@ -78,6 +78,21 @@ class AccountFramework extends require('../component/index.js') {
   }
 
   /**
+   * Finds an account framework by a userInfoId and returns only merged userIds
+   *  field dont populate UserInfo.
+   *
+   * @param {string} userInfoId - The ObjectId of the user to search.
+   * @returns {Promise<Object|null>} - The UserIds of merged account document if found,
+   *  otherwise null.
+   */
+   async getOnlyUserIdsMAByUserId(userInfoId) {
+    const account = await this.getAccountFrameworkModel().findOne({ 'userIds': userInfoId })
+      .select('userIds -_id').lean();
+
+    return account;
+  }
+
+  /**
    * Creates a new account framework with the provided userIds and saves it.
    *
    * @param {Array<string>} userIds - The userIds to be included in the new account framework.
@@ -139,6 +154,29 @@ class AccountFramework extends require('../component/index.js') {
       else {
         return [];
       }
+    }
+  }
+
+  /**
+   * Retrieves Only Merged UserIds (dont populate userInfo) for the provided
+   *  userInfoId and returns the associated userIds.
+   *
+   * @param {string} userInfoId - The ID of the user to fetch account information for.
+   * @returns {Promise<Array>} - An array of userIds associated with the account framework.
+   * @throws {Error} - Throws an error if the ObjectId is invalid.
+   */
+  async getUserIdsOfMergedAccounts(userInfoId) {
+    // Validate the ObjectId
+    await this.validateObjectId(userInfoId);
+    const mongoose = this.app().component('./database/index.js').mongoose();
+    const userInfoObjectId = new mongoose.Types.ObjectId(userInfoId);
+    // Get only userIds field dont populate userInfo from a merge account.
+    const mergedUserIds = await this.getOnlyUserIdsMAByUserId(userInfoObjectId);
+
+    if (mergedUserIds) {
+      return mergedUserIds.userIds;
+    } else {
+      return [userInfoId];
     }
   }
 

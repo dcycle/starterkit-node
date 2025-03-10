@@ -24,6 +24,18 @@ modules:
         verb: post
       - route: accountFrameworkUnmergeSubmit
         verb: get
+      - route: viewStripeSubscriptionsList
+        verb: get
+      - route: addSubscription
+        verb: get
+      - route: createSubscription
+        verb: post
+      - route: cancelSubscription
+        verb: post
+      - route: addPaymentMethod
+        verb: post
+      - route: addPaymentMethod
+        verb: get
     authenticatedJson:
       - route: tokenRequest
         verb: get
@@ -130,3 +142,6 @@ modules:
   ./accountFramework/index.js:
     # Token expiry duration 1 hour = 3600 seconds
     tokenExpiryDuration: 3600
+  ./stripeSubscriptions/index.js:
+    stripeSecurityKey: 'override this in ./app/config/unversioned.yml; see README.md'
+    stripePublishableKey: 'override this in ./app/config/unversioned.yml; see README.md'
