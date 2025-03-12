@@ -1467,10 +1467,12 @@ Again, it is important to do this on your Docker host, not on the container!
 
 
 
+
 Integrate Stripe subscriptions
 -----
 
 Step 1. Configure Products, Get Api Keys from Stripe dashboard.
+
 Step 2. Integrate and run stripe subscription in starterkit-node.
 
 
