@@ -1479,25 +1479,25 @@ Step 2. Integrate and run stripe subscription in starterkit-node.
 Step 1. Configure Products, Get Api Keys from Stripe dashboard.
 -----
 
-Step 1:- Create a account in  stripe dashboard 
+Step 1:- Create a account in stripe dashboard 
 
-   Fill this form [https://dashboard.stripe.com/register ](https://dashboard.stripe.com/register ) to create a stripe account. You will receive email for email verification. Verify email by clicking on verification email, Upon success page will get redirect to stripe dashboard.
+Fill this form [https://dashboard.stripe.com/register ](https://dashboard.stripe.com/register ) to create a stripe account. You will receive email for email verification. Verify email by clicking on verification email, Upon success page will get redirect to stripe dashboard.
 
 
 Step 2:- Get api keys 
 
-    Go to  [https://dashboard.stripe.com/test/apikeys](https://dashboard.stripe.com/test/apikeys)  you will see publishable and secured key are generated for your account. Publishable keys for test environment starts with pk_test and secured keys for test environment are starts with sk_test. 
+Go to  [https://dashboard.stripe.com/test/apikeys](https://dashboard.stripe.com/test/apikeys)  you will see publishable and secured key are generated for your account. Publishable keys for test environment starts with pk_test and secured keys for test environment are starts with sk_test. 
 
-    Note down both the keys.
+Note down both the keys.
 
 
 Step 3 : We have to create Subscription based products.  
 
-    Click on subscriptions in left side pane or visit [https://dashboard.stripe.com/test/subscriptions](https://dashboard.stripe.com/test/subscriptions)
+Click on subscriptions in left side pane or visit [https://dashboard.stripe.com/test/subscriptions](https://dashboard.stripe.com/test/subscriptions)
 
-    We don't see any subscriptions . Because we haven't created products yet. Click on Create product or go to [https://dashboard.stripe.com/test/products?active=true&create=product&source=product_list](https://dashboard.stripe.com/test/products?active=true&create=product&source=product_list)
+We don't see any subscriptions . Because we haven't created products yet. Click on Create product or go to [https://dashboard.stripe.com/test/products?active=true&create=product&source=product_list](https://dashboard.stripe.com/test/products?active=true&create=product&source=product_list)
 
-    create product one by one.
+create product one by one.
 
     example :- 
 
@@ -1531,16 +1531,16 @@ step1:-  nodejs stripe package heps us to access stripe api, we have included st
 step2:-  Open app/config/unversioned.yml file and 
     register a  /stripeSubscriptions/index.js module with stripeSecurityKey and stripePublishableKey. 
 
-    ```
-    ./stripeSubscriptions/index.js:
-        stripeSecurityKey: '<replace your stripe secure key copied earlier>'
-        stripePublishableKey: '<replace your stripe publishable key copied earlier>'
+```
+./stripeSubscriptions/index.js:
+    stripeSecurityKey: '<replace your stripe secure key copied earlier>'
+    stripePublishableKey: '<replace your stripe publishable key copied earlier>'
 
-    ```
+```
 
-    stripeSecurityKey :-  secret Stripe API key required for the Stripe library, which is necessary for authenticating API requests.
+stripeSecurityKey :-  secret Stripe API key required for the Stripe library, which is necessary for authenticating API requests.
 
-    stripePublishableKey :-  Publishable keys which is used for client-side operations (e.g., for creating a Stripe checkout or other interactions with the Stripe API that are intended to happen in the browser). Publishable keys are safe to use on the front end.
+stripePublishableKey :-  Publishable keys which is used for client-side operations (e.g., for creating a Stripe checkout or other interactions with the Stripe API that are intended to happen in the browser). Publishable keys are safe to use on the front end.
 
 
 step3:-  Deploy the code
@@ -1557,7 +1557,7 @@ step3:-  Deploy the code
 
 Step 4:- Login as user a 
 
-    -    go to  /add/payment-method and fill card number, date, CVV, zip code and click on enter payment details 
+-    go to  /add/payment-method and fill card number, date, CVV, zip code and click on enter payment details 
 
 
       *** For test environment payment method values *** 
@@ -1567,29 +1567,29 @@ Step 4:- Login as user a
       Zip code: Any 5 digit number
       
 
-    -    page will redirect to /account/subscriptions/add subscription plan page. You can see the products created in stripe dashboard are displayed here.  products are fetch directly from stripe using publishable api key from front end (We are not storing products in starterkit node).
+-    page will redirect to /account/subscriptions/add subscription plan page. You can see the products created in stripe dashboard are displayed here.  products are fetch directly from stripe using publishable api key from front end (We are not storing products in starterkit node).
 
-    -    select the subscription plan and click on subscribe. 
-    Page will redirect to /account/subscriptions Subscriptions page.  Here you can see your subscribed products details fetched directly from stripe. If your account is merged with other account then you can see currently log in and merged accounts subscribed products (We are not storing subscriptions in starterkit node). 
+-    select the subscription plan and click on subscribe. 
+Page will redirect to /account/subscriptions Subscriptions page.  Here you can see your subscribed products details fetched directly from stripe. If your account is merged with other account then you can see currently log in and merged accounts subscribed products (We are not storing subscriptions in starterkit node). 
 
-    -    You can click on cancel subscribe to cancel the subscription.
+-    You can click on cancel subscribe to cancel the subscription.
 
-    -    You can login to stripe dashboard and verify customer, transactions, subscriptions , invoices  . 
-    [https://dashboard.stripe.com](https://dashboard.stripe.com)
+-    You can login to stripe dashboard and verify customer, transactions, subscriptions , invoices  . 
+ [https://dashboard.stripe.com](https://dashboard.stripe.com)
 
 Summary :- 
 
-    *** stripe expects customer details like customer email, his metadata like username ... are to be sent to stripe system.  If customer email id is sent to stripe then stripe will send emails regarding orders and other activities. 
+*** stripe expects customer details like customer email, his metadata like username ... are to be sent to stripe system.  If customer email id is sent to stripe then stripe will send emails regarding orders and other activities. 
 
-    ***Stripe doesn't let us subscribe to products unless we send a payment method id of a respective customer If it is a subscription type products.
+***Stripe doesn't let us subscribe to products unless we send a payment method id of a respective customer If it is a subscription type products.
 
-    * Hence first we have to create customer and attach payment method to customer in stripe through api.  when currently logged in user submits payment method in  /add/payment-method page. we are checking stripe customer is already created and customer id , payment method id , currently logged in user id is stored in stripeCustomer collection. If not when payment method id successfully returned from stripe, we are storing customer id, payment method id , currently logged in user id  in stripeCustomer collection for future reference.
+* Hence first we have to create customer and attach payment method to customer in stripe through api.  when currently logged in user submits payment method in  /add/payment-method page. we are checking stripe customer is already created and customer id , payment method id , currently logged in user id is stored in stripeCustomer collection. If not when payment method id successfully returned from stripe, we are storing customer id, payment method id , currently logged in user id  in stripeCustomer collection for future reference.
 
-    * when user click on subscribe a product we have to send customer id, payment method id and price id of a selected product price item to subscribe in stripe through api end point. 
+* when user click on subscribe a product we have to send customer id, payment method id and price id of a selected product price item to subscribe in stripe through api end point. 
 
-    * In subscription listing page we are fetching merged account userIds. Foreach userId finding out customer id from stripeCustomer collections and then by passing customer id we are fetching subscription details and rending the subscriptions details and product associated with it  from stripe endpoint. 
+* In subscription listing page we are fetching merged account userIds. Foreach userId finding out customer id from stripeCustomer collections and then by passing customer id we are fetching subscription details and rending the subscriptions details and product associated with it  from stripe endpoint. 
 
-    * For Cancel the subscription We can send subscriptionId to stripe cancel api to cancel the subscription.
+* For Cancel the subscription We can send subscriptionId to stripe cancel api to cancel the subscription.
 
 
 Resources
