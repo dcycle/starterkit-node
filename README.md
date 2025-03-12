@@ -1586,7 +1586,7 @@ Summary :-
 
 * In subscription listing page we are fetching merged account userIds. Foreach userId finding out customer id from stripeCustomer collections and then by passing customer id we are fetching subscription details and rending the subscriptions details and product associated with it  from stripe endpoint. 
 
-* Canceling the subscription We can send subscriptionId to stripe cancel api to cancel the subscription.
+* For Cancel the subscription We can send subscriptionId to stripe cancel api to cancel the subscription.
 
 
 Resources
