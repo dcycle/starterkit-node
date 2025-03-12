@@ -143,5 +143,5 @@ modules:
     # Token expiry duration 1 hour = 3600 seconds
     tokenExpiryDuration: 3600
   ./stripeSubscriptions/index.js:
-    stripeSecurityKey: 'override this in ./app/config/unversioned.yml; see README.md'
-    stripePublishableKey: 'override this in ./app/config/unversioned.yml; see README.md'
+    stripeSecurityKey: 'override this in ./app/config/unversioned.yml'
+    stripePublishableKey: 'override this in ./app/config/unversioned.yml'
