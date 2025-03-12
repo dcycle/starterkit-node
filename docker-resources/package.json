@@ -23,6 +23,7 @@
     "mathjs": "*",
     "twilio": "*",
     "passport-google-oauth20": "*",
-    "passport-strategy": "*"
+    "passport-strategy": "*",
+    "stripe": "*"
   }
 }

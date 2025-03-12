@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>All Subscriptions</title>
+</head>
+<body>
+  <h1>Subscriptions</h1>
+  <p><%= message %></p>
+
+  <% subscriptionsWithProducts.forEach(function(subscription) { %>
+    <div>
+      <h2>Subscription ID: <%= subscription.subscriptionId %></h2>
+      <p>Status: <%= subscription.status %></p>
+      <p>Customer ID: <%= subscription.customerId %></p>
+      <p>Subscribed Date: <%= new Date(subscription.subscriptionCreated * 1000).toLocaleDateString() %></p>
+      <p>Surrent period start Date: <%= new Date(subscription.subscriptionCurrentPeriodStart * 1000).toLocaleDateString() %></p>
+      <p>Subscribed period end Date: <%= new Date(subscription.subscriptionCurrentPeriodEnd * 1000).toLocaleDateString() %></p>
+      <!-- Cancel Button -->
+      <% if (subscription.status === 'active') { %>
+        <form method="POST" action="/account/subscriptions/cancel" onsubmit="return confirm('Are you sure you want to cancel this subscription?')">
+          <input type="hidden" name="subscriptionId" value="<%= subscription.subscriptionId %>">
+          <button type="submit">Cancel Subscription</button>
+        </form>
+      <% } %>
+      <h3>Products in this Subscription:</h3>
+      <ul>
+        <% subscription.productDetails.forEach(function(product) { %>
+          <li>
+            <h4><%= product.productName %></h4>
+            <p><strong>Product ID:</strong> <%= product.productId %></p>
+            <p><strong>Description:</strong> <%= product.productDescription %></p>
+            <p><strong>Price:</strong> <%= product.priceAmount %> <%= product.currency.toUpperCase() %></p>
+          </li>
+        <% }); %>
+      </ul>
+    </div>
+    <hr>
+  <% }); %>
+</body>
+</html>
