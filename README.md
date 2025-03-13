@@ -1069,6 +1069,31 @@ Merge and Unmerge accounts through UI.
     [GENERATE A TOKEN BUTTON]
     ````
 
+Merge and Unmerge accounts through Shell.
+------------------------------------
+
+1. Merge accounts by username :- 
+```
+./scripts/account-merge.sh <username1> <username2>
+```
+
+ex:- ./scripts/account-merge.sh c d
+
+
+2. Account Information by username:- 
+```
+./scripts/account-info.sh <username>
+```
+
+ex:- ./scripts/account-info.sh c
+
+3. Unmerge account by username:- 
+
+```
+./scripts/account-unmerge.sh <username>
+```
+
+ex:- ./scripts/account-unmerge.sh c
 
 
 Security tokens
