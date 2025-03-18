@@ -12,6 +12,11 @@ class Authentication extends require('../component/index.js') {
     const UserDetail = new Schema({
       username: String,
       password: String,
+      roles: {
+        type: [String],
+        // default role
+        default: ['authenticated']
+      }
     }, {
       // This will add createdAt and updatedAt fields.
       timestamps: true
@@ -232,7 +237,13 @@ class Authentication extends require('../component/index.js') {
 
     this.validateUsername(username);
     this.validatePassword(password);
-    await this.userDetails().register({username: username, active: false}, password);
+    // Default user role is [authenticated], If logged in user admin then admin will have
+    // [authenticated, administrator] roles
+    let roles = ["authenticated"];
+    if (username == "admin") {
+      roles.push("administrator");
+    }
+    await this.userDetails().register({username: username, active: false, roles: roles}, password);
   }
 
   /** Validate a username, throw an error if it does not validate. */
