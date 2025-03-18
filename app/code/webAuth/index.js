@@ -68,7 +68,7 @@ class WebAuth extends require('../component/index.js') {
    * @returns {Object|null} An object representing the routes if valid, or null if the paths are invalid.
    */
   _getRoutesFromConfig() {
-    const paths = this._app.config().modules['./webAuth/index.js']['routes'];
+    const paths = this._app.config().modules['./webAuth/index.js'].routes;
     if (!paths || typeof paths !== 'object') {
       console.log("Paths are not valid.");
       return null;

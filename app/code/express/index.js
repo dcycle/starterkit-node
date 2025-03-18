@@ -53,8 +53,11 @@ class Express extends require('../component/index.js') {
 
     let ret = [
       (req, res, next) => {
-        let messege = "'Please make sure you specify the access rules for the path '";
-        messege + id + ' with verb ' + verb + ' with permission';
+        let messege = "Please make sure you specify the access rules for the path '" +
+          id +
+          "' with verb '" +
+          verb +
+          "' with permission";
         res.send(messege);
       }
     ];
