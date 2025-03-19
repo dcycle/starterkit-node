@@ -641,24 +641,25 @@ modules:
         permission: "check token status"
 ```
 
-    Permissions-based Routes:
-        Each route is now associated with a permission instead of a role.
-        For example, the route chat is associated with the permission "view chat",
-        meaning only users having role with this permission can access the chat route.
+Permissions-based Routes:
+    Each route is now associated with a permission instead of a role.
+    For example, the route chat is associated with the permission "view chat",
+    meaning only users having role with this permission can access the chat route.
 
-    Roles Associated with Permissions:
-        Roles (e.g., authenticated, administrator, anonymous) are now associated with one or more permissions.
-        For example, the authenticated role has the permission "view chat", meaning users with the authenticated role can access the chat.
+Roles Associated with Permissions:
+    Roles (e.g., authenticated, administrator, anonymous) are now associated with one or more permissions.
+    For example, the authenticated role has the permission "view chat", meaning users with the authenticated role can access the chat.
 
-    Role Assignment for New Users:
-        When the system is first created, the "admin" user will have the roles "authenticated" and "administrator".
-        Users created using the ./scripts/reset-password.sh script will only have the "authenticated" role.
+Role Assignment for New Users:
+    When the system is first created, the "admin" user will have the roles "authenticated" and "administrator".
+    Users created using the ./scripts/reset-password.sh script will only have the "authenticated" role.
 
-    note:- In versioned.yml for administrator role I have assigned * which indicates administrator can access all routes.
-        ```
-          administrator:
-            - "*"
-        ```
+note:- In versioned.yml for administrator role I have assigned * which indicates administrator can access all routes.
+    ```
+        administrator:
+        - "*"
+    ```
+
 The Node.js command line interface (CLI)
 -----
 
