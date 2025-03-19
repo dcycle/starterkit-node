@@ -211,6 +211,7 @@ class WebAuth extends require('../component/index.js') {
       const rolePermissions = this._app.config().modules['./webAuth/index.js'].roles[role];
 
       // If the rolePermissions is an array and includes the permission, return true
+      // @ts-ignore is used to suppress TypeScript errors Property 'includes' does not exist on type 'any[]'
       if (Array.isArray(rolePermissions) && rolePermissions.includes(permission)) {
         return true;
       }

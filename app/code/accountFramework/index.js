@@ -95,7 +95,7 @@ class AccountFramework extends require('../component/index.js') {
   /**
    * Get a Roles of users by Finding an account framework by a userInfoId.
    *
-   * @param {string} userInfoId - The ObjectId of the user to search.
+   * @param {string} userId - The ObjectId of the user to search.
    * @returns {Promise<array>} - Array of roles ['authenticated', 'administrator']
    */
   async getMARolesByUserId(userId) {
