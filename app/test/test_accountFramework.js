@@ -517,3 +517,23 @@ test.serial('generateToken should throw an error if token generation fails', asy
   const error = await t.throwsAsync(() => my.generateToken(name));
   t.is(error.message, 'Token generation failed', 'The error message should match');
 });
+
+
+// Test Case 1: Check if roles are returned correctly without duplicates
+test.serial('should return unique roles from multiple accounts', async t => {
+  // Setup mock data for getAccounts
+  const mockAccounts = [
+    { roles: ['authenticated', 'administrator'] },
+    { roles: ['authenticated', 'user'] },
+    { roles: ['user', 'guest'] }
+  ];
+
+  sinon.stub(my, 'getAccounts').resolves(mockAccounts);  // Stub getAccounts here
+
+  // Test the function
+  const userId = 'user123';
+  const result = await my.getMARolesByUserId(userId);
+
+  // Assert the result contains unique roles
+  t.deepEqual(result, ['authenticated', 'administrator', 'user', 'guest']);
+});

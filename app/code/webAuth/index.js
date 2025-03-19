@@ -68,7 +68,7 @@ class WebAuth extends require('../component/index.js') {
    * @returns {Object|null} An object representing the routes if valid, or null if the paths are invalid.
    */
   _getRoutesFromConfig() {
-    const paths = this._app.config().modules['./webAuth/index.js'].routes;
+    const paths = this.app().config().modules['./webAuth/index.js'].routes;
     if (!paths || typeof paths !== 'object') {
       console.log("Paths are not valid.");
       return null;
@@ -96,7 +96,7 @@ class WebAuth extends require('../component/index.js') {
 
     const callback = this._createMiddlewareCallback(routeConfig);
 
-    this._app.component('./express/index.js').addMiddleware(routeConfig.route, routeConfig.verb, [callback]);
+    this.app().component('./express/index.js').addMiddleware(routeConfig.route, routeConfig.verb, [callback]);
   }
 
   /**
@@ -160,7 +160,7 @@ class WebAuth extends require('../component/index.js') {
    * @param {Object} routeConfig - The configuration object for the route, including permissions.
    */
   async _handleAuthenticatedUser(req, res, next, routeConfig) {
-    const roles = await this._app.c("accountFramework").getMARolesByUserId(req.user._id);
+    const roles = await this.app().c("accountFramework").getMARolesByUserId(req.user._id);
 
     if (roles.includes('administrator')) {
       next();  // Administrator has access to all routes
@@ -208,7 +208,7 @@ class WebAuth extends require('../component/index.js') {
   isPermissionValidForRoles(permission, userRoles) {
     // Loop through all roles and check if any role has the required permission
     for (let role of userRoles) {
-      const rolePermissions = this._app.config().modules['./webAuth/index.js'].roles[role];
+      const rolePermissions = this.app().config().modules['./webAuth/index.js'].roles[role];
 
       // If the rolePermissions is an array and includes the permission, return true
       // @ts-ignore is used to suppress TypeScript errors Property 'includes' does not exist on type 'any[]'
