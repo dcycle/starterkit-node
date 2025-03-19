@@ -242,7 +242,7 @@ it('should fill in the form and generate a token for whatsapp and submit form', 
         await page.type('#tokenInput', token);
         // Click the "Generate Token" button
         await page.click('#submitBtn');
-        await testBase.screenshot(page, 'login-with-phone-whatsapp-submit', await page.content());
+        // await testBase.screenshot(page, 'login-with-phone-whatsapp-submit', await page.content());
         await page.waitForSelector('#message');
 
         // Check the HTML content
@@ -258,3 +258,4 @@ it('should fill in the form and generate a token for whatsapp and submit form', 
   }
   await browser.close();  
 });
+

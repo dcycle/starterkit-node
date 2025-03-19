@@ -87,8 +87,6 @@ it("admin should access aadmininstrator roles pages.", async function() {
 
     await page.goto('http://node:8080/dashboardui');
 
-    await page.waitForNavigation({ waitUntil: 'networkidle0' });
-
     console.log("Check the admin dashboard message");
     const bodyContent = await page.evaluate(() => document.body.textContent.trim()); // Get all text content in the body
     expect(bodyContent).to.include('This is where the admin dashboard will be', 'Admin dashboard message not found.');
