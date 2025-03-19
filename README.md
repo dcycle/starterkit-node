@@ -654,7 +654,11 @@ modules:
         When the system is first created, the "admin" user will have the roles "authenticated" and "administrator".
         Users created using the ./scripts/reset-password.sh script will only have the "authenticated" role.
 
-
+    note:- In versioned.yml for administrator role I have assigned * which indicates administrator can access all routes.
+        ```
+          administrator:
+            - "*"
+        ```
 The Node.js command line interface (CLI)
 -----
 
