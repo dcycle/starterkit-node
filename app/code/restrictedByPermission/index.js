@@ -57,7 +57,7 @@ class RestrictedByPermission extends require('../component/index.js') {
       }
     };
 
-        // Add the permission-checking middleware to handle GET requests
+    // Add the permission-checking middleware to handle GET requests
     app.c('express').addMiddleware('restrictedByPermission', 'get', [checkPermission]);
 
     // Handle dynamic routes for accessing restricted content
@@ -66,12 +66,12 @@ class RestrictedByPermission extends require('../component/index.js') {
       // HTTP method for this route
       'get',
       // Route pattern with dynamic permissionId and file path
-      '/private/restricted-by-permission/permission-:permissionId/access/*',
+      '/private/restricted-by-permission/permission-:permissionId/access/:restOfPath',
       (req, res) => {
         // Extract the permission ID from route parameters
         const permissionId = req.params.permissionId;
         // Capture the rest of the URL after '/access/'
-        const requestedUri = req.params[0];
+        const requestedUri = req.params.restOfPath;
         // Construct the file path to the requested content
         const filePath = `${restrictedfolderpath}/permission-${permissionId}/access/${requestedUri}`;
         // Require the filesystem module
@@ -83,11 +83,12 @@ class RestrictedByPermission extends require('../component/index.js') {
             // File not found, send a 404 Not Found response
             res.status(404).send('File not found');
           } else {
-            // File exists, serve the file with a 200 OK response
+            // File exists, serve the file with a 200 OK response            
             res.status(200).sendFile(filePath);
           }
         });
-    });
+      }
+    );
 
     // Return the instance of the class
     return this;
