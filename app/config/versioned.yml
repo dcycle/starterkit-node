@@ -1,61 +1,134 @@
 ---
 modules:
   ./webAuth/index.js:
-    authenticated:
+    roles:
+      authenticated:
+        - "view authenticated routes"
+        - "view chat"
+        - "view chatApi"
+        - "create chatApi message"
+        - "send chatApi message"
+        - "perform crash test"
+        - "view user details"
+        - "merge accounts"
+        - "unmerge accounts"
+        - "view merge UI"
+        - "view merge UI (GT)"
+        - "submit token"
+        - "submit unmerge request"
+        - "view Stripe subscriptions"
+        - "add subscription"
+        - "create subscription"
+        - "cancel subscription"
+        - "add payment method"
+        - "view payment method"
+        - "request json token"
+
+      administrator:
+        - "*"
+
+      anonymous:
+        - "view public routes"
+        - "check token status"
+        - "access REST endpoints"
+        - "receive WhatsApp webhook"
+        - "send WhatsApp message"
+        - "send SMS"
+        - "receive SMS webhook"
+        - "view Google error logs"
+        - "view text framework plugins"
+
+    routes:
+      # Authenticated Routes
       - route: chat
         verb: get
+        permission: "view chat"
       - route: chatApi
         verb: get
+        permission: "view chatApi"
       - route: chatApi
         verb: post
+        permission: "create chatApi message"
+      - route: chatApi
+        verb: post
+        permission: "send chatApi message"
       - route: CrashTest
         verb: get
+        permission: "perform crash test"
       - route: accountFrameworkUserDetail
         verb: get
+        permission: "view user details"
       - route: accountFrameworkMerge
         verb: post
+        permission: "merge accounts"
       - route: accountFrameworkUnMerge
         verb: post
+        permission: "unmerge accounts"
       - route: accountFrameworkMergeUI
         verb: get
+        permission: "view merge UI"
       - route: accountFrameworkMergeUIGT
         verb: get
+        permission: "view merge UI (GT)"
       - route: accountFrameworkTokenSubmit
         verb: post
+        permission: "submit token"
       - route: accountFrameworkUnmergeSubmit
         verb: get
+        permission: "submit unmerge request"
       - route: viewStripeSubscriptionsList
         verb: get
+        permission: "view Stripe subscriptions"
       - route: addSubscription
         verb: get
+        permission: "add subscription"
       - route: createSubscription
         verb: post
+        permission: "create subscription"
       - route: cancelSubscription
         verb: post
+        permission: "cancel subscription"
       - route: addPaymentMethod
         verb: post
+        permission: "add payment method"
       - route: addPaymentMethod
         verb: get
-    authenticatedJson:
+        permission: "view payment method"
+      - route: dashboardUI
+        verb: get
+        permission: "view dashboard UI"
+
+      # AuthenticatedJson Route
       - route: tokenRequest
         verb: get
-    anonymous:
+        permission: "request json token"
+
+      # Anonymous Route
       - route: tokenCheck
         verb: get
+        permission: "check token status"
       - route: rest
         verb: get
+        permission: "access REST endpoints"
       - route: webhookWhatsApp
         verb: post
+        permission: "receive WhatsApp webhook"
       - route: whatsappSend
         verb: post
+        permission: "send WhatsApp message"
       - route: sendSMS
         verb: post
+        permission: "send SMS"
       - route: webhookSMS
         verb: post
+        permission: "receive SMS webhook"
       - route: googleErr
         verb: get
+        permission: "view Google error logs"
       - route: textFrameworkPlugins
         verb: get
+        permission: "view text framework plugins"
+
   ./rest/index.js:
     path: '/api/v1'
   ./chatWeb/index.js:
@@ -145,3 +218,4 @@ modules:
   ./stripeSubscriptions/index.js:
     stripeSecurityKey: 'override this in ./app/config/unversioned.yml'
     stripePublishableKey: 'override this in ./app/config/unversioned.yml'
+  ./dashboardUI/index.js: {}

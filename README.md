@@ -21,6 +21,7 @@ Dcycle Node.js starterkit
   * Components can define classes
   * Observers
   * Tokens System
+  * Role-Based Permission System
 * The Node.js command line interface (CLI)
 * MongoDB crud (create - read - update - delete)
 * Mongoose vs MongoDB
@@ -609,6 +610,55 @@ tokens expire after a given time
         // false
 
 
+Role-Based Permission System
+----
+
+routes will be defined with permissions, and roles will be associated with these permissions. This allows for a more granular control of who can access specific routes based on their permissions.
+Configuration Format (versioned.yml)
+
+The routes and permissions for the modules will be configured in the ./app/config/versioned.yml file. Here's the updated structure :
+
+```
+modules:
+  ./webAuth/index.js:
+    roles:
+      authenticated:
+        - "view chat"
+        - "view chatApi"
+      administrator:
+        - "*"
+      anonymous:
+        - "check token status"
+    routes:
+      # Authenticated Routes
+      - route: chat
+        verb: get
+        permission: "view chat"
+      ...
+      # Anonymous Route
+      - route: tokenCheck
+        verb: get
+        permission: "check token status"
+```
+
+Permissions-based Routes:
+    Each route is now associated with a permission instead of a role.
+    For example, the route chat is associated with the permission "view chat",
+    meaning only users having role with this permission can access the chat route.
+
+Roles Associated with Permissions:
+    Roles (e.g., authenticated, administrator, anonymous) are now associated with one or more permissions.
+    For example, the authenticated role has the permission "view chat", meaning users with the authenticated role can access the chat.
+
+Role Assignment for New Users:
+    When the system is first created, the "admin" user will have the roles "authenticated" and "administrator".
+    Users created using the ./scripts/reset-password.sh script will only have the "authenticated" role.
+
+note:- In versioned.yml for administrator role I have assigned * which indicates administrator can access all routes.
+    ```
+        administrator:
+        - "*"
+    ```
 
 The Node.js command line interface (CLI)
 -----

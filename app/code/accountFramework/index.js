@@ -93,6 +93,36 @@ class AccountFramework extends require('../component/index.js') {
   }
 
   /**
+   * Get a Roles of users by Finding an account framework by a userInfoId.
+   *
+   * @param {string} userId - The ObjectId of the user to search.
+   * @returns {Promise<array>} - Array of roles ['authenticated', 'administrator']
+   */
+  async getMARolesByUserId(userId) {
+    try {
+      const accounts = await this.getAccounts(userId);
+      if (accounts) {
+        // Merge roles from all users and remove duplicates using a Set
+        const mergedRoles = new Set();
+
+        // Loop through userIds and add each role to the Set
+        accounts.forEach(user => {
+          user.roles.forEach(role => mergedRoles.add(role));
+        });
+        // Convert Set back to an array
+        const uniqueRoles = Array.from(mergedRoles);
+        return uniqueRoles;
+      } else {
+        console.log('No user found with the provided userId.');
+        return [];
+      }
+    } catch (err) {
+      console.error('Error fetching roles:', err);
+      return [];
+    }
+  }
+
+  /**
    * Creates a new account framework with the provided userIds and saves it.
    *
    * @param {Array<string>} userIds - The userIds to be included in the new account framework.
