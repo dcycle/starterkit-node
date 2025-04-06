@@ -7,7 +7,10 @@
 class Express extends require('../component/index.js') {
 
   // Store routes information
+  // https://github.com/jshint/jshint/issues/3361
+  /* jshint ignore:start */
   routes = [];
+  /* jshint ignore:end */
 
   async init(app)  {
     this._app = app;
