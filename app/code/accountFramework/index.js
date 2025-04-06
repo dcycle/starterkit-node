@@ -407,7 +407,8 @@ class AccountFramework extends require('../component/index.js') {
           // Indicates the account is merged.
           'accountMerged': true,
           // Array of users info of a merged accounts.
-          'accounts': account.userIds
+          'accounts': account.userIds,
+          'title':  "Account Merge"          
         };
       }
       else {
@@ -415,10 +416,9 @@ class AccountFramework extends require('../component/index.js') {
         response = {
           // Indicates the account is not merged
           'accountMerged': false,
+          'title':  "Account Merge"
         };
       }
-
-      response.title= "Account Merge";
 
       // Render the 'accountMerge' template and pass the response data to the template
       // The 'accountMerge' template will be populated with the values of 'accountMerged' and 'accounts'
