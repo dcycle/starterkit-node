@@ -418,6 +418,8 @@ class AccountFramework extends require('../component/index.js') {
         };
       }
 
+      response.title= "Account Merge";
+
       // Render the 'accountMerge' template and pass the response data to the template
       // The 'accountMerge' template will be populated with the values of 'accountMerged' and 'accounts'
       app.c('theme').render(res, 'accountMerge', response);

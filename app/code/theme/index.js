@@ -7,7 +7,7 @@
   async init(app)  {
     super.init(app);
     const expressApp = app.component('./express/index.js').expressApp();
-    // this._expressApp = this.express()();
+    // @ts-expect-error
     const ejsLayouts = require('express-ejs-layouts');
     // Tell Express to use ejs-layouts
     expressApp.use(ejsLayouts);

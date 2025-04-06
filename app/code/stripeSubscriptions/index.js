@@ -106,7 +106,10 @@ class StripeSubscriptions extends require('../component/index.js') {
           // or other interactions with the Stripe API that are intended to happen in the browser).
           // Publishable keys are safe to use on the front end.          
           const stripePublishableKey = this.app().config().modules['./stripeSubscriptions/index.js'].stripePublishableKey;
-          app.c('theme').render(res, 'addPaymentMethod', { stripePublishableKey });
+          app.c('theme').render(res, 'addPaymentMethod', {
+            stripePublishableKey,
+            title: "addPaymentMethod",
+          });
         } catch (error) {
           console.error(error);
           res.status(500).send('addPaymentMethod get error');
@@ -193,7 +196,10 @@ class StripeSubscriptions extends require('../component/index.js') {
             });
           }
 
-          app.c('theme').render(res, 'addSubscription', { productsWithPrices });
+          app.c('theme').render(res, 'addSubscription', {
+            productsWithPrices,
+            title: "addSubscription",
+          });
         } catch (error) {
           console.error(error);
           res.status(500).send('An error occurred');
@@ -282,6 +288,7 @@ class StripeSubscriptions extends require('../component/index.js') {
 
               if (subscriptions.data.length === 0) {
                 app.c('theme').render(res, 'subscriptions', {
+                  title: "Subscriptions",
                   message: 'No subscriptions. Add a subscription.',
                   subscriptionsWithProducts: []
                 });
@@ -318,11 +325,13 @@ class StripeSubscriptions extends require('../component/index.js') {
 
           if (subscriptionsWithProducts.length > 0) {
             app.c('theme').render(res, 'subscriptions', {
+                title: "Subscriptions",
                 message: 'Your subscriptions are:',
                 subscriptionsWithProducts: subscriptionsWithProducts
               });
           } else {
             app.c('theme').render(res, 'subscriptions', {
+                title: "Subscriptions",
                 message: 'No subscriptions found for this account',
                 subscriptionsWithProducts: []
               }
