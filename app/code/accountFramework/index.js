@@ -420,7 +420,7 @@ class AccountFramework extends require('../component/index.js') {
 
       // Render the 'accountMerge' template and pass the response data to the template
       // The 'accountMerge' template will be populated with the values of 'accountMerged' and 'accounts'
-      res.render('accountMerge', response);
+      app.c('theme').render(res, 'accountMerge', response);
     });
 
     // Add route for generating a token for account merge operation

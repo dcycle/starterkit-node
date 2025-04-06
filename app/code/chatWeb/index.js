@@ -22,7 +22,7 @@ class ChatWeb extends require('../component/index.js') {
       if (users) {
         name = users['0'].username;
       }
-      res.render('chat', {
+      app.c('theme').render(res, 'chat', {
         name: name
       });
     });

@@ -52,7 +52,7 @@ class StripeSubscriptions extends require('../component/index.js') {
    */
    async findStripeCustomerByUserId(userInfoId) {
     return await this.getStripeCustomerModel().findOne({ 'userId': userInfoId });
-  }    
+  }
 
   // Initializing the Stripe API
   initStripeApi() {
@@ -106,7 +106,7 @@ class StripeSubscriptions extends require('../component/index.js') {
           // or other interactions with the Stripe API that are intended to happen in the browser).
           // Publishable keys are safe to use on the front end.          
           const stripePublishableKey = this.app().config().modules['./stripeSubscriptions/index.js'].stripePublishableKey;
-          res.render('addPaymentMethod', { stripePublishableKey });
+          app.c('theme').render(res, 'addPaymentMethod', { stripePublishableKey });
         } catch (error) {
           console.error(error);
           res.status(500).send('addPaymentMethod get error');
@@ -193,7 +193,7 @@ class StripeSubscriptions extends require('../component/index.js') {
             });
           }
 
-          res.render('addSubscription', { productsWithPrices });
+          app.c('theme').render(res, 'addSubscription', { productsWithPrices });
         } catch (error) {
           console.error(error);
           res.status(500).send('An error occurred');
@@ -281,10 +281,10 @@ class StripeSubscriptions extends require('../component/index.js') {
               });
 
               if (subscriptions.data.length === 0) {
-                return res.render('subscriptions', {
-                    message: 'No subscriptions. Add a subscription.',
-                    subscriptionsWithProducts: []                
-                  });
+                app.c('theme').render(res, 'subscriptions', {
+                  message: 'No subscriptions. Add a subscription.',
+                  subscriptionsWithProducts: []
+                });
               }
 
               const subscriptionWithProducts = await Promise.all(subscriptions.data.map(async (subscription) => {
@@ -317,15 +317,16 @@ class StripeSubscriptions extends require('../component/index.js') {
           }
 
           if (subscriptionsWithProducts.length > 0) {
-            return res.render('subscriptions', {
-              message: 'Your subscriptions are:',
-              subscriptionsWithProducts: subscriptionsWithProducts
-            });
+            app.c('theme').render(res, 'subscriptions', {
+                message: 'Your subscriptions are:',
+                subscriptionsWithProducts: subscriptionsWithProducts
+              });
           } else {
-            return res.render('subscriptions', {
-              message: 'No subscriptions found for this account',
-              subscriptionsWithProducts: []
-            });
+            app.c('theme').render(res, 'subscriptions', {
+                message: 'No subscriptions found for this account',
+                subscriptionsWithProducts: []
+              }
+            );
           }
         } catch (error) {
           console.error('Error fetching subscriptions:', error);

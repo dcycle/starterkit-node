@@ -1,0 +1,55 @@
+<h1>Subscription Plans</h1>
+<div id="subscriptions">
+  <% productsWithPrices.forEach(function(productData) { %>
+    <div class="product">
+      <h2><%= productData.product.name %></h2>
+      <p><%= productData.product.description || 'No description available' %></p>
+
+      <h3>Available Pricing Plans:</h3>
+      <ul>
+        <% productData.prices.forEach(function(price) { %>
+          <li>
+            <p><%= price.nickname || 'No nickname' %> - $<%= (price.unit_amount / 100).toFixed(2) %> per month</p>
+            <button onclick="subscribe('<%= price.id %>')">Subscribe</button>
+          </li>
+        <% }) %>
+      </ul>
+    </div>
+  <% }) %>
+</div>
+
+<script>
+  function subscribe(priceId) {
+    // Handle subscription creation (e.g., send priceId to the backend for subscription)
+    console.log('Selected Price ID:', priceId);
+    // Send the token to the server to initiate the merge process
+    // Send a POST request to the backend to create the subscription
+    fetch('/account/subscriptions/add', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        priceId: priceId, // Send the priceId selected by the user
+      }),
+    })
+    .then((response) => response.json())  // Parse the JSON response from the backend
+    .then((data) => {
+      if (data.success) {
+        console.log("Subscription created successfully:", data.subscription);
+        // Redirect to a success page or display a success message
+        window.location.href = '/account/subscriptions';
+      } else {
+        console.error('Error creating subscription:', data.message);
+        // Optionally display an error message to the user
+        alert('Failed to create subscription: ' + data.message);
+      }
+    })
+    .catch((error) => {
+      console.error('Error in fetch:', error);
+      // Display a generic error message
+      alert('An error occurred while processing your subscription.');
+    });
+    // Add your subscription logic here (e.g., make an API call to your backend to create the subscription)
+  }
+</script>
