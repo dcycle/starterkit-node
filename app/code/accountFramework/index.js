@@ -397,6 +397,9 @@ class AccountFramework extends require('../component/index.js') {
       // This line checks if the account for the current logged-in user is already merged.
       // `req.user._id` contains the user ID from the session or authentication.
       const account = await that.accountIsMerged(req.user._id);
+
+      const title = "Account Merge";
+
       // Declare a variable to hold the response object
       let response;
       // Check if the account is merged
@@ -407,19 +410,18 @@ class AccountFramework extends require('../component/index.js') {
           // Indicates the account is merged.
           'accountMerged': true,
           // Array of users info of a merged accounts.
-          'accounts': account.userIds
+          'accounts': account.userIds,
+          'title': title          
         };
       }
       else {
         // If the account is not merged, return a response with accountMerged as false
         response = {
           // Indicates the account is not merged
-          'accountMerged': false
+          'accountMerged': false,
+          'title': title
         };
       }
-
-      // Later in your code, add the 'title' property
-      response.title = "Account Merge";
 
       // Render the 'accountMerge' template and pass the response data to the template
       // The 'accountMerge' template will be populated with the values of 'accountMerged' and 'accounts'
