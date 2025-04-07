@@ -276,6 +276,7 @@ class StripeSubscriptions extends require('../component/index.js') {
         try {
           const mergeduserIds = await app.c('accountFramework').getUserIdsOfMergedAccounts(req.user.id);
           const subscriptionsWithProducts = [];
+          const title = "Subscriptions";
 
           for (const userId of mergeduserIds) {
             const savedStripeCustomer = await this.findStripeCustomerByUserId(userId);
@@ -287,7 +288,7 @@ class StripeSubscriptions extends require('../component/index.js') {
 
               if (subscriptions.data.length === 0) {
                 app.c('theme').render(res, 'subscriptions', {
-                  title: "Subscriptions",
+                  title: title,
                   message: 'No subscriptions. Add a subscription.',
                   subscriptionsWithProducts: []
                 });
@@ -324,13 +325,13 @@ class StripeSubscriptions extends require('../component/index.js') {
 
           if (subscriptionsWithProducts.length > 0) {
             app.c('theme').render(res, 'subscriptions', {
-                title: "Subscriptions",
+                title: title,
                 message: 'Your subscriptions are:',
                 subscriptionsWithProducts: subscriptionsWithProducts
               });
           } else {
             app.c('theme').render(res, 'subscriptions', {
-                title: "Subscriptions",
+                title: title,
                 message: 'No subscriptions found for this account',
                 subscriptionsWithProducts: []
               }
