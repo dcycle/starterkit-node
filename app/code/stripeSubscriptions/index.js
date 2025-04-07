@@ -241,8 +241,7 @@ class StripeSubscriptions extends require('../component/index.js') {
             customer: savedStripeCustomer.customerId,
             items: [{
               price: priceId,
-            }],
-            expand: ['latest_invoice.payment_intent'],
+            }]
           });
 
           res.status(200).json({
