@@ -52,7 +52,7 @@ class StripeSubscriptions extends require('../component/index.js') {
    */
    async findStripeCustomerByUserId(userInfoId) {
     return await this.getStripeCustomerModel().findOne({ 'userId': userInfoId });
-  }    
+  }
 
   // Initializing the Stripe API
   initStripeApi() {
@@ -106,7 +106,10 @@ class StripeSubscriptions extends require('../component/index.js') {
           // or other interactions with the Stripe API that are intended to happen in the browser).
           // Publishable keys are safe to use on the front end.          
           const stripePublishableKey = this.app().config().modules['./stripeSubscriptions/index.js'].stripePublishableKey;
-          res.render('addPaymentMethod', { stripePublishableKey });
+          app.c('theme').render(res, 'addPaymentMethod', {
+            stripePublishableKey,
+            title: "addPaymentMethod",
+          });
         } catch (error) {
           console.error(error);
           res.status(500).send('addPaymentMethod get error');
@@ -193,7 +196,10 @@ class StripeSubscriptions extends require('../component/index.js') {
             });
           }
 
-          res.render('addSubscription', { productsWithPrices });
+          app.c('theme').render(res, 'addSubscription', {
+            productsWithPrices,
+            title: "addSubscription",
+          });
         } catch (error) {
           console.error(error);
           res.status(500).send('An error occurred');
@@ -235,8 +241,7 @@ class StripeSubscriptions extends require('../component/index.js') {
             customer: savedStripeCustomer.customerId,
             items: [{
               price: priceId,
-            }],
-            expand: ['latest_invoice.payment_intent'],
+            }]
           });
 
           res.status(200).json({
@@ -271,6 +276,7 @@ class StripeSubscriptions extends require('../component/index.js') {
         try {
           const mergeduserIds = await app.c('accountFramework').getUserIdsOfMergedAccounts(req.user.id);
           const subscriptionsWithProducts = [];
+          const title = "Subscriptions";
 
           for (const userId of mergeduserIds) {
             const savedStripeCustomer = await this.findStripeCustomerByUserId(userId);
@@ -281,10 +287,11 @@ class StripeSubscriptions extends require('../component/index.js') {
               });
 
               if (subscriptions.data.length === 0) {
-                return res.render('subscriptions', {
-                    message: 'No subscriptions. Add a subscription.',
-                    subscriptionsWithProducts: []                
-                  });
+                app.c('theme').render(res, 'subscriptions', {
+                  title: title,
+                  message: 'No subscriptions. Add a subscription.',
+                  subscriptionsWithProducts: []
+                });
               }
 
               const subscriptionWithProducts = await Promise.all(subscriptions.data.map(async (subscription) => {
@@ -317,15 +324,18 @@ class StripeSubscriptions extends require('../component/index.js') {
           }
 
           if (subscriptionsWithProducts.length > 0) {
-            return res.render('subscriptions', {
-              message: 'Your subscriptions are:',
-              subscriptionsWithProducts: subscriptionsWithProducts
-            });
+            app.c('theme').render(res, 'subscriptions', {
+                title: title,
+                message: 'Your subscriptions are:',
+                subscriptionsWithProducts: subscriptionsWithProducts
+              });
           } else {
-            return res.render('subscriptions', {
-              message: 'No subscriptions found for this account',
-              subscriptionsWithProducts: []
-            });
+            app.c('theme').render(res, 'subscriptions', {
+                title: title,
+                message: 'No subscriptions found for this account',
+                subscriptionsWithProducts: []
+              }
+            );
           }
         } catch (error) {
           console.error('Error fetching subscriptions:', error);

@@ -1,0 +1,9 @@
+<nav>
+  <% if (navData && Array.isArray(navData) && navData.length > 0) { %>
+    <ul>
+      <% navData.forEach(link => { %>
+        <li><a href="<%= link.path %>"><%= link.untranslated %></a></li>
+      <% }) %>
+    </ul>
+  <% } %>
+</nav>

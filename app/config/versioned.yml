@@ -145,3 +145,12 @@ modules:
   ./stripeSubscriptions/index.js:
     stripeSecurityKey: 'override this in ./app/config/unversioned.yml'
     stripePublishableKey: 'override this in ./app/config/unversioned.yml'
+  ./nav/index.js:
+    menus:
+      navigation:
+        - route: chat
+          untranslated: "Chat"
+        - route: accountFrameworkMergeUI
+          untranslated: "Merge Accounts"
+  ./theme/index.js:
+    default: "defaultTheme"

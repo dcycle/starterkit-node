@@ -5,6 +5,13 @@
  */
 
 class Express extends require('../component/index.js') {
+
+  // Store routes information
+  // https://github.com/jshint/jshint/issues/3361
+  /* jshint ignore:start */
+  routes = [];
+  /* jshint ignore:end */
+
   async init(app)  {
     this._app = app;
 
@@ -32,6 +39,9 @@ class Express extends require('../component/index.js') {
 
   addRoute(id, verb, path, callback) {
     this.expressApp()[verb]([path], this.middlewares(id, verb), callback);
+
+    // Store route information
+    this.routes.push({ id, verb, path });
   }
 
   routeKey(id, verb) {
@@ -77,6 +87,11 @@ class Express extends require('../component/index.js') {
   }
   expressApp() {
     return this._expressApp;
+  }
+
+  // Method to get all routes
+  getRoutes() {
+    return this.routes;
   }
 }
 

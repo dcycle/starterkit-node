@@ -21,6 +21,9 @@ Dcycle Node.js starterkit
   * Components can define classes
   * Observers
   * Tokens System
+  * how to add menu links
+  * how to add view pages
+  * how to switch between themes
 * The Node.js command line interface (CLI)
 * MongoDB crud (create - read - update - delete)
 * Mongoose vs MongoDB
@@ -608,6 +611,65 @@ tokens expire after a given time
         await app.c('tokens').checkToken('test', token);
         // false
 
+
+how to add menu links
+-----
+
+Add menu links in app/config/versioned.yml file  under navigation key ./nav/index.js module.
+
+```
+  ./nav/index.js:
+    menus:
+      navigation:
+        - route: chat
+          untranslated: "Chat"
+        - route: accountFrameworkMergeUI
+          untranslated: "Merge Accounts"
+
+```
+
+route of navigation menu links are mapped to path in app/code/nav/index.js module.
+
+how to add view page
+-----
+
+express-ejs-layouts is a middleware for the Express web framework in EJS (Embedded JavaScript) templates. It helps separate the layout structure (like the header, footer, and other repeating sections) from the content of the page, which simplifies maintenance and makes it easier to apply a consistent layout across different pages.
+
+We have created simple layout app/views/themes/defaultTheme/layouts/layout.ejs  file.  Menu links are rendering in this layout. 
+
+If you created page then call render function of theme module to load default theme.
+
+```
+app.c('theme').render(res, 'view-page-name', response);
+``` 
+
+create <view-page-name>.ejs  file in app/views/themes/defaultTheme with page specific html. layout applied by default.
+Refer other .ejs files in app/views/themes/defaultTheme for reference.
+
+how to switch between themes
+-----
+
+We can switch between theme by updating default value of ./theme/index.js module in  ./app/config/versioned.yml 
+
+```
+./theme/index.js:
+    default: "defaultTheme"
+ ```
+
+For example : 
+
+Copy ./app/views/themes/defaultTheme into another folder ./app/views/themes/notDefaultTheme
+
+In ./app/views/themes/notDefaultTheme/layouts/layout.ejs  modify htmls. For example <body style="background:red;">
+
+Then in ./app/config/versioned.yml  update default theme value as below:
+
+```
+./theme/index.js:
+    default: "notDefaultTheme"
+```
+
+ Reloaded the page you will see red background.
 
 
 The Node.js command line interface (CLI)
