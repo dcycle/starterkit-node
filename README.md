@@ -23,6 +23,7 @@ Dcycle Node.js starterkit
   * Tokens System
   * how to add menu links
   * how to add view pages
+  * how to switch between themes
 * The Node.js command line interface (CLI)
 * MongoDB crud (create - read - update - delete)
 * Mongoose vs MongoDB
@@ -644,6 +645,31 @@ app.c('theme').render(res, 'view-page-name', response);
 
 create <view-page-name>.ejs  file in app/views/themes/defaultTheme with page specific html. layout applied by default.
 Refer other .ejs files in app/views/themes/defaultTheme for reference.
+
+how to switch between themes
+-----
+
+We can switch between theme by updating default value of ./theme/index.js module in  ./app/config/versioned.yml 
+
+```
+./theme/index.js:
+    default: "defaultTheme"
+ ```
+
+For example : 
+
+Copy ./app/views/themes/defaultTheme into another folder ./app/views/themes/notDefaultTheme
+
+In ./app/views/themes/notDefaultTheme/layouts/layout.ejs  modify htmls. For example <body style="background:red;">
+
+Then in ./app/config/versioned.yml  update default theme value as below:
+
+```
+./theme/index.js:
+    default: "notDefaultTheme"
+```
+
+ Reloaded the page you will see red background.
 
 
 The Node.js command line interface (CLI)
