@@ -407,18 +407,19 @@ class AccountFramework extends require('../component/index.js') {
           // Indicates the account is merged.
           'accountMerged': true,
           // Array of users info of a merged accounts.
-          'accounts': account.userIds,
-          'title':  "Account Merge"          
+          'accounts': account.userIds
         };
       }
       else {
         // If the account is not merged, return a response with accountMerged as false
         response = {
           // Indicates the account is not merged
-          'accountMerged': false,
-          'title':  "Account Merge"
+          'accountMerged': false
         };
       }
+
+      // Later in your code, add the 'title' property
+      response.title = "Account Merge";
 
       // Render the 'accountMerge' template and pass the response data to the template
       // The 'accountMerge' template will be populated with the values of 'accountMerged' and 'accounts'
